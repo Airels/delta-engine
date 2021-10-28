@@ -6,7 +6,7 @@ import model.elements.entities.Entity;
 import model.engines.utils.Key;
 import model.events.Event;
 
-public class KernelEngine implements Engine {
+public class KernelEngine extends Thread {
 
     private InputEngine inputEngine;
     private IAEngine iaEngine;
@@ -16,15 +16,16 @@ public class KernelEngine implements Engine {
     private SoundEngine soundEngine;
     private NetworkEngine networkEngine;
 
-    KernelEngine() {
-        // TODO
+    public KernelEngine() {
+        inputEngine = new InputEngine();
+        iaEngine = new IAEngine();
+        physicsEngine = new PhysicsEngine();
+        // TODO ..
     }
 
     @Override
-    public void init() {
-        inputEngine = new InputEngine();
-        iaEngine = new IAEngine();
-        // ...
+    public synchronized void start() {
+        super.start();
     }
 
     @Override
