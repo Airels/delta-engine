@@ -2,9 +2,17 @@ package fr.r1r0r0.deltaengine.model;
 
 import fr.r1r0r0.deltaengine.model.elements.Entity;
 
-public interface IA {
+public abstract class IA {
 
-    void setEntity(Entity entity);
-    Entity getEntity();
-    void tick();
+    private Entity attachedEntity;
+
+    public final void setEntity(Entity entity) {
+        attachedEntity = entity;
+    }
+
+    public final Entity getEntity() {
+        return attachedEntity;
+    }
+
+    public abstract void tick();
 }

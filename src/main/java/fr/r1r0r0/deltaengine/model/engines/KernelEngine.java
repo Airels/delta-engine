@@ -1,6 +1,7 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.model.IA;
+import fr.r1r0r0.deltaengine.model.Map;
 import fr.r1r0r0.deltaengine.model.elements.Element;
 import fr.r1r0r0.deltaengine.model.elements.ElementVisitor;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
@@ -38,7 +39,55 @@ public class KernelEngine extends Thread {
 
     }
 
-    public void addElement(Element element) {
+    public NetworkEngine getNetworkEngine() {
+        return networkEngine;
+    }
+
+    public SoundEngine getSoundEngine() {
+        return soundEngine;
+    }
+
+    public void addMap(Map map) {
+
+    }
+
+    public void removeMap(String name) {
+
+    }
+
+    public void clearMaps() {
+
+    }
+
+    public String getCurrentMapName() {
+        return null;
+    }
+
+    public void setCurrentMap(String name) {
+
+    }
+
+    public void setInput(Key key, Event event) {
+
+    }
+
+    public void clearInput(Key key) {
+
+    }
+
+    public void addGlobalEvent(Event event) {
+
+    }
+
+    public void removeGlobalEvent(Event event) {
+
+    }
+
+    public void clearGlobalEvents() {
+
+    }
+
+    private void addElement(Element element) {
         graphicsEngine.addElement(element);
 
         if (ElementVisitor.isAnEntity(element)) {
@@ -51,35 +100,23 @@ public class KernelEngine extends Thread {
         }
     }
 
-    public void removeElement(Element element) {
+    private void removeElement(Element element) {
 
     }
 
-    public void clearElements() {
+    private void clearElements() {
 
     }
 
-    public void setInput(Key key, Event event) {
+    private void addEvent(Event event) {
 
     }
 
-    public void addEvent(Event event) {
+    private void removeEvent(Event event) {
 
     }
 
-    public void removeEvent(Event event) {
+    private void clearEvents() {
 
-    }
-
-    public void clearEvents() {
-
-    }
-
-    public NetworkEngine getNetwork() {
-        return networkEngine;
-    }
-
-    public SoundEngine getSoundEngine() {
-        return soundEngine;
     }
 }
