@@ -2,6 +2,7 @@ package fr.r1r0r0.deltaengine.model.elements;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Direction;
+import fr.r1r0r0.deltaengine.model.IA;
 import fr.r1r0r0.deltaengine.model.elements.Element;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 
@@ -45,5 +46,13 @@ public class Entity implements Element {
 
     public void setSpeed(double speed) {
 
+    }
+
+    public final void setIA(IA ia) {
+        ia.setEntity(this);
+    }
+
+    public final IA getIA() {
+        return null;
     }
 }

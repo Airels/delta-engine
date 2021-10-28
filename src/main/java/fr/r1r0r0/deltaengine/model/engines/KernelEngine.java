@@ -41,8 +41,14 @@ public class KernelEngine extends Thread {
     public void addElement(Element element) {
         graphicsEngine.addElement(element);
 
-        if (ElementVisitor.isAnEntity(element))
-            physicsEngine.addEntity(((Entity) element));
+        if (ElementVisitor.isAnEntity(element)) {
+            Entity entity = (Entity) element;
+            physicsEngine.addEntity(entity);
+
+            if (entity.getIA() != null) {
+                iaEngine.addIA(entity.getIA());
+            }
+        }
     }
 
     public void removeElement(Element element) {
