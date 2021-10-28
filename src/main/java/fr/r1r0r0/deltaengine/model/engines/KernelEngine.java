@@ -63,18 +63,6 @@ public class KernelEngine extends Thread {
 
     }
 
-    public void addIA(IA ia) {
-
-    }
-
-    public void removeIA(IA ia) {
-
-    }
-
-    public void clearIAs() {
-
-    }
-
     public void addEvent(Event event) {
 
     }
