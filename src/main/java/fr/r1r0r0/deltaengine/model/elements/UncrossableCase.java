@@ -29,6 +29,10 @@ public class UncrossableCase extends Case {
         return authorizedEntitiesToCross.contains(entity.getClass());
     }
 
+    /**
+     * Add what class child of Entity can cross this case, who technically can't be crossed.
+     * @param allowedEntity Entity Class authorized to cross this case.
+     */
     public void canBeCrossedBy(Class<? extends Entity> allowedEntity) {
         authorizedEntitiesToCross.add(allowedEntity);
     }
