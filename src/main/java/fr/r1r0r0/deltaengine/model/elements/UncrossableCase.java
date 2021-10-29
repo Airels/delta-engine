@@ -14,8 +14,8 @@ public class UncrossableCase extends Case {
 
     private List<Class<? extends Entity>> authorizedEntitiesToCross;
 
-    public UncrossableCase(Coordinates coordinates, Sprite sprite) {
-        super(coordinates, sprite);
+    public UncrossableCase(int x, int y, Sprite sprite) {
+        super(x, y, sprite);
 
         authorizedEntitiesToCross = new ArrayList<>();
     }

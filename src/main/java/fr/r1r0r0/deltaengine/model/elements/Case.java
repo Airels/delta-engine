@@ -14,13 +14,13 @@ public class Case implements Element {
 
     /**
      * Default constructor. Set a case sprite and coordinates in the map.
-     * @param coordinates the coordinates of the map. Coordinates values are integers. If doubles, it will be truncated.
+     * @param x the coordinates of the map. Coordinates values are integers. If doubles, it will be truncated.
      * @param sprite the sprite to apply on the case
      */
-    public Case(Coordinates coordinates, Sprite sprite) {
-        this.coords = coordinates;
+    public Case(int x, int y, Sprite sprite) {
+        this.coords = new Coordinates(x, y);
         this.sprite = sprite;
-        name = String.format("Case(%s;%s)", coordinates.getX(), coordinates.getY());
+        name = String.format("Case(%s;%s)", coords.getX(), coords.getY());
     }
 
 

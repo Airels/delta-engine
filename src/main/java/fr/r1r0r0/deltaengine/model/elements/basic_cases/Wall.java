@@ -10,8 +10,8 @@ import javafx.scene.shape.Rectangle;
  */
 public class Wall extends UncrossableCase {
 
-    public Wall(Coordinates coordinates) {
-        super(coordinates, () -> {
+    public Wall(int x, int y) {
+        super(x, y, () -> {
             Rectangle rectangle = new Rectangle();
             rectangle.setFill(Color.GRAY); // TODO set default wall sprite
             return rectangle;
