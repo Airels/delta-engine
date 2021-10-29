@@ -6,10 +6,20 @@ import fr.r1r0r0.deltaengine.model.elements.ElementVisitor;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
 import fr.r1r0r0.deltaengine.model.events.Event;
 
+import java.util.List;
+
 public final class Map {
 
     public Map(String name, int width, int height) {
 
+    }
+
+    public int getWidth() {
+        return 0;
+    }
+
+    public int getHeight() {
+        return 0;
     }
 
     public String getName() {
@@ -50,5 +60,13 @@ public final class Map {
 
     public void clearEvents() {
 
+    }
+
+    public List<Case> getCases() {
+        return null;
+    }
+
+    public List<Entity> getEntities() {
+        return null;
     }
 }
