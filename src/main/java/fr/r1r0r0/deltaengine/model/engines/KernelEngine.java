@@ -28,7 +28,7 @@ public class KernelEngine extends Thread {
     private final java.util.Map<String, Map> maps;
     private final List<Event> globalEvents;
     private final List<HUDElement> hudElements;
-    private KernelEngine instance;
+    private static KernelEngine instance;
     private Map currentMap;
     private int frameRate;
 
@@ -64,7 +64,7 @@ public class KernelEngine extends Thread {
      *
      * @return KernelEngine instance
      */
-    public KernelEngine getInstance() {
+    public static KernelEngine getInstance() {
         if (instance == null)
             instance = new KernelEngine();
 
@@ -336,11 +336,11 @@ public class KernelEngine extends Thread {
         List<Entity> mapEntities = map.getEntities();
         List<Event> mapEvents = map.getEvents();
 
+        physicsEngine.setMap(map);
         graphicsEngine.setCases(mapCases, width, height);
 
         for (Entity mapEntity : mapEntities) {
             graphicsEngine.addElement(mapEntity);
-            physicsEngine.addEntity(mapEntity);
             if (mapEntity.getIA() != null)
                 iaEngine.addIA(mapEntity.getIA());
         }
@@ -356,12 +356,19 @@ public class KernelEngine extends Thread {
      * Unload current map, loading associated elements, IA, and events
      */
     private void unloadMap() {
+        List<Case> mapCases = currentMap.getCases();
         List<Entity> mapEntities = currentMap.getEntities();
         List<Event> mapEvents = currentMap.getEvents();
 
+        physicsEngine.clearMap();
+
+
+        for (Case c : mapCases) {
+            graphicsEngine.removeElement(c);
+        }
+
         for (Entity entity : mapEntities) {
             graphicsEngine.removeElement(entity);
-            physicsEngine.removeEntity(entity);
             if (entity.getIA() != null)
                 iaEngine.removeIA(entity.getIA());
         }

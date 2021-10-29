@@ -1,6 +1,6 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
-import fr.r1r0r0.deltaengine.model.elements.Entity;
+import fr.r1r0r0.deltaengine.model.Map;
 
 public class PhysicsEngine implements Engine {
     @Override
@@ -13,15 +13,11 @@ public class PhysicsEngine implements Engine {
 
     }
 
-    public void addEntity(Entity entity) {
+    public void setMap(Map map) {
 
     }
 
-    public void removeEntity(Entity entity) {
-
-    }
-
-    public void clearEntities() {
+    public void clearMap() {
 
     }
 }
