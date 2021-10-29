@@ -1,6 +1,10 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
+import fr.r1r0r0.deltaengine.model.elements.Case;
 import fr.r1r0r0.deltaengine.model.elements.Element;
+import fr.r1r0r0.deltaengine.model.elements.Entity;
+
+import java.util.List;
 
 class GraphicsEngine implements Engine {
     @Override
@@ -13,15 +17,19 @@ class GraphicsEngine implements Engine {
 
     }
 
-    public void addElement(Element element) {
+    public void setCases(List<Case> cases, int width, int height) {
 
     }
 
-    public void removeElement(Element element) {
+    public void addEntity(Entity entity) {
 
     }
 
-    public void clearElements() {
+    public void removeEntity(Entity entity) {
+
+    }
+
+    public void clearEntities() {
 
     }
 }
