@@ -5,6 +5,7 @@ import fr.r1r0r0.deltaengine.model.Map;
 import fr.r1r0r0.deltaengine.model.elements.Element;
 import fr.r1r0r0.deltaengine.model.elements.ElementVisitor;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
+import fr.r1r0r0.deltaengine.model.elements.HUDElement;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
 
@@ -67,6 +68,14 @@ public class KernelEngine extends Thread {
 
     }
 
+    public void haltCurrentMap() {
+
+    }
+
+    public void resumeCurrentMap() {
+
+    }
+
     public void setInput(Key key, Event event) {
 
     }
@@ -84,6 +93,18 @@ public class KernelEngine extends Thread {
     }
 
     public void clearGlobalEvents() {
+
+    }
+
+    public void addHUDElement(HUDElement hudElement) {
+
+    }
+
+    public void removeHUDElement(HUDElement hudElement) {
+
+    }
+
+    public void clearHUDElements() {
 
     }
 

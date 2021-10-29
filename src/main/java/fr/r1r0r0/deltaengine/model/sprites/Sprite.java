@@ -1,5 +1,7 @@
 package fr.r1r0r0.deltaengine.model.sprites;
 
-public interface Sprite {
+import javafx.scene.Node;
 
+public interface Sprite{
+    Node getNode();
 }

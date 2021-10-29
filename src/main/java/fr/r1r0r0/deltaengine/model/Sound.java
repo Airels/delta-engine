@@ -1,20 +1,8 @@
 package fr.r1r0r0.deltaengine.model;
 
-public class Sound {
+public final class Sound {
 
     public Sound(String name, String path) {
-
-    }
-
-    public void play() {
-
-    }
-
-    public void pause() {
-
-    }
-
-    public void stop() {
 
     }
 
@@ -23,6 +11,6 @@ public class Sound {
     }
 
     public double getVolume() {
-        return 0;
+        return 1.0;
     }
 }
