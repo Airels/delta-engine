@@ -8,6 +8,7 @@ import java.io.File;
 public final class Sound {
 
     private String name, path;
+    private File file;
     private double volume;
 
     /**
@@ -19,6 +20,7 @@ public final class Sound {
         this.name = name;
         this.path = path;
         volume = 1;
+        file = new File(path);
     }
 
     /**
@@ -46,5 +48,13 @@ public final class Sound {
      */
     public String getPath() {
         return path;
+    }
+
+    /**
+     * Get file descriptor for audio clip
+     * @return File audio clip file
+     */
+    public File getFile() {
+        return file;
     }
 }
