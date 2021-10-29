@@ -82,6 +82,8 @@ public class KernelEngine extends Thread {
 
             new Thread(soundEngine).start();
             new Thread(networkEngine).start();
+
+            physicsEngine.setCurrentFrameRate(frameRate);
         } catch (UnknownEngineException e) {
             System.err.println("KERNEL CRITICAL ERROR :");
             e.printStackTrace();
@@ -129,6 +131,7 @@ public class KernelEngine extends Thread {
      */
     public void setFrameRate(int frameRate) {
         this.frameRate = frameRate;
+        physicsEngine.setCurrentFrameRate(frameRate);
     }
 
     /**
