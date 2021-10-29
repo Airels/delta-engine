@@ -3,7 +3,12 @@ package fr.r1r0r0.deltaengine.model.engines;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
 
-public class InputEngine implements Engine {
+class InputEngine implements Engine {
+
+    InputEngine() {
+
+    }
+
     @Override
     public void init() {
 

@@ -2,7 +2,12 @@ package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.model.Map;
 
-public class PhysicsEngine implements Engine {
+class PhysicsEngine implements Engine {
+
+    PhysicsEngine(int frameRate) {
+
+    }
+
     @Override
     public void init() {
 
