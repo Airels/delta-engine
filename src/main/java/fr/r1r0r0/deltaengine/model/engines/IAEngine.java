@@ -3,6 +3,7 @@ package fr.r1r0r0.deltaengine.model.engines;
 import fr.r1r0r0.deltaengine.model.IA;
 
 class IAEngine implements Engine {
+
     @Override
     public void init() {
 
