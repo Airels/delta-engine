@@ -16,6 +16,10 @@ public final class Map {
         return null;
     }
 
+    public void setName(String name) {
+
+    }
+
     public void setCase(Case c) {
 
     }
