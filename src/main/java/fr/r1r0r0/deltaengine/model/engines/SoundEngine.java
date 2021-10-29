@@ -4,6 +4,10 @@ import fr.r1r0r0.deltaengine.model.Sound;
 
 public class SoundEngine implements Engine {
 
+    SoundEngine() {
+
+    }
+
     @Override
     public void init() {
 
