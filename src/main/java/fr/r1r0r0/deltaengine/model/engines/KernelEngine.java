@@ -34,13 +34,17 @@ public class KernelEngine extends Thread {
 
     private boolean currentMapHalted;
 
+    public final static int DEFAULT_FRAME_RATE = 60;
+
     /**
      * Default constructor. Not accessible from outside, because kernel must be omnipresent everywhere on the code.
      */
     private KernelEngine() {
+        frameRate = DEFAULT_FRAME_RATE;
+
         inputEngine = new InputEngine();
         iaEngine = new IAEngine();
-        physicsEngine = new PhysicsEngine();
+        physicsEngine = new PhysicsEngine(frameRate);
         eventEngine = new EventEngine();
         graphicsEngine = new GraphicsEngine();
         soundEngine = new SoundEngine();
@@ -49,8 +53,6 @@ public class KernelEngine extends Thread {
         maps = new HashMap<>();
         globalEvents = new ArrayList<>();
         hudElements = new ArrayList<>();
-
-        frameRate = 60;
 
         currentMapHalted = false;
     }
