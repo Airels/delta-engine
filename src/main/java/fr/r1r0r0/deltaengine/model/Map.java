@@ -69,4 +69,8 @@ public final class Map {
     public List<Entity> getEntities() {
         return null;
     }
+    
+    public List<Event> getEvents() {
+        return null;
+    }
 }
