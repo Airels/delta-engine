@@ -25,7 +25,7 @@ class GraphicsEngine implements Engine {
 
     }
 
-    public void removeElements(Element element) {
+    public void removeElement(Element element) {
 
     }
 
