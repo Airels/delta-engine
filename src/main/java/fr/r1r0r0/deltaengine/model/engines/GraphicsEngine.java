@@ -21,15 +21,15 @@ class GraphicsEngine implements Engine {
 
     }
 
-    public void addEntity(Entity entity) {
+    public void addElement(Element element) {
 
     }
 
-    public void removeEntity(Entity entity) {
+    public void removeElements(Element element) {
 
     }
 
-    public void clearEntities() {
+    public void clearElements() {
 
     }
 }
