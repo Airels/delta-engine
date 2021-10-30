@@ -2,7 +2,6 @@ package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.exceptions.MapAlreadyExistException;
 import fr.r1r0r0.deltaengine.exceptions.MapDoesNotExistException;
-import fr.r1r0r0.deltaengine.exceptions.NotInitializedException;
 import fr.r1r0r0.deltaengine.exceptions.UnknownEngineException;
 import fr.r1r0r0.deltaengine.model.Map;
 import fr.r1r0r0.deltaengine.model.elements.Case;
@@ -10,8 +9,7 @@ import fr.r1r0r0.deltaengine.model.elements.Entity;
 import fr.r1r0r0.deltaengine.model.elements.HUDElement;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
-import javafx.application.Application;
-import javafx.stage.Stage;
+import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +19,7 @@ import java.util.List;
  * Core of the engine, oversees all engines and use them to render final game. <br>
  * Game developer uses all given methods to build its game, engines.kernel just try to render his creation using all others engines.
  */
-public final class KernelEngine extends Application {
+public final class KernelEngine {
 
     public final static int DEFAULT_FRAME_RATE = 60;
     private static KernelEngine instance;
@@ -38,17 +36,17 @@ public final class KernelEngine extends Application {
     private Map currentMap;
     private int frameRate;
     private boolean currentMapHalted;
-    private boolean initialized, started;
+    private volatile boolean initialized, started;
 
     /**
-     * Default constructor. Creates all sub-engines but not initializing them and itself.
+     * Default constructor. Creates all sub-engines but not initializing them.
      */
-    public KernelEngine() {
+    KernelEngine() {
         frameRate = DEFAULT_FRAME_RATE;
 
         inputEngine = new InputEngine();
         iaEngine = new IAEngine();
-        physicsEngine = new PhysicsEngine(frameRate);
+        physicsEngine = new PhysicsEngine();
         eventEngine = new EventEngine();
         graphicsEngine = new GraphicsEngine();
         soundEngine = new SoundEngine();
@@ -59,22 +57,15 @@ public final class KernelEngine extends Application {
         hudElements = new ArrayList<>();
 
         currentMapHalted = false;
+
         initialized = false;
         started = false;
     }
 
     /**
-     * To launch Kernel Engine in a separated Thread
+     * Initializes Kernel Engine and its components. If kernel was initialized before, then init will be skipped.
      */
-    public void launch() {
-        new Thread(() -> Application.launch(KernelEngine.class)).start();
-    }
-
-    /**
-     * Initializes Kernel Engine. If engines.kernel was initialized before, then init will be skipped.
-     */
-    @Override
-    public void init() {
+    void init() {
         if (initialized) return;
 
         try {
@@ -82,59 +73,60 @@ public final class KernelEngine extends Application {
                 getEngine(e).init();
             }
 
+            // new Thread(soundEngine).start();
             new Thread(networkEngine).start();
-
-            physicsEngine.setCurrentFrameRate(frameRate);
 
             initialized = true;
         } catch (UnknownEngineException e) {
-            System.err.println("KERNEL CRITICAL ERROR :");
-            e.printStackTrace();
-            System.err.println("Please report this incident on GitHub page.");
-            System.exit(1);
+            DeltaEngine.showKernelCriticalError(e);
         }
     }
 
     /**
-     * Kernel Engine main loop. <br>
-     * This method is blocking, it will return until Application is closed.
-     * Consider using launch() method instead to launch Kernel in a dedicated Thread.
-     *
-     * @throws Exception when exceptions occur
-     * @see KernelEngine#launch() to launch Kernel indepdendently
+     * Kernel Engine loop.
      */
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        if (!initialized)
-            throw new NotInitializedException("KernelEngine not initialized.");
+    void start() {
         if (started)
-            throw new RuntimeException("KernelEngine already started. Cannot start it twice.i");
+            throw new RuntimeException("Engine is already running");
 
         started = true;
-
+        Object lock = new Object();
         try {
             while (!Thread.interrupted()) {
                 if (!currentMapHalted) {
                     for (Engines e : Engines.values()) {
-                        getEngine(e).run();
+                        if (e == Engines.GRAPHICS_ENGINE) {
+                            Platform.runLater(() -> {
+                                graphicsEngine.run();
+                                synchronized (lock) {
+                                    lock.notifyAll();
+                                }
+                            });
+                        } else {
+                            getEngine(e).run();
+                        }
                     }
                 } else {
                     inputEngine.run();
-                    graphicsEngine.run();
+                    Platform.runLater(graphicsEngine);
+                }
+
+                Thread.sleep(1000 / frameRate);
+                synchronized (lock) {
+                    lock.wait(); // To wait graphicsEngine
                 }
             }
         } catch (UnknownEngineException e) {
-            System.err.println("KERNEL CRITICAL ERROR :");
-            e.printStackTrace();
-            System.err.println("Please report this incident on GitHub page.");
-            System.exit(1);
+            DeltaEngine.showKernelCriticalError(e);
+        } catch (InterruptedException ignored) {
+            // ignored
         } finally {
             started = false;
         }
     }
 
     /**
-     * Allows to know engines.kernel's frame rate goal currently. <br>
+     * Allows knowing Engine frame rate goal currently. <br>
      * Default : 60. Kernel will try to process itself and all others engines 60 times in one second.
      *
      * @return current frame rate
@@ -144,7 +136,7 @@ public final class KernelEngine extends Application {
     }
 
     /**
-     * To define a frame rate that engines.kernel will be sync on <br>
+     * To define a frame rate that Engine will try to be sync on <br>
      * Default : 60. Kernel will try to process itself and all others engines 60 times in one second.
      *
      * @param frameRate new engine frame rate
@@ -236,7 +228,7 @@ public final class KernelEngine extends Application {
     }
 
     /**
-     * Load a previous added map on the engines.kernel by its name
+     * Load a previous added map on the Engine by its name
      *
      * @param name the name of map to load
      * @throws MapDoesNotExistException if map was not added before
@@ -282,7 +274,7 @@ public final class KernelEngine extends Application {
      *
      * @param key to clear
      */
-    public void clearInput(Key key) throws NotInitializedException {
+    public void clearInput(Key key) {
         inputEngine.setInput(key, null);
     }
 
@@ -327,7 +319,7 @@ public final class KernelEngine extends Application {
     }
 
     /**
-     * Remove a static element corresponing to HUD previously added on the interface
+     * Remove a static element corresponding to HUD previously added on the interface
      *
      * @param hudElement the element to remove
      */

@@ -4,10 +4,6 @@ import fr.r1r0r0.deltaengine.model.Map;
 
 class PhysicsEngine implements Engine {
 
-    PhysicsEngine(int frameRate) {
-
-    }
-
     @Override
     public void init() {
 
