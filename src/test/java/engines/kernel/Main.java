@@ -22,14 +22,9 @@ public class Main {
         soundEngine.addSound(siren);
         soundEngine.setLoop("siren", true);
         soundEngine.setVolume("siren", 0.5);
-        soundEngine.setSpeed("siren", 1);
+        soundEngine.setSpeed("siren", 1.1);
         soundEngine.play("siren");
 
         MediaPlayer player = soundEngine.getMediaPlayer("siren");
-
-        while (true) {
-            if (player.getCurrentTime().equals(player.getStopTime()))
-                player.seek(player.getStartTime());
-        }
     }
 }

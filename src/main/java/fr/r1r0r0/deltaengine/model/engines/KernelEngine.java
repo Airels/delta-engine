@@ -143,7 +143,6 @@ public final class KernelEngine {
      */
     public void setFrameRate(int frameRate) {
         this.frameRate = frameRate;
-        physicsEngine.setCurrentFrameRate(frameRate);
     }
 
     /**
