@@ -2,11 +2,16 @@ package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.exceptions.MapAlreadyExistException;
 import fr.r1r0r0.deltaengine.exceptions.MapDoesNotExistException;
+import fr.r1r0r0.deltaengine.exceptions.NotInitializedException;
 import fr.r1r0r0.deltaengine.exceptions.UnknownEngineException;
 import fr.r1r0r0.deltaengine.model.Map;
-import fr.r1r0r0.deltaengine.model.elements.*;
+import fr.r1r0r0.deltaengine.model.elements.Case;
+import fr.r1r0r0.deltaengine.model.elements.Entity;
+import fr.r1r0r0.deltaengine.model.elements.HUDElement;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,10 +19,12 @@ import java.util.List;
 
 /**
  * Core of the engine, oversees all engines and use them to render final game. <br>
- * Game developer uses all given methods to build its game, kernel just try to render his creation using all others engines.
+ * Game developer uses all given methods to build its game, engines.kernel just try to render his creation using all others engines.
  */
-public class KernelEngine extends Thread {
+public final class KernelEngine extends Application {
 
+    public final static int DEFAULT_FRAME_RATE = 60;
+    private static KernelEngine instance;
     private final InputEngine inputEngine;
     private final IAEngine iaEngine;
     private final PhysicsEngine physicsEngine;
@@ -28,18 +35,15 @@ public class KernelEngine extends Thread {
     private final java.util.Map<String, Map> maps;
     private final List<Event> globalEvents;
     private final List<HUDElement> hudElements;
-    private static KernelEngine instance;
     private Map currentMap;
     private int frameRate;
-
     private boolean currentMapHalted;
-
-    public final static int DEFAULT_FRAME_RATE = 60;
+    private boolean initialized, started;
 
     /**
-     * Default constructor. Not accessible from outside, because kernel must be omnipresent everywhere on the code.
+     * Default constructor. Creates all sub-engines but not initializing them and itself.
      */
-    private KernelEngine() {
+    public KernelEngine() {
         frameRate = DEFAULT_FRAME_RATE;
 
         inputEngine = new InputEngine();
@@ -55,37 +59,34 @@ public class KernelEngine extends Thread {
         hudElements = new ArrayList<>();
 
         currentMapHalted = false;
-    }
-
-    private synchronized void tick() {
-
+        initialized = false;
+        started = false;
     }
 
     /**
-     * To get an instance of kernel engine. Kernel is omnipresent everywhere on the code.
-     *
-     * @return KernelEngine instance
+     * To launch Kernel Engine in a separated Thread
      */
-    public static KernelEngine getInstance() {
-        if (instance == null)
-            instance = new KernelEngine();
-
-        return instance;
+    public void launch() {
+        new Thread(() -> Application.launch(KernelEngine.class)).start();
     }
 
+    /**
+     * Initializes Kernel Engine. If engines.kernel was initialized before, then init will be skipped.
+     */
     @Override
-    public synchronized void start() {
-        super.start();
+    public void init() {
+        if (initialized) return;
 
         try {
             for (Engines e : Engines.values()) {
                 getEngine(e).init();
             }
 
-            new Thread(soundEngine).start();
             new Thread(networkEngine).start();
 
             physicsEngine.setCurrentFrameRate(frameRate);
+
+            initialized = true;
         } catch (UnknownEngineException e) {
             System.err.println("KERNEL CRITICAL ERROR :");
             e.printStackTrace();
@@ -94,8 +95,23 @@ public class KernelEngine extends Thread {
         }
     }
 
+    /**
+     * Kernel Engine main loop. <br>
+     * This method is blocking, it will return until Application is closed.
+     * Consider using launch() method instead to launch Kernel in a dedicated Thread.
+     *
+     * @throws Exception when exceptions occur
+     * @see KernelEngine#launch() to launch Kernel indepdendently
+     */
     @Override
-    public void run() {
+    public void start(Stage primaryStage) throws Exception {
+        if (!initialized)
+            throw new NotInitializedException("KernelEngine not initialized.");
+        if (started)
+            throw new RuntimeException("KernelEngine already started. Cannot start it twice.i");
+
+        started = true;
+
         try {
             while (!Thread.interrupted()) {
                 if (!currentMapHalted) {
@@ -112,11 +128,13 @@ public class KernelEngine extends Thread {
             e.printStackTrace();
             System.err.println("Please report this incident on GitHub page.");
             System.exit(1);
+        } finally {
+            started = false;
         }
     }
 
     /**
-     * Allows to know kernel's frame rate goal currently. <br>
+     * Allows to know engines.kernel's frame rate goal currently. <br>
      * Default : 60. Kernel will try to process itself and all others engines 60 times in one second.
      *
      * @return current frame rate
@@ -126,7 +144,7 @@ public class KernelEngine extends Thread {
     }
 
     /**
-     * To define a frame rate that kernel will be sync on <br>
+     * To define a frame rate that engines.kernel will be sync on <br>
      * Default : 60. Kernel will try to process itself and all others engines 60 times in one second.
      *
      * @param frameRate new engine frame rate
@@ -188,7 +206,7 @@ public class KernelEngine extends Thread {
     }
 
     /**
-     * Remove given name map to the kernel. If current map is the map to remove, map will be unloaded
+     * Remove given name map to the engines.kernel. If current map is the map to remove, map will be unloaded
      *
      * @param name the name of the map to remove
      * @return true if removed, false if no map was already been added to this name
@@ -201,7 +219,7 @@ public class KernelEngine extends Thread {
     }
 
     /**
-     * Clear all maps from the kernel. If current map is running, it will be unloaded
+     * Clear all maps from the engines.kernel. If current map is running, it will be unloaded
      */
     public synchronized void clearMaps() {
         unloadMap();
@@ -218,7 +236,7 @@ public class KernelEngine extends Thread {
     }
 
     /**
-     * Load a previous added map on the kernel by its name
+     * Load a previous added map on the engines.kernel by its name
      *
      * @param name the name of map to load
      * @throws MapDoesNotExistException if map was not added before
@@ -264,7 +282,7 @@ public class KernelEngine extends Thread {
      *
      * @param key to clear
      */
-    public void clearInput(Key key) {
+    public void clearInput(Key key) throws NotInitializedException {
         inputEngine.setInput(key, null);
     }
 
@@ -300,6 +318,7 @@ public class KernelEngine extends Thread {
 
     /**
      * Add a static element corresponding to HUD on the interface
+     *
      * @param hudElement the element to add
      */
     public synchronized void addHUDElement(HUDElement hudElement) {
@@ -309,6 +328,7 @@ public class KernelEngine extends Thread {
 
     /**
      * Remove a static element corresponing to HUD previously added on the interface
+     *
      * @param hudElement the element to remove
      */
     public synchronized void removeHUDElement(HUDElement hudElement) {
@@ -328,6 +348,7 @@ public class KernelEngine extends Thread {
 
     /**
      * Loads given map, loading associated elements, IA, and events
+     *
      * @param map the map to load
      */
     private void loadMap(Map map) {

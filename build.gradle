@@ -23,3 +23,11 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+task mainTest(type: JavaExec) {
+    group = 'Application'
+    description = 'Simple Main run test'
+
+    classpath sourceSets.test.runtimeClasspath
+    main = 'engines.kernel.Main'
+}
