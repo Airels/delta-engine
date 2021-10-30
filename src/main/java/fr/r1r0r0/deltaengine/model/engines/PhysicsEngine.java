@@ -14,10 +14,6 @@ class PhysicsEngine implements Engine {
 
     }
 
-    public void setCurrentFrameRate(double frameRate) {
-
-    }
-
     public void setMap(Map map) {
 
     }

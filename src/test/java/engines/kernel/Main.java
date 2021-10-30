@@ -14,11 +14,10 @@ import javax.sound.sampled.Clip;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        /*
         KernelEngine deltaEngine = DeltaEngine.launch();
 
         SoundEngine soundEngine = deltaEngine.getSoundEngine();
-        Sound siren = new Sound("siren", "C:\\Users\\Yohan\\Desktop\\final.wav");
+        Sound siren = new Sound("siren", "C:\\Users\\Yohan\\Desktop\\a.wav");
 
         soundEngine.addSound(siren);
         soundEngine.setLoop("siren", true);
@@ -32,16 +31,5 @@ public class Main {
             if (player.getCurrentTime().equals(player.getStopTime()))
                 player.seek(player.getStartTime());
         }
-
-         */
-        Sound siren = new Sound("siren", "C:\\Users\\Yohan\\Desktop\\final.wav");
-        Clip clip = AudioSystem.getClip();
-        AudioInputStream inputStream = AudioSystem.getAudioInputStream(siren.getFile());
-        clip.open(inputStream);
-        clip.start();
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
-        clip.
-
-        Thread.sleep(999999);
     }
 }
