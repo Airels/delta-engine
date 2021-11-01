@@ -2,7 +2,6 @@ package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.exceptions.MapAlreadyExistException;
 import fr.r1r0r0.deltaengine.exceptions.MapDoesNotExistException;
-import fr.r1r0r0.deltaengine.exceptions.UnknownEngineException;
 import fr.r1r0r0.deltaengine.model.Map;
 import fr.r1r0r0.deltaengine.model.elements.Case;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
@@ -22,7 +21,6 @@ import java.util.List;
 public final class KernelEngine {
 
     public final static int DEFAULT_FRAME_RATE = 60;
-    private static KernelEngine instance;
     private final InputEngine inputEngine;
     private final IAEngine iaEngine;
     private final PhysicsEngine physicsEngine;
@@ -44,13 +42,13 @@ public final class KernelEngine {
     KernelEngine() {
         frameRate = DEFAULT_FRAME_RATE;
 
-        inputEngine = new InputEngine();
-        iaEngine = new IAEngine();
-        physicsEngine = new PhysicsEngine();
-        eventEngine = new EventEngine();
-        graphicsEngine = new GraphicsEngine();
-        soundEngine = new SoundEngine();
-        networkEngine = new NetworkEngine();
+        inputEngine = (InputEngine) Engines.INPUT_ENGINE.getInstance();
+        iaEngine = (IAEngine) Engines.IA_ENGINE.getInstance();
+        physicsEngine = (PhysicsEngine) Engines.PHYSICS_ENGINE.getInstance();
+        eventEngine = (EventEngine) Engines.EVENT_ENGINE.getInstance();
+        graphicsEngine = (GraphicsEngine) Engines.GRAPHICS_ENGINE.getInstance();
+        soundEngine = (SoundEngine) Engines.SOUND_ENGINE.getInstance();
+        networkEngine = (NetworkEngine) Engines.NETWORK_ENGINE.getInstance();
 
         maps = new HashMap<>();
         globalEvents = new ArrayList<>();
@@ -68,18 +66,14 @@ public final class KernelEngine {
     void init() {
         if (initialized) return;
 
-        try {
-            for (Engines e : Engines.values()) {
-                getEngine(e).init();
-            }
-
-            // new Thread(soundEngine).start();
-            new Thread(networkEngine).start();
-
-            initialized = true;
-        } catch (UnknownEngineException e) {
-            DeltaEngine.showKernelCriticalError(e);
+        for (Engines e : Engines.values()) {
+            getEngine(e).init();
         }
+
+        // new Thread(soundEngine).start();
+        new Thread(networkEngine).start();
+
+        initialized = true;
     }
 
     /**
@@ -116,8 +110,6 @@ public final class KernelEngine {
                     lock.wait(); // To wait graphicsEngine
                 }
             }
-        } catch (UnknownEngineException e) {
-            DeltaEngine.showKernelCriticalError(e);
         } catch (InterruptedException ignored) {
             // ignored
         } finally {
@@ -150,19 +142,9 @@ public final class KernelEngine {
      *
      * @param engine engine ID to get
      * @return Engine object
-     * @throws UnknownEngineException if wanted engine doesn't exist (or not implemented yet)
      */
-    private Engine getEngine(Engines engine) throws UnknownEngineException {
-        return switch (engine) {
-            case EVENT_ENGINE -> eventEngine;
-            case GRAPHICS_ENGINE -> graphicsEngine;
-            case IA_ENGINE -> iaEngine;
-            case INPUT_ENGINE -> inputEngine;
-            case NETWORK_ENGINE -> networkEngine;
-            case PHYSICS_ENGINE -> physicsEngine;
-            case SOUND_ENGINE -> soundEngine;
-            default -> throw new UnknownEngineException(engine);
-        };
+    private Engine getEngine(Engines engine) {
+        return engine.getInstance();
     }
 
     /**
