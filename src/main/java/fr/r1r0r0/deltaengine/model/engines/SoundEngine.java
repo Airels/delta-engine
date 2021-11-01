@@ -13,7 +13,7 @@ import java.util.Map;
  * Sound Engine, allows to control all given sounds.
  * @see Sound sounds objects manipulated by this Engine
  */
-public class SoundEngine implements Engine {
+public final class SoundEngine implements Engine {
 
     private final Map<String, MediaPlayer> sounds;
 

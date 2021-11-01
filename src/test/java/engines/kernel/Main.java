@@ -16,7 +16,7 @@ public class Main {
         soundEngine.addSound(siren);
         soundEngine.setLoop("siren", true);
         soundEngine.setVolume("siren", 1);
-        soundEngine.setSpeed("siren", 1.1);
+        soundEngine.setSpeed("siren", 1.05);
         soundEngine.play("siren");
     }
 }
