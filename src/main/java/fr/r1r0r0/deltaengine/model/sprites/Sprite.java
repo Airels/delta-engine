@@ -4,4 +4,7 @@ import javafx.scene.Node;
 
 public interface Sprite{
     Node getNode();
+
+    void setZOrder(int z);
+    int getZOrder();
 }
