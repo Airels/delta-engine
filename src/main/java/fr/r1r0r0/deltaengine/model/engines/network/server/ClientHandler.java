@@ -1,10 +1,12 @@
 package fr.r1r0r0.deltaengine.model.engines.network.server;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.net.SocketException;
+import java.util.ArrayDeque;
 import java.util.Collection;
 
 /**
@@ -12,7 +14,7 @@ import java.util.Collection;
  * Contains its own buffer, who will receive all data from the client machine,
  * when its run() method is called.
  */
-final class ClientHandler implements Runnable {
+final class ClientHandler extends Thread {
 
     private final Server server;
     private final Socket client;
@@ -22,6 +24,7 @@ final class ClientHandler implements Runnable {
 
     /**
      * Default constructor. Creates a client handler for the server.
+     *
      * @param server the server
      * @param client client socket
      * @throws IOException when socket exception occurs
@@ -36,10 +39,15 @@ final class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        synchronized (this) {
+        while (!client.isClosed()) {
             try {
-                if (inputStream.available() > 0)
-                    buffer.addAll((Collection<Object>) inputStream.readObject());
+                Object receivedObj = inputStream.readObject();
+
+                synchronized (this) {
+                    buffer.add(receivedObj);
+                }
+            } catch (EOFException | SocketException e) {
+                close();
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -48,14 +56,17 @@ final class ClientHandler implements Runnable {
 
     /**
      * Send data to bound client
-     * @param elements objects collection to send
+     *
+     * @param objects objects to send
      */
-    public void send(Collection<Object> elements) throws IOException {
-        outputStream.writeObject(elements);
+    public void send(Object... objects) throws IOException {
+        for (Object obj : objects)
+            outputStream.writeObject(obj);
     }
 
     /**
      * Retrieve all data received from the client and reset its buffer
+     *
      * @return Collection of objects received
      */
     public synchronized Collection<Object> receive() {
@@ -78,9 +89,18 @@ final class ClientHandler implements Runnable {
     }
 
     /**
+     * Check if connection has been closed
+     *
+     * @return boolean, true if connection is closed, false otherwise
+     */
+    public boolean isClosed() {
+        return client.isClosed();
+    }
+
+    /**
      * Initializes internal buffer
      */
     private void initBuffer() {
-        buffer = new ArrayList<>();
+        buffer = new ArrayDeque<>();
     }
 }

@@ -71,7 +71,7 @@ public final class KernelEngine {
         }
 
         // new Thread(soundEngine).start();
-        new Thread(networkEngine).start();
+        // new Thread(networkEngine).start();
 
         initialized = true;
     }

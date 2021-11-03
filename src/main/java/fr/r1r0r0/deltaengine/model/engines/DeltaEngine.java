@@ -79,4 +79,9 @@ public final class DeltaEngine extends Application {
         System.err.println("Please report this incident on GitHub page.");
         System.exit(1);
     }
+
+    static void showEngineError(Exception e) {
+        System.err.println("DELTAENGINE ERROR :");
+        e.printStackTrace();
+    }
 }

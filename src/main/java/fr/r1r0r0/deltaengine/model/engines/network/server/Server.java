@@ -2,6 +2,7 @@ package fr.r1r0r0.deltaengine.model.engines.network.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.SocketException;
 import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -38,8 +39,14 @@ public final class Server extends Thread {
                 try {
                     ClientHandler client = new ClientHandler(this, server.accept());
                     lock.writeLock().lock();
-                    clients.add(client);
-                    lock.writeLock().unlock();
+                    try {
+                        clients.add(client);
+                        client.start();
+                    } finally {
+                        lock.writeLock().unlock();
+                    }
+                } catch (SocketException e) {
+                    // ignored
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -52,39 +59,61 @@ public final class Server extends Thread {
         connectionHandler.start();
 
         while (!interrupted) {
+            List<ClientHandler> pendingDeletionClients = new ArrayList<>();
             lock.readLock().lock();
-            clients.forEach(ClientHandler::run);
-            lock.readLock().unlock();
-        }
-    }
-
-    /**
-     * Send collection of objects to all clients (broadcast)
-     * @param elements collection to send
-     */
-    public void send(Collection<Object> elements) {
-        for (ClientHandler client : clients) {
             try {
-                lock.readLock().lock();
-                client.send(elements);
+                for (ClientHandler client : clients) {
+                    if (client.isClosed())
+                        pendingDeletionClients.add(client);
+                }
+            } finally {
                 lock.readLock().unlock();
-            } catch (IOException e) {
-                e.printStackTrace();
+            }
+
+            if (pendingDeletionClients.size() > 0) {
+                lock.writeLock().lock();
+                try {
+                    clients.removeAll(pendingDeletionClients);
+                } finally {
+                    lock.writeLock().unlock();
+                }
             }
         }
     }
 
     /**
+     * Send collection of objects to all clients (broadcast)
+     * @param objects objects to send
+     */
+    public void send(Object... objects) {
+        lock.readLock().lock();
+        try {
+            for (ClientHandler client : clients) {
+                try {
+                    client.send(objects);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    /**
      * Send collection of objects to a specific client
-     * @param elements collection to send
      * @param clientIndex index of specific client
+     * @param objects objects to send
      * @throws IOException when socket exception occurs
      */
-    public void sendToClient(Collection<Object> elements, int clientIndex) throws IOException {
+    public void sendToClient(int clientIndex, Object... objects) throws IOException {
         lock.readLock().lock();
-        ClientHandler selectedClient = clients.get(clientIndex);
-        selectedClient.send(elements);
-        lock.readLock().unlock();
+        try {
+            ClientHandler selectedClient = clients.get(clientIndex);
+            selectedClient.send(objects);
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     /**
@@ -94,9 +123,12 @@ public final class Server extends Thread {
     public List<Collection<Object>> receive() {
         List<Collection<Object>> clientsDataReceived = new LinkedList<>();
 
-        for (ClientHandler client : clients) {
-            lock.readLock().lock();
-            clientsDataReceived.add(client.receive());
+        lock.readLock().lock();
+        try {
+            for (ClientHandler client : clients) {
+                clientsDataReceived.add(client.receive());
+            }
+        } finally {
             lock.readLock().unlock();
         }
 
@@ -115,6 +147,7 @@ public final class Server extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         clients.forEach(ClientHandler::close);
     }
 
@@ -125,6 +158,23 @@ public final class Server extends Thread {
     public void closeClient(int clientIndex) {
         ClientHandler selectedClient = clients.get(clientIndex);
         selectedClient.close();
-        clients.remove(clientIndex);
+    }
+
+    @Override
+    public boolean isInterrupted() {
+        return interrupted;
+    }
+
+    /**
+     * Returns number of connected clients currently
+     * @return integer number of connected clients
+     */
+    public int nbConnectedClients() {
+        lock.readLock().lock();
+        try {
+            return clients.size();
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 }
