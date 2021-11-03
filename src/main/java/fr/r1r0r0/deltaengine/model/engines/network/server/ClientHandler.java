@@ -58,6 +58,7 @@ final class ClientHandler extends Thread {
      * Send data to bound client
      *
      * @param objects objects to send
+     * @throws IOException default exceptions thrown by Java libraries
      */
     public void send(Object... objects) throws IOException {
         for (Object obj : objects)

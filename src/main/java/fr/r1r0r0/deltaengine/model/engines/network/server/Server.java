@@ -25,6 +25,7 @@ public final class Server extends Thread {
      * Default constructor.
      * Declare a new server with specified port, and prepare to receive new clients
      * when server will be launched.
+     *
      * @param port server port
      * @throws IOException exception from ServerSocket when it occurs
      */
@@ -83,6 +84,7 @@ public final class Server extends Thread {
 
     /**
      * Send collection of objects to all clients (broadcast)
+     *
      * @param objects objects to send
      */
     public void send(Object... objects) {
@@ -102,8 +104,9 @@ public final class Server extends Thread {
 
     /**
      * Send collection of objects to a specific client
+     *
      * @param clientIndex index of specific client
-     * @param objects objects to send
+     * @param objects     objects to send
      * @throws IOException when socket exception occurs
      */
     public void sendToClient(int clientIndex, Object... objects) throws IOException {
@@ -118,6 +121,7 @@ public final class Server extends Thread {
 
     /**
      * Retrieve all data received by clients until call of this method.
+     *
      * @return List of collection of objects for each client
      */
     public List<Collection<Object>> receive() {
@@ -153,6 +157,7 @@ public final class Server extends Thread {
 
     /**
      * Close specific client from all connected clients and remove it from handled clients
+     *
      * @param clientIndex index of specific client
      */
     public void closeClient(int clientIndex) {
@@ -167,6 +172,7 @@ public final class Server extends Thread {
 
     /**
      * Returns number of connected clients currently
+     *
      * @return integer number of connected clients
      */
     public int nbConnectedClients() {
