@@ -13,6 +13,7 @@ import javafx.application.Platform;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Core of the engine, oversees all engines and use them to render final game. <br>
@@ -32,15 +33,29 @@ public final class KernelEngine {
     private final List<Event> globalEvents;
     private final List<HUDElement> hudElements;
     private Map currentMap;
-    private int frameRate;
     private boolean currentMapHalted;
     private volatile boolean initialized, started;
+    private int frameRate, optimalTime;
+    private volatile int currentFrameRate;
+    private final Thread frameRatePrinter;
 
     /**
      * Default constructor. Creates all sub-engines but not initializing them.
      */
     KernelEngine() {
-        frameRate = DEFAULT_FRAME_RATE;
+        setFrameRate(DEFAULT_FRAME_RATE);
+        currentFrameRate = 0;
+        frameRatePrinter = new Thread(() -> {
+            while (!Thread.interrupted()) {
+                System.out.println("FPS: " + currentFrameRate);
+                currentFrameRate = 0;
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ignored) {
+                    break;
+                }
+            }
+        });
 
         inputEngine = (InputEngine) Engines.INPUT_ENGINE.getInstance();
         iaEngine = (IAEngine) Engines.IA_ENGINE.getInstance();
@@ -85,36 +100,49 @@ public final class KernelEngine {
 
         started = true;
         Object lock = new Object();
-        try {
-            while (!Thread.interrupted()) {
-                if (!currentMapHalted) {
-                    for (Engines e : Engines.values()) {
-                        if (e == Engines.GRAPHICS_ENGINE) {
-                            Platform.runLater(() -> {
-                                graphicsEngine.run();
-                                synchronized (lock) {
-                                    lock.notifyAll();
-                                }
-                            });
-                        } else {
-                            getEngine(e).run();
-                        }
+        long updateStart, updateDuration, waitTime;
+        while (!Thread.interrupted()) {
+            updateStart = System.currentTimeMillis();
+            if (!currentMapHalted) {
+                for (Engines e : Engines.values()) {
+                    if (e == Engines.GRAPHICS_ENGINE) {
+                        Platform.runLater(() -> {
+                            graphicsEngine.run();
+                            synchronized (lock) {
+                                lock.notifyAll();
+                            }
+                        });
+                    } else {
+                        getEngine(e).run();
                     }
-                } else {
-                    inputEngine.run();
-                    Platform.runLater(graphicsEngine);
                 }
-
-                Thread.sleep(1000 / frameRate);
-                synchronized (lock) {
-                    lock.wait(); // To wait graphicsEngine
-                }
+            } else {
+                inputEngine.run();
+                Platform.runLater(graphicsEngine);
             }
-        } catch (InterruptedException ignored) {
-            // ignored
-        } finally {
-            started = false;
+
+            try {
+                synchronized (lock) {
+                    lock.wait();
+                }
+            } catch (InterruptedException e) {
+                break;
+            }
+
+            updateDuration = System.currentTimeMillis() - updateStart;
+
+            try {
+                currentFrameRate++;
+                waitTime = optimalTime - updateDuration;
+                if (waitTime > 0)
+                    Thread.sleep(waitTime);
+                // else we're late!
+            } catch (InterruptedException e) {
+                break;
+            }
         }
+
+        started = false;
     }
 
     /**
@@ -135,6 +163,19 @@ public final class KernelEngine {
      */
     public void setFrameRate(int frameRate) {
         this.frameRate = frameRate;
+        this.optimalTime = 1000 / frameRate;
+    }
+
+    /**
+     * Enable or disable printing current FrameRate in standard output.
+     *
+     * @param enabled boolean true to enable it, false to disable it
+     */
+    public void printFrameRate(boolean enabled) {
+        if (enabled)
+            frameRatePrinter.start();
+        else
+            frameRatePrinter.interrupt();
     }
 
     /**

@@ -9,14 +9,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         KernelEngine deltaEngine = DeltaEngine.launch();
-
-        SoundEngine soundEngine = deltaEngine.getSoundEngine();
-        Sound siren = new Sound("siren", "C:\\Users\\Yohan\\Desktop\\a.wav");
-
-        soundEngine.addSound(siren);
-        soundEngine.setLoop("siren", true);
-        soundEngine.setVolume("siren", 1);
-        soundEngine.setSpeed("siren", 1.05);
-        soundEngine.play("siren");
+        deltaEngine.printFrameRate(true);
+        deltaEngine.setFrameRate(100_000);
     }
 }
