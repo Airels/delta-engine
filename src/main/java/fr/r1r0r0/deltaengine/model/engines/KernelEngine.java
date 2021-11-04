@@ -8,6 +8,7 @@ import fr.r1r0r0.deltaengine.model.elements.Entity;
 import fr.r1r0r0.deltaengine.model.elements.HUDElement;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
+import fr.r1r0r0.deltaengine.model.events.KeyEvent;
 import javafx.application.Platform;
 
 import java.util.ArrayList;
@@ -285,9 +286,9 @@ public final class KernelEngine {
      * If previous input was bound, it will be overridden
      *
      * @param key   to bind
-     * @param event triggered when key is pressed
+     * @param event event to bind on actions
      */
-    public void setInput(Key key, Event event) {
+    public void setInput(Key key, KeyEvent event) {
         inputEngine.setInput(key, event);
     }
 

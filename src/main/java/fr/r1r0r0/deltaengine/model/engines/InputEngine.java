@@ -1,7 +1,7 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
-import fr.r1r0r0.deltaengine.model.events.Event;
+import fr.r1r0r0.deltaengine.model.events.KeyEvent;
 
 class InputEngine implements Engine {
 
@@ -19,7 +19,7 @@ class InputEngine implements Engine {
 
     }
 
-    public void setInput(Key key, Event event) {
+    public void setInput(Key key, KeyEvent event) {
 
     }
 }
