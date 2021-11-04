@@ -31,4 +31,10 @@ public class Coordinates {
     public double getY() {
         return y;
     }
+
+    public Coordinates getNextCoordinates (Direction direction, double delta) {
+        Coordinates other = direction.getCoordinates();
+        return new Coordinates(x + other.x * delta,y + other.y * delta);
+    }
+
 }
