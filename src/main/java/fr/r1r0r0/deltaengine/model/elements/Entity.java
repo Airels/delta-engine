@@ -3,14 +3,13 @@ package fr.r1r0r0.deltaengine.model.elements;
 import fr.r1r0r0.deltaengine.exceptions.IAAlreadyAttachedException;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Direction;
-import fr.r1r0r0.deltaengine.model.IA;
-import fr.r1r0r0.deltaengine.model.elements.Element;
+import fr.r1r0r0.deltaengine.model.AI;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 
 /**
  * An entity of the engine. An entity is detached from cases, and can freely move on them.
  * Every object of the game could be an entity.
- * An IA could also be attached to an Entity.
+ * An AI could also be attached to an Entity.
  */
 public class Entity implements Element {
 
@@ -19,7 +18,7 @@ public class Entity implements Element {
     private Coordinates coords;
     private Direction direction;
     private double speed;
-    private IA attachedIA;
+    private AI attachedIA;
 
     /**
      * Default constructor. Defines all attributes to an entity.
@@ -71,11 +70,11 @@ public class Entity implements Element {
     }
 
     /**
-     * IA to attach to the entity. Can be called once. Once IA is attached, it is impossible to remove or change it.
-     * @param ia IA to attach to the entity
-     * @throws IAAlreadyAttachedException if an IA is already attached to the entity
+     * AI to attach to the entity. Can be called once. Once AI is attached, it is impossible to remove or change it.
+     * @param ia AI to attach to the entity
+     * @throws IAAlreadyAttachedException if an AI is already attached to the entity
      */
-    public final void setIA(IA ia) throws IAAlreadyAttachedException {
+    public final void setIA(AI ia) throws IAAlreadyAttachedException {
         if (attachedIA != null)
             throw new IAAlreadyAttachedException(this);
 
@@ -84,10 +83,10 @@ public class Entity implements Element {
     }
 
     /**
-     * Get attached IA of the entity
-     * @return attached IA
+     * Get attached AI of the entity
+     * @return attached AI
      */
-    public final IA getIA() {
+    public final AI getIA() {
         return attachedIA;
     }
 
