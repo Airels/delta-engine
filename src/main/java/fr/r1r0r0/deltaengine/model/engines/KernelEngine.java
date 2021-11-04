@@ -13,7 +13,6 @@ import javafx.application.Platform;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Core of the engine, oversees all engines and use them to render final game. <br>
@@ -23,7 +22,7 @@ public final class KernelEngine {
 
     public final static int DEFAULT_FRAME_RATE = 60;
     private final InputEngine inputEngine;
-    private final IAEngine iaEngine;
+    private final AIEngine iaEngine;
     private final PhysicsEngine physicsEngine;
     private final EventEngine eventEngine;
     private final GraphicsEngine graphicsEngine;
@@ -58,7 +57,7 @@ public final class KernelEngine {
         });
 
         inputEngine = (InputEngine) Engines.INPUT_ENGINE.getInstance();
-        iaEngine = (IAEngine) Engines.IA_ENGINE.getInstance();
+        iaEngine = (AIEngine) Engines.AI_ENGINE.getInstance();
         physicsEngine = (PhysicsEngine) Engines.PHYSICS_ENGINE.getInstance();
         eventEngine = (EventEngine) Engines.EVENT_ENGINE.getInstance();
         graphicsEngine = (GraphicsEngine) Engines.GRAPHICS_ENGINE.getInstance();
@@ -361,7 +360,7 @@ public final class KernelEngine {
     }
 
     /**
-     * Loads given map, loading associated elements, IA, and events
+     * Loads given map, loading associated elements, AI, and events
      *
      * @param map the map to load
      */
@@ -382,7 +381,7 @@ public final class KernelEngine {
         for (Entity mapEntity : mapEntities) {
             graphicsEngine.addElement(mapEntity);
             if (mapEntity.getIA() != null)
-                iaEngine.addIA(mapEntity.getIA());
+                iaEngine.addAI(mapEntity.getIA());
         }
 
         for (Event event : mapEvents) {
@@ -393,7 +392,7 @@ public final class KernelEngine {
     }
 
     /**
-     * Unload current map, loading associated elements, IA, and events
+     * Unload current map, loading associated elements, AI, and events
      */
     private void unloadMap() {
         List<Case> mapCases = currentMap.getCases();
@@ -410,7 +409,7 @@ public final class KernelEngine {
         for (Entity entity : mapEntities) {
             graphicsEngine.removeElement(entity);
             if (entity.getIA() != null)
-                iaEngine.removeIA(entity.getIA());
+                iaEngine.removeAI(entity.getIA());
         }
 
         for (Event mapEvent : mapEvents) {

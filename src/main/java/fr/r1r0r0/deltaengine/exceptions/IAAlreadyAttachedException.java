@@ -9,6 +9,6 @@ public class IAAlreadyAttachedException extends Exception {
     }
 
     public IAAlreadyAttachedException(Entity entity) {
-        this(entity.getName() + " already have attached IA");
+        this(entity.getName() + " already have attached AI");
     }
 }
