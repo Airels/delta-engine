@@ -1,13 +1,13 @@
 package fr.r1r0r0.deltaengine.model;
 
 import fr.r1r0r0.deltaengine.exceptions.MapCaseCoordinateStackingException;
-import fr.r1r0r0.deltaengine.exceptions.MapEntityDuplicateException;
 import fr.r1r0r0.deltaengine.exceptions.MapEntityNameStackingException;
 import fr.r1r0r0.deltaengine.model.elements.Case;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
 import fr.r1r0r0.deltaengine.model.events.Event;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,9 +16,7 @@ public final class Map {
     private final String name;
     private final int width;
     private final int height;
-    private final List<Case> casesList; //TODO passer par le map.values
     private final java.util.Map<Coordinates,Case> cases;
-    private final List<Entity> entitiesList;
     private final java.util.Map<String,Entity> entities;
     private final List<Event> events;
 
@@ -27,9 +25,7 @@ public final class Map {
         this.width = width;
         this.height = height;
         cases = new HashMap<>();
-        casesList = new ArrayList<>();
         entities = new HashMap<>();
-        entitiesList = new ArrayList<>();
         events = new ArrayList<>();
     }
 
@@ -56,12 +52,9 @@ public final class Map {
         return cases.get(new Coordinates(x,y));
     }
 
-    public void addEntity (Entity entity) throws MapEntityDuplicateException, MapEntityNameStackingException {
-        if (entitiesList.contains(entity))
-            throw new MapEntityDuplicateException(entity);
-        if (entities.containsKey(entity.getName()))
+    public void addEntity (Entity entity) throws MapEntityNameStackingException {
+        if (entities.containsKey(entity.getName()) && entities.get(entity.getName()) != entity)
             throw new MapEntityNameStackingException(entities.get(entity.getName()),entity);
-        entitiesList.add(entity);
         entities.put(entity.getName(),entity);
     }
 
@@ -70,12 +63,10 @@ public final class Map {
     }
 
     public void removeEntity (Entity entity) {
-        entitiesList.remove(entity);
         entities.remove(entity.getName());
     }
 
     public void clearEntities () {
-        entitiesList.clear();
         entities.clear();
     }
 
@@ -91,12 +82,12 @@ public final class Map {
         events.clear();
     }
 
-    public List<Case> getCases () {
-        return casesList;
+    public Collection<Case> getCases () {
+        return cases.values();
     }
 
-    public List<Entity> getEntities () {
-        return entitiesList;
+    public Collection<Entity> getEntities () {
+        return entities.values();
     }
 
     public List<Event> getEvents () {

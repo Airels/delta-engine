@@ -11,6 +11,7 @@ import fr.r1r0r0.deltaengine.model.events.Event;
 import javafx.application.Platform;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -372,12 +373,12 @@ public final class KernelEngine {
         int width = map.getWidth(),
                 height = map.getHeight();
 
-        List<Case> mapCases = map.getCases();
+        Collection<Case> mapCases = map.getCases();
         List<Entity> mapEntities = map.getEntities();
         List<Event> mapEvents = map.getEvents();
 
         physicsEngine.setMap(map);
-        graphicsEngine.setCases(mapCases, width, height);
+        graphicsEngine.setCases(new ArrayList<>(mapCases), width, height);
 
         for (Entity mapEntity : mapEntities) {
             graphicsEngine.addElement(mapEntity);
