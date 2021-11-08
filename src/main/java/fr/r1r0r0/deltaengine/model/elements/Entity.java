@@ -6,8 +6,13 @@ import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.Direction;
 import fr.r1r0r0.deltaengine.model.IA;
 import fr.r1r0r0.deltaengine.model.elements.Element;
+import fr.r1r0r0.deltaengine.model.events.Event;
+import fr.r1r0r0.deltaengine.model.events.VoidEvent;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 import javafx.geometry.Dimension2D;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An entity of the engine. An entity is detached from cases, and can freely move on them.
@@ -17,12 +22,13 @@ import javafx.geometry.Dimension2D;
 public class Entity implements Element {
 
     private Sprite sprite;
-    private String name;
+    private final String name;
     private Coordinates coords;
     private Direction direction;
     private double speed;
     private IA attachedIA;
-    private Dimension dimension;
+    private final Dimension dimension;
+    private final Map<Entity, Event> collisionEvents;
 
     /**
      * Default constructor. Defines all attributes to an entity.
@@ -38,6 +44,7 @@ public class Entity implements Element {
         speed = 0;
         attachedIA = null;
         this.dimension = dimension;
+        this.collisionEvents = new HashMap<>();
     }
 
     /**
@@ -148,5 +155,22 @@ public class Entity implements Element {
     @Override
     public String getName() {
         return name;
+    }
+
+    public void setCollisionEvent(Entity entity, Event event) {
+        collisionEvents.put(entity, event);
+    }
+
+    public void clearCollisionEvent(Entity entity) {
+        collisionEvents.remove(entity);
+    }
+
+    public void clearAllCollisionEvents() {
+        collisionEvents.clear();
+    }
+
+    public Event getCollisionEvent(Entity entity) {
+        Event event = collisionEvents.get(entity);
+        return (event == null) ? new VoidEvent() : event;
     }
 }
