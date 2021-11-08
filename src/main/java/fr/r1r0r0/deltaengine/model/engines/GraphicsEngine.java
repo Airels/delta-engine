@@ -1,6 +1,7 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
+import fr.r1r0r0.deltaengine.model.Map;
 import fr.r1r0r0.deltaengine.model.elements.Case;
 import fr.r1r0r0.deltaengine.model.elements.Element;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
@@ -18,9 +19,10 @@ import java.util.NoSuchElementException;
 /**
  * Graphic engine takes care of maintaining the view updated
  */
-class GraphicsEngine implements Engine {
+final class GraphicsEngine implements Engine {
 
     private ArrayList<Element> elements;
+    private final int CASE_SIZE = 40;
     private Stage stage;
     private Pane pane;
     private Scene scene;
@@ -90,6 +92,10 @@ class GraphicsEngine implements Engine {
         else if(n.isVisible())n.setVisible(false);
     }
 
+    public void setMap(Map map) {
+        setCases(map.getCases(), map.getWidth(), map.getHeight());
+    }
+
     /**
      * set up the cases matrix
      * @param cases to set up
@@ -97,13 +103,17 @@ class GraphicsEngine implements Engine {
      * @param height ??
      */
     public void setCases(List<Case> cases, int width, int height) {
-        for (Element e:cases){
-            //TODO mettre la bonne taille des cases (width != height ?)
-            e.getSprite().getNode().resize(1,1);
-            addElement(e);
+        for (int i = 0; i < height ; i++){
+            for (int j = 0; j < width; j++) {
+                Case e = cases.get(i*width+j);
+                e.getSprite().getNode().resize(CASE_SIZE,CASE_SIZE);
+                e.getSprite().getNode().setLayoutX(i*CASE_SIZE);
+                e.getSprite().getNode().setLayoutY(j*CASE_SIZE);
+                addElement(e);
+            }
         }
-        stage.setWidth(width);
-        stage.setHeight(height);
+        stage.setWidth(width*CASE_SIZE);
+        stage.setHeight(height*CASE_SIZE);
     }
 
     /**
