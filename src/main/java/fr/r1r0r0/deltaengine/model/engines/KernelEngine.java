@@ -375,11 +375,11 @@ public final class KernelEngine {
                 height = map.getHeight();
 
         Collection<Case> mapCases = map.getCases();
-        List<Entity> mapEntities = map.getEntities();
-        List<Event> mapEvents = map.getEvents();
+        Collection<Entity> mapEntities = map.getEntities();
+        Collection<Event> mapEvents = map.getEvents();
 
         physicsEngine.setMap(map);
-        graphicsEngine.setCases(new ArrayList<>(mapCases), width, height);
+        graphicsEngine.setMap(map);
 
         for (Entity mapEntity : mapEntities) {
             graphicsEngine.addElement(mapEntity);
@@ -398,9 +398,9 @@ public final class KernelEngine {
      * Unload current map, loading associated elements, IA, and events
      */
     private void unloadMap() {
-        List<Case> mapCases = currentMap.getCases();
-        List<Entity> mapEntities = currentMap.getEntities();
-        List<Event> mapEvents = currentMap.getEvents();
+        Collection<Case> mapCases = currentMap.getCases();
+        Collection<Entity> mapEntities = currentMap.getEntities();
+        Collection<Event> mapEvents = currentMap.getEvents();
 
         physicsEngine.clearMap();
 
