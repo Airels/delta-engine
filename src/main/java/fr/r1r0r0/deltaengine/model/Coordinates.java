@@ -31,4 +31,17 @@ public class Coordinates {
     public double getY() {
         return y;
     }
+
+    /**
+     * Calc and returns the next coordinates matching to the current coordinate,
+     * a direction, and a delta of movement
+     * @param direction the direction where the movement will be applied
+     * @param delta the delta of movement
+     * @return the next coordinate
+     */
+    public Coordinates getNextCoordinates (Direction direction, double delta) {
+        Coordinates other = direction.getCoordinates();
+        return new Coordinates(x + other.x * delta,y + other.y * delta);
+    }
+
 }
