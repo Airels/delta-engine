@@ -5,15 +5,13 @@ import fr.r1r0r0.deltaengine.exceptions.MapEntityNameStackingException;
 import fr.r1r0r0.deltaengine.exceptions.MapOutOfBoundException;
 import fr.r1r0r0.deltaengine.model.elements.Case;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
-import fr.r1r0r0.deltaengine.model.elements.basic_cases.Void;
+import fr.r1r0r0.deltaengine.model.elements.basic_cases.VoidCase;
 import fr.r1r0r0.deltaengine.model.events.Event;
 
 import java.util.*;
 
 /**
  * Map that represent the area where entities move
- * //TODO: rename le setCase vers addCase ?
- * //TODO: rename la classe case Void vers VoidCase
  */
 public final class Map {
 
@@ -71,7 +69,7 @@ public final class Map {
      * @throws MapOutOfBoundException throw if a case with coordinate out of the area define by the
      * map is add
      */
-    public void setCase (Case c) throws MapCaseCoordinateStackingException, MapOutOfBoundException {
+    public void addCase (Case c) throws MapCaseCoordinateStackingException, MapOutOfBoundException {
         Coordinates coordinates = c.getCoordinates();
         if (cases.containsKey(coordinates) && cases.get(coordinates) != c)
             throw new MapCaseCoordinateStackingException(cases.get(coordinates),c);
@@ -86,12 +84,12 @@ public final class Map {
      * Return the case in the map with coordinate (x,y)
      * @param x the x value
      * @param y the y value
-     * @return the case in the map with coordinate (x,y),or a new Void(x,y)
+     * @return the case in the map with coordinate (x,y),or a new VoidCase(x,y)
      * if map does not contain case with this coordinate
      */
     public Case getCase (int x, int y) {
         Case c = cases.get(new Coordinates(x,y));
-        return (c == null) ? new Void(x,y) : c;
+        return (c == null) ? new VoidCase(x,y) : c;
     }
 
     /**
