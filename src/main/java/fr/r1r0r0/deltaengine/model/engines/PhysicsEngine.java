@@ -9,6 +9,8 @@ import fr.r1r0r0.deltaengine.model.elements.Entity;
 
 /**
  * A physical engine
+ * TODO: voir pour faire en sorte que une limite detemps maximum soit defini
+ * afin de limiter les problemes de freez-rush
  */
 class PhysicsEngine implements Engine {
 
