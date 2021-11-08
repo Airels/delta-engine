@@ -20,7 +20,7 @@ public final class Map {
     private final int height;
     private final java.util.Map<Coordinates,Case> cases;
     private final java.util.Map<String,Entity> entities;
-    private final LinkedHashSet<Event> events;
+    private final Set<Event> events;
 
     /**
      * Constructor
