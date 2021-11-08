@@ -1,5 +1,7 @@
 package fr.r1r0r0.deltaengine.model;
 
+import java.util.Objects;
+
 /**
  * Coordinates of a point, or object, coded by two doubles for 2D position.
  */
@@ -44,4 +46,16 @@ public final class Coordinates {
         return new Coordinates(x + other.x * delta,y + other.y * delta);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinates that = (Coordinates) o;
+        return Double.compare(that.x, x) == 0 && Double.compare(that.y, y) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
 }

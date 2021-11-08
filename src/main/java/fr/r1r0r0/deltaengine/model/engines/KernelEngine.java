@@ -379,10 +379,6 @@ public final class KernelEngine {
         if (currentMap != null)
             unloadMap();
 
-        int width = map.getWidth(),
-                height = map.getHeight();
-
-        Collection<Case> mapCases = map.getCases();
         Collection<Entity> mapEntities = map.getEntities();
         Collection<Event> mapEvents = map.getEvents();
 
