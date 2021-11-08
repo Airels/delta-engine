@@ -1,11 +1,15 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
-import fr.r1r0r0.deltaengine.model.events.KeyEvent;
+import fr.r1r0r0.deltaengine.model.events.InputEvent;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 class InputEngine implements Engine {
 
-    InputEngine() {
+    private EventHandler<KeyEvent> handler;
+    InputEngine(Stage stage) {
 
     }
 
@@ -19,7 +23,9 @@ class InputEngine implements Engine {
 
     }
 
-    public void setInput(Key key, KeyEvent event) {
+    public void setInput(Key key, InputEvent event) {
+
+        KeyEvent keyEvent = new KeyEvent(key.name(),);
 
     }
 }
