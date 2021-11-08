@@ -8,6 +8,9 @@ import fr.r1r0r0.deltaengine.model.elements.Entity;
 
 /**
  * A physical engine
+ * TODO: les marge d erreur deplacement pour les recentrer
+ * TODO: prendre en compte les dimensions de l entite pour le deplacement
+ * TODO: le points est topleft et prendre en compte les dimensions
  */
 class PhysicsEngine implements Engine {
 
@@ -45,6 +48,17 @@ class PhysicsEngine implements Engine {
             for (Entity entity : map.getEntities()) {
                 updateCoordinate(entity,deltaTime);
             }
+            for (Entity source : map.getEntities()) {
+                for (Entity target : map.getEntities()) {
+                    checkCollision(source,target);
+                }
+            }
+        }
+    }
+
+    private void checkCollision (Entity source, Entity target) {
+        if (source.testCollide(source)) {
+            source.getCollisionEvent(target).checkEvent();
         }
     }
 
