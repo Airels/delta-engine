@@ -4,7 +4,7 @@ package fr.r1r0r0.deltaengine.model.events;
  * Special event used to bind actions on Keyboard events.
  * Can bind two triggers called when a specific key is pressed or released.
  */
-public final class KeyEvent {
+public final class InputEvent {
 
     private final Trigger pressTrigger, releaseTrigger;
 
@@ -13,7 +13,7 @@ public final class KeyEvent {
      * @param pressTrigger trigger when key is pressed
      * @param releaseTrigger trigger when key is released
      */
-    public KeyEvent(Trigger pressTrigger, Trigger releaseTrigger) {
+    public InputEvent(Trigger pressTrigger, Trigger releaseTrigger) {
         this.pressTrigger = pressTrigger;
         this.releaseTrigger = releaseTrigger;
     }

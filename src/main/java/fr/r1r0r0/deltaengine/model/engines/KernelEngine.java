@@ -8,14 +8,13 @@ import fr.r1r0r0.deltaengine.model.elements.Entity;
 import fr.r1r0r0.deltaengine.model.elements.HUDElement;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
-import fr.r1r0r0.deltaengine.model.events.KeyEvent;
+import fr.r1r0r0.deltaengine.model.events.InputEvent;
 import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Core of the engine, oversees all engines and use them to render final game. <br>
@@ -289,7 +288,7 @@ public final class KernelEngine {
      * @param key   to bind
      * @param event event to bind on actions
      */
-    public void setInput(Key key, KeyEvent event) {
+    public void setInput(Key key, InputEvent event) {
         inputEngine.setInput(key, event);
     }
 
