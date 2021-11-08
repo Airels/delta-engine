@@ -17,7 +17,7 @@ public enum Key {
         jfxKey = key;
     }
 
-    KeyCode getJFXInput() {
+    public KeyCode getJFXInput() {
         return jfxKey;
     }
 }

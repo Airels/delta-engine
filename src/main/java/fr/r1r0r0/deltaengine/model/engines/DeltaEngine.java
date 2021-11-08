@@ -27,7 +27,7 @@ public final class DeltaEngine extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         kernelEngine = new KernelEngine();
-        kernelEngine.init();
+        kernelEngine.init(primaryStage);
 
         synchronized (DeltaEngine.class) {
             DeltaEngine.class.notifyAll();

@@ -1,5 +1,6 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
+import fr.r1r0r0.deltaengine.exceptions.InputKeyStackingError;
 import fr.r1r0r0.deltaengine.exceptions.MapAlreadyExistException;
 import fr.r1r0r0.deltaengine.exceptions.MapDoesNotExistException;
 import fr.r1r0r0.deltaengine.model.Map;
@@ -10,6 +11,7 @@ import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
 import fr.r1r0r0.deltaengine.model.events.InputEvent;
 import javafx.application.Platform;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,9 +80,12 @@ public final class KernelEngine {
 
     /**
      * Initializes Kernel Engine and its components. If kernel was initialized before, then init will be skipped.
+     * @param stage Given stage by JavaFX
      */
-    void init() {
+    void init(Stage stage) {
         if (initialized) return;
+
+        inputEngine.setStage(stage);
 
         for (Engines e : Engines.values()) {
             getEngine(e).init();
@@ -288,8 +293,9 @@ public final class KernelEngine {
      *
      * @param key   to bind
      * @param event event to bind on actions
+     * @throws InputKeyStackingError if key is already bound
      */
-    public void setInput(Key key, InputEvent event) {
+    public void setInput(Key key, InputEvent event) throws InputKeyStackingError {
         inputEngine.setInput(key, event);
     }
 
@@ -299,7 +305,7 @@ public final class KernelEngine {
      * @param key to clear
      */
     public void clearInput(Key key) {
-        inputEngine.setInput(key, null);
+        inputEngine.clearKey(key);
     }
 
     /**
