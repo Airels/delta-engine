@@ -14,6 +14,15 @@ import fr.r1r0r0.deltaengine.model.elements.Entity;
  */
 class PhysicsEngine implements Engine {
 
+    /**
+     * Explication de la mise en place des collisions entre une source et une target :
+     * la source est une entitite qui posssede une liste de points de collision
+     * qui par defaut correspondent aux points :
+     * topleft, topright, botleft, botright, center, centerleft, centerright, centertop, centerbot
+     * puis on va tester l appartenance d un de ces points dans la hitbox de la cible
+     * qui correspond a un minX maxX minY maxY
+     */
+
     private Map map;
     private long previousRunTime;
     private long maxRunDelta;
