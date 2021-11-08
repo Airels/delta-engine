@@ -7,13 +7,18 @@ public final class Rectangle extends Shape {
     private double width, height;
     private final javafx.scene.shape.Rectangle fxRectangle;
 
-    public Rectangle(double width, double height) {
+    public Rectangle(Color color) {
+        this(0, 0, color);
+    }
+
+    public Rectangle(double width, double height, Color color) {
         this.width = width;
         this.height = height;
         this.fxRectangle = new javafx.scene.shape.Rectangle();
 
         fxRectangle.setWidth(width);
         fxRectangle.setHeight(height);
+        fxRectangle.setFill(color);
     }
 
     public void setColor(Color color){
