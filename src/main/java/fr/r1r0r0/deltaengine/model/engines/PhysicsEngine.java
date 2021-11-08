@@ -8,13 +8,12 @@ import fr.r1r0r0.deltaengine.model.elements.Entity;
 
 /**
  * A physical engine
- * TODO: voir pour faire en sorte que une limite detemps maximum soit defini
- * afin de limiter les problemes de freez-rush
  */
 class PhysicsEngine implements Engine {
 
     private Map map;
     private long previousRunTime;
+    private long maxRunDelta;
 
     /**
      * Constructor
@@ -22,6 +21,7 @@ class PhysicsEngine implements Engine {
     public PhysicsEngine () {
         map = null;
         previousRunTime = System.currentTimeMillis();
+        maxRunDelta = 0;
     }
 
     /**
@@ -39,6 +39,7 @@ class PhysicsEngine implements Engine {
     public void run() {
         long currentRunTime = System.currentTimeMillis();
         long deltaTime = previousRunTime - currentRunTime;
+        deltaTime = Math.min(deltaTime, maxRunDelta);
         previousRunTime = currentRunTime;
         if (map != null) {
             for (Entity entity : map.getEntities()) {
@@ -85,4 +86,7 @@ class PhysicsEngine implements Engine {
         map = null;
     }
 
+    public void setMaxRunDelta(int fps) {
+        maxRunDelta = 1000 / fps;
+    }
 }

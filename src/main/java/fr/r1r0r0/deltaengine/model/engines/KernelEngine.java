@@ -166,6 +166,7 @@ public final class KernelEngine {
     public void setFrameRate(int frameRate) {
         this.frameRate = frameRate;
         this.optimalTime = 1000 / frameRate;
+        this.physicsEngine.setMaxRunDelta(this.frameRate);
     }
 
     /**
