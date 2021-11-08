@@ -1,7 +1,9 @@
 package fr.r1r0r0.deltaengine.model.elements;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
+import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
+import javafx.geometry.Dimension2D;
 
 /**
  * A Case in a grid. Atomic element of a Map, used to render background textures.
@@ -23,6 +25,11 @@ public class Case implements Element {
         name = String.format("Case(%s;%s)", coords.getX(), coords.getY());
     }
 
+
+    @Override
+    public final Dimension getDimension() {
+        return new Dimension(1, 1);
+    }
 
     @Override
     public Sprite getSprite() {

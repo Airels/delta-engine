@@ -1,13 +1,17 @@
 package fr.r1r0r0.deltaengine.model.elements;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
+import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
+import javafx.geometry.Dimension2D;
 
 /**
  * A graphical element. Could be a Case, an Entity or anything graphical.
  * Possess coordinates, a Sprite and a Name.
  */
 public interface Element {
+
+    Dimension getDimension();
 
     /**
      * Returns sprite of the element

@@ -2,10 +2,12 @@ package fr.r1r0r0.deltaengine.model.elements;
 
 import fr.r1r0r0.deltaengine.exceptions.IAAlreadyAttachedException;
 import fr.r1r0r0.deltaengine.model.Coordinates;
+import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.Direction;
 import fr.r1r0r0.deltaengine.model.IA;
 import fr.r1r0r0.deltaengine.model.elements.Element;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
+import javafx.geometry.Dimension2D;
 
 /**
  * An entity of the engine. An entity is detached from cases, and can freely move on them.
@@ -20,6 +22,7 @@ public class Entity implements Element {
     private Direction direction;
     private double speed;
     private IA attachedIA;
+    private Dimension dimension;
 
     /**
      * Default constructor. Defines all attributes to an entity.
@@ -27,13 +30,14 @@ public class Entity implements Element {
      * @param coords coordinates of the entity
      * @param sprite sprite of the entity
      */
-    public Entity(String name, Coordinates coords, Sprite sprite) {
+    public Entity(String name, Coordinates coords, Sprite sprite, Dimension dimension) {
         this.name = name;
         this.coords = coords;
         this.sprite = sprite;
         direction = Direction.IDLE;
         speed = 0;
         attachedIA = null;
+        this.dimension = dimension;
     }
 
     /**
@@ -89,6 +93,11 @@ public class Entity implements Element {
      */
     public final IA getIA() {
         return attachedIA;
+    }
+
+    @Override
+    public Dimension getDimension() {
+        return dimension;
     }
 
     /**
