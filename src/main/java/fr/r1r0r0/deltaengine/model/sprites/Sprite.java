@@ -5,6 +5,10 @@ import javafx.scene.Node;
 public interface Sprite{
     Node getNode();
 
-    void setZOrder(int z);
-    int getZOrder();
+    default void setZOrder(double z){
+        this.getNode().setViewOrder(z);
+    };
+    default double getZOrder(){
+        return this.getNode().getViewOrder();
+    }
 }
