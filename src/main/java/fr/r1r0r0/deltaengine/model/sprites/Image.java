@@ -10,21 +10,16 @@ import java.io.FileNotFoundException;
 public final class Image implements Sprite {
 
     private String path;
+    private ImageView imageView;
 
-    public Image(String path) {
+    public Image(String path) throws FileNotFoundException {
         this.path = path;
+        imageView = new ImageView(new javafx.scene.image.Image(new FileInputStream(path)));
     }
 
     @Override
     public Node getNode() {
-        try {
-            javafx.scene.image.Image img = new javafx.scene.image.Image(new FileInputStream(path));
-
-            return new ImageView(img);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return imageView;
     }
 }
 
