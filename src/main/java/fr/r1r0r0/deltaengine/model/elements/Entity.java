@@ -45,6 +45,7 @@ public class Entity implements Element {
         attachedIA = null;
         this.dimension = dimension;
         this.collisionEvents = new HashMap<>();
+        sprite.setZOrder(100);
     }
 
     /**

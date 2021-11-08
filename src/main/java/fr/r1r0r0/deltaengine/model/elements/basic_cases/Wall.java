@@ -13,7 +13,7 @@ public class Wall extends UncrossableCase {
     public Wall(int x, int y) {
         super(x, y, () -> {
             Rectangle rectangle = new Rectangle();
-            rectangle.setFill(Color.GRAY); // TODO set default wall sprite
+            rectangle.setFill(Color.GRAY);
             return rectangle;
         });
     }

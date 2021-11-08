@@ -21,6 +21,7 @@ public class HUDElement implements Element {
         this.coordinates = coordinates;
         this.sprite = sprite;
         this.dimension = dimension;
+        sprite.setZOrder(0);
     }
 
     @Override

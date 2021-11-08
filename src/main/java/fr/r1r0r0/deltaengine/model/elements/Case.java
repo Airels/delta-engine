@@ -23,6 +23,7 @@ public class Case implements Element {
         this.coords = new Coordinates(x, y);
         this.sprite = sprite;
         name = String.format("Case(%s;%s)", coords.getX(), coords.getY());
+        sprite.setZOrder(1000);
     }
 
 
