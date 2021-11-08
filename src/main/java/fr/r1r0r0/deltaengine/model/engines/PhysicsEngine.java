@@ -3,7 +3,6 @@ package fr.r1r0r0.deltaengine.model.engines;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Direction;
 import fr.r1r0r0.deltaengine.model.Map;
-import fr.r1r0r0.deltaengine.model.elements.Case;
 import fr.r1r0r0.deltaengine.model.elements.CrossableVisitor;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
 
@@ -68,8 +67,7 @@ class PhysicsEngine implements Engine {
     private boolean isValidCoordinates (Coordinates coordinates) {
         int x = (coordinates.getX() >= 0) ? (int) coordinates.getX() : ((int) coordinates.getX() - 1);
         int y = (coordinates.getY() >= 0) ? (int) coordinates.getY() : ((int) coordinates.getY() - 1);
-        Case nextCase = map.getCase(x,y);
-        return nextCase != null && CrossableVisitor.isCaseCrossable(nextCase);
+        return CrossableVisitor.isCaseCrossable(map.getCase(x,y));
     }
 
     /**
