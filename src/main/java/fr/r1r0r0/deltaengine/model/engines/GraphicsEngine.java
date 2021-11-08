@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -99,18 +100,15 @@ final class GraphicsEngine implements Engine {
     /**
      * set up the cases matrix
      * @param cases to set up
-     * @param width ?? TODO
-     * @param height ??
+     * @param width is the number of case used in the map's width
+     * @param height is the number of case used in the map's height
      */
-    public void setCases(List<Case> cases, int width, int height) {
-        for (int i = 0; i < height ; i++){
-            for (int j = 0; j < width; j++) {
-                Case e = cases.get(i*width+j);
-                e.getSprite().getNode().resize(CASE_SIZE,CASE_SIZE);
-                e.getSprite().getNode().setLayoutX(i*CASE_SIZE);
-                e.getSprite().getNode().setLayoutY(j*CASE_SIZE);
-                addElement(e);
-            }
+    public void setCases(Collection<Case> cases, int width, int height) {
+        for(Case c:cases){
+            c.getSprite().getNode().resize(CASE_SIZE,CASE_SIZE);
+            c.getSprite().getNode().setLayoutX(c.getCoordinates().getX()*CASE_SIZE);
+            c.getSprite().getNode().setLayoutY(c.getCoordinates().getY()*CASE_SIZE);
+            addElement(c);
         }
         stage.setWidth(width*CASE_SIZE);
         stage.setHeight(height*CASE_SIZE);
