@@ -46,7 +46,6 @@ public final class KernelEngine {
      * Default constructor. Creates all sub-engines but not initializing them.
      */
     KernelEngine() {
-        setFrameRate(DEFAULT_FRAME_RATE);
         currentFrameRate = 0;
         frameRatePrinter = new Thread(() -> {
             while (!Thread.interrupted()) {
@@ -76,6 +75,8 @@ public final class KernelEngine {
 
         initialized = false;
         started = false;
+
+        setFrameRate(DEFAULT_FRAME_RATE);
     }
 
     /**
