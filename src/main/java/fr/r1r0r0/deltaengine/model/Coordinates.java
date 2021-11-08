@@ -3,7 +3,7 @@ package fr.r1r0r0.deltaengine.model;
 /**
  * Coordinates of a point, or object, coded by two doubles for 2D position.
  */
-public class Coordinates {
+public final class Coordinates {
     private double x, y;
 
     /**
