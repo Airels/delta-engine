@@ -87,6 +87,7 @@ public final class KernelEngine {
         if (initialized) return;
 
         inputEngine.setStage(stage);
+        graphicsEngine.setStage(stage);
 
         for (Engines e : Engines.values()) {
             getEngine(e).init();
@@ -386,7 +387,7 @@ public final class KernelEngine {
         Collection<Event> mapEvents = map.getEvents();
 
         physicsEngine.setMap(map);
-        graphicsEngine.setMap(map);
+        Platform.runLater(() -> graphicsEngine.setMap(map));
 
         for (Entity mapEntity : mapEntities) {
             graphicsEngine.addElement(mapEntity);

@@ -49,12 +49,11 @@ final class GraphicsEngine implements Engine {
         z = 0.0;
 
         pane = new Pane();
-        scene = new Scene(pane,600,600);
+        scene = new Scene(pane,10,10);
         pane.setVisible(true);
 
-        stage = new Stage();
         stage.setScene(scene);
-
+        stage.show();
         initialized = true;
     }
 
@@ -63,8 +62,7 @@ final class GraphicsEngine implements Engine {
      */
     @Override
     public void run() {
-        if (started)
-            throw new RuntimeException("Graphic Engine is already running");
+        if (started) throw new RuntimeException("Graphic Engine is already running");
         started = true;
         for (Element e:elements){
             updateElement(e);
@@ -88,7 +86,6 @@ final class GraphicsEngine implements Engine {
             if (c.getX() != n.getLayoutX()) n.setLayoutX(c.getX());
             if (c.getY() != n.getLayoutY()) n.setLayoutY(c.getY());
             if (!n.isVisible()) n.setVisible(true);
-
         }
         else if(n.isVisible())n.setVisible(false);
     }
@@ -142,5 +139,10 @@ final class GraphicsEngine implements Engine {
     public void clearElements() {
         elements.clear();
         pane.getChildren().clear();
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+
     }
 }
