@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         KernelEngine deltaEngine = DeltaEngine.launch();
-        deltaEngine.printFrameRate(true);
+        deltaEngine.printFrameRate(false);
 
         Map map = new Map("test",30,20);
         deltaEngine.addMap(map);
