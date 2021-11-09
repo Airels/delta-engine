@@ -1,6 +1,7 @@
 package engines.kernel;
 
 import fr.r1r0r0.deltaengine.model.*;
+import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
 import fr.r1r0r0.deltaengine.model.elements.basic_cases.Wall;
 import fr.r1r0r0.deltaengine.model.engines.DeltaEngine;
@@ -12,6 +13,8 @@ import fr.r1r0r0.deltaengine.model.events.Trigger;
 import fr.r1r0r0.deltaengine.model.sprites.shapes.Circle;
 import fr.r1r0r0.deltaengine.model.sprites.shapes.Rectangle;
 import javafx.scene.paint.Color;
+
+import java.awt.*;
 
 public class Main {
 
@@ -65,7 +68,9 @@ public class Main {
         });
         pacman.setAI(new BasicAI(pacman));
 
+        mapLevel.addEvent(new Timer(300));
         deltaEngine.setCurrentMap("test2");
+        deltaEngine.addGlobalEvent(new Timer(1000));
     }
 }
 
@@ -102,6 +107,31 @@ class BasicAI extends AI {
             entity.setDirection(Direction.UP);
         } else if (coordinates.getY() <= 4) {
             entity.setDirection(Direction.DOWN);
+        }
+    }
+}
+
+class Timer extends Event {
+
+    private long lastTimer, duration;
+
+    public Timer(long duration) {
+        this.duration = duration;
+        lastTimer = System.currentTimeMillis();
+        this.addTrigger(() -> Toolkit.getDefaultToolkit().beep());
+    }
+
+    /**
+     * Called by the engine, all code of the event. Everything can be implemented here. <br>
+     * To activate all attached triggers, runTriggers() method from Event object must be called.
+     *
+     * @see Event#runTriggers() to run all registered triggers
+     */
+    @Override
+    public void checkEvent() {
+        if (System.currentTimeMillis() - lastTimer >= duration) {
+            this.runTriggers();
+            lastTimer = System.currentTimeMillis();
         }
     }
 }
