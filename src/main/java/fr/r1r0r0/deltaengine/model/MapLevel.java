@@ -67,7 +67,7 @@ public final class MapLevel {
      * @throws MapCaseCoordinateStackingException throw if a case with the same coordinate is already
      * present in the map
      * @throws MapOutOfBoundException throw if a case with coordinate out of the area define by the
-     * map is add
+     * map is added
      */
     public void addCase (Cell c) throws MapCaseCoordinateStackingException, MapOutOfBoundException {
         Coordinates coordinates = c.getCoordinates();
@@ -107,7 +107,7 @@ public final class MapLevel {
     /**
      * Return the entity in map with the same given
      * @param name a name
-     * @return an entity in map with the same given, or null if their is no entity with this name
+     * @return an entity in map with the same given, or null if there is no entity with this name
      */
     public Entity getEntity (String name) {
         return entities.get(name);

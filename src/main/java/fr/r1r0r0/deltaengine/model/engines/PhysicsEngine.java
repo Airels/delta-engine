@@ -11,8 +11,9 @@ import fr.r1r0r0.deltaengine.model.elements.Entity;
  * TODO: les marge d erreur deplacement pour les recentrer
  * TODO: prendre en compte les dimensions de l entite pour le deplacement
  * TODO: le points est topleft et prendre en compte les dimensions
+ * TODO: On synchronise le run en cas de modif de map
  */
-class PhysicsEngine implements Engine {
+final class PhysicsEngine implements Engine {
 
     /**
      * Explication de la mise en place des collisions entre une source et une target :
@@ -49,22 +50,29 @@ class PhysicsEngine implements Engine {
      */
     @Override
     public void run() {
-        long currentRunTime = System.currentTimeMillis();
-        long deltaTime = currentRunTime - previousRunTime;
-        double timeRatio = (double) Math.min(deltaTime, maxRunDelta) / 1000;
-        previousRunTime = currentRunTime;
-        if (mapLevel != null) {
-            for (Entity entity : mapLevel.getEntities()) {
-                updateCoordinate(entity,timeRatio);
-            }
-            for (Entity source : mapLevel.getEntities()) {
-                for (Entity target : mapLevel.getEntities()) {
-                    checkCollision(source,target);
+        synchronized (this) {
+            long currentRunTime = System.currentTimeMillis();
+            long deltaTime = currentRunTime - previousRunTime;
+            double timeRatio = (double) Math.min(deltaTime, maxRunDelta) / 1000;
+            previousRunTime = currentRunTime;
+            if (mapLevel != null) {
+                for (Entity entity : mapLevel.getEntities()) {
+                    updateCoordinate(entity,timeRatio);
+                }
+                for (Entity source : mapLevel.getEntities()) {
+                    for (Entity target : mapLevel.getEntities()) {
+                        checkCollision(source,target);
+                    }
                 }
             }
         }
     }
 
+    /**
+     * TODO
+     * @param source
+     * @param target
+     */
     private void checkCollision (Entity source, Entity target) {
         if (source.testCollide(target)) {
             source.getCollisionEvent(target).checkEvent();
@@ -98,17 +106,21 @@ class PhysicsEngine implements Engine {
      * Replace the current mapLevel with another
      * @param mapLevel a mapLevel
      */
-    public void setMap(MapLevel mapLevel) {
+    public synchronized void setMap(MapLevel mapLevel) {
         this.mapLevel = mapLevel;
     }
 
     /**
      * Clear the current mapLevel
      */
-    public void clearMap() {
+    public synchronized void clearMap() {
         mapLevel = null;
     }
 
+    /**
+     * TODO
+     * @param fps
+     */
     public void setMaxRunDelta(int fps) {
         maxRunDelta = 1000 / fps;
     }

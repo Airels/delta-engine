@@ -10,7 +10,7 @@ import java.util.List;
  */
 public abstract class Event {
 
-    private List<Trigger> triggers;
+    private final List<Trigger> triggers;
 
     /**
      * Default constructor

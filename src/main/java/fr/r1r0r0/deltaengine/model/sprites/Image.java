@@ -7,11 +7,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+/**
+ * TODO
+ */
 public final class Image implements Sprite {
 
     private String path;
     private ImageView imageView;
 
+    /**
+     * TODO
+     * @param path
+     * @throws FileNotFoundException
+     */
     public Image(String path) throws FileNotFoundException {
         this.path = path;
         imageView = new ImageView(new javafx.scene.image.Image(new FileInputStream(path)));

@@ -16,6 +16,13 @@ public class HUDElement implements Element {
     private String name;
     private Dimension dimension;
 
+    /**
+     * Default constructor.
+     * @param name String representing the name of the Element
+     * @param coordinates Coordinates of the element
+     * @param sprite Sprite of the element
+     * @param dimension Dimension of the element
+     */
     public HUDElement(String name, Coordinates coordinates, Sprite sprite, Dimension dimension) {
         this.name = name;
         this.coordinates = coordinates;
@@ -29,6 +36,7 @@ public class HUDElement implements Element {
         return dimension;
     }
 
+    @Override
     public void setDimension(Dimension dimension) {
         this.dimension = dimension;
     }

@@ -93,9 +93,6 @@ public final class KernelEngine {
             getEngine(e).init();
         }
 
-        // new Thread(soundEngine).start();
-        // new Thread(networkEngine).start();
-
         initialized = true;
     }
 

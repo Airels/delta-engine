@@ -17,6 +17,9 @@ public final class SoundEngine implements Engine {
 
     private final Map<String, MediaPlayer> sounds;
 
+    /**
+     * Default constructor.
+     */
     SoundEngine() {
         sounds = new HashMap<>();
     }

@@ -108,79 +108,75 @@ public class Entity implements Element {
         return dimension;
     }
 
+    @Override
     public void setDimension (Dimension dimension) {
         this.dimension = dimension;
     }
 
-    /**
-     * Returns sprite of the entity
-     *
-     * @return Sprite of the entity
-     */
     @Override
     public Sprite getSprite() {
         return sprite;
     }
 
-    /**
-     * Set sprite of an entity
-     *
-     * @param sprite sprite to set
-     */
     @Override
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
     }
 
-    /**
-     * Coordinates of the entity in the game.
-     *
-     * @return Coordinates of the entity
-     */
     @Override
     public Coordinates getCoordinates() {
         return coords;
     }
 
-    /**
-     * Allows setting new coordinates for the entity.
-     *
-     * @param coordinates new coordinates
-     */
     @Override
     public void setCoordinates(Coordinates coordinates) {
         this.coords = coordinates;
     }
 
-    /**
-     * Name getter of the entity
-     *
-     * @return String name of the entity
-     */
     @Override
     public String getName() {
         return name;
     }
 
+    /**
+     * Set a new collision event bound to given entity.
+     * @param entity entity to react with
+     * @param event event to play when a collision is detected
+     */
     public void setCollisionEvent(Entity entity, Event event) {
         collisionEvents.put(entity, event);
     }
 
+    /**
+     * Clear all collision events bound to given entity
+     * @param entity bound entity to clear events
+     */
     public void clearCollisionEvent(Entity entity) {
         collisionEvents.remove(entity);
     }
 
+    /**
+     * Clear all collision events.
+     */
     public void clearAllCollisionEvents() {
         collisionEvents.clear();
     }
 
+    /**
+     * TODO
+     * @param entity
+     * @return
+     */
     public Event getCollisionEvent(Entity entity) {
         Event event = collisionEvents.get(entity);
-        return (event == null) ? new VoidEvent() : event;
+        return (event == null) ? VoidEvent.getInstance() : event;
     }
 
+    /**
+     * TODO
+     * @return
+     */
     private Collection<Coordinates> getCollisionPoints () {
-        //TODO: voir pour mettre ses points par defaut dans la classe
         double centerX = coords.getX() + (dimension.getWidth() / 2);
         double centerY = coords.getY() + (dimension.getHeight() / 2);
         double maxX = coords.getX() + dimension.getWidth();
@@ -197,6 +193,11 @@ public class Entity implements Element {
         );
     }
 
+    /**
+     * TODO
+     * @param other
+     * @return
+     */
     public boolean testCollide (Entity other) {
         Coordinates otherCoords = other.coords;
         double minX = otherCoords.getX();

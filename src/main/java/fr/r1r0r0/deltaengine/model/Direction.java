@@ -13,10 +13,18 @@ public enum Direction {
 
     private final Coordinates coordinates;
 
+    /**
+     * TODO
+     * @param coordinates
+     */
     Direction (Coordinates coordinates) {
         this.coordinates = coordinates;
     }
 
+    /**
+     * TODO
+     * @return
+     */
     public Coordinates getCoordinates () {
         return coordinates;
     }

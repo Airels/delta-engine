@@ -12,11 +12,17 @@ import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.Map;
 
-class InputEngine implements Engine {
+/**
+ * TODO
+ */
+final class InputEngine implements Engine {
 
     private Stage stage;
     private final Map<KeyCode, InputEvent> events;
 
+    /**
+     * TODO
+     */
     InputEngine() {
         events = new HashMap<>();
     }
@@ -41,6 +47,12 @@ class InputEngine implements Engine {
 
     }
 
+    /**
+     * Allows setting a new input keyboard event to given Keyboard with specified Event to trigger.
+     * @param key Key to bind
+     * @param event Event to trigger when Key is bound
+     * @throws InputKeyStackingError if given Key is already bound to an Event
+     */
     public void setInput(Key key, InputEvent event) throws InputKeyStackingError {
         KeyCode jfxKey = key.getJFXInput();
         if (events.containsKey(jfxKey) && events.get(jfxKey) != event)
@@ -48,10 +60,18 @@ class InputEngine implements Engine {
         events.put(jfxKey, event);
     }
 
+    /**
+     * Setting the JavaFX stage. Allowing to bind keyboard inputs to it.
+     * @param stage JavaFX stage.
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    /**
+     * Remove Event from a given key.
+     * @param key Key of event that must be removed.
+     */
     public void clearKey(Key key) {
         events.remove(key.getJFXInput());
     }

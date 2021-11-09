@@ -12,7 +12,7 @@ import java.util.*;
  * Uses Socket of Java, you connect to the server once constructor is called.
  * When connected, you can send objects to the server or receive objects from the server.
  */
-public class Client extends Thread {
+public final class Client extends Thread {
 
     private final Socket connection;
     private final ObjectOutputStream outputStream;

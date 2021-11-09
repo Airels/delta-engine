@@ -13,6 +13,12 @@ public class UncrossableCell extends Cell {
 
     private List<Class<? extends Entity>> authorizedEntitiesToCross;
 
+    /**
+     * Default constructor
+     * @param x abscissa of the cell
+     * @param y ordinate of the cell
+     * @param sprite Sprite of the cell
+     */
     public UncrossableCell(int x, int y, Sprite sprite) {
         super(x, y, sprite);
 

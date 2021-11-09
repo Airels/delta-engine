@@ -11,35 +11,51 @@ import javafx.geometry.Dimension2D;
  */
 public interface Element {
 
+    /**
+     * Return dimension of the Element. Represents the size of the Element.
+     *
+     * @return Dimension of the element
+     */
     Dimension getDimension();
-    void setDimension (Dimension dimension);
+
+    /**
+     * Allows to set dimension of the element, representing its size.
+     *
+     * @param dimension Dimension to set
+     */
+    void setDimension(Dimension dimension);
 
     /**
      * Returns sprite of the element
+     *
      * @return Sprite of the element
      */
     Sprite getSprite();
 
     /**
      * Set sprite of an element
+     *
      * @param sprite sprite to set
      */
     void setSprite(Sprite sprite);
 
     /**
      * Coordinates of the element in the game.
+     *
      * @return Coordinates of the element
      */
     Coordinates getCoordinates();
 
     /**
      * Allows setting new coordinates for the element.
+     *
      * @param coordinates new coordinates
      */
     void setCoordinates(Coordinates coordinates);
 
     /**
      * Name getter of the element
+     *
      * @return String name of the element
      */
     String getName();
