@@ -11,7 +11,9 @@ import fr.r1r0r0.deltaengine.model.events.VoidEvent;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 import javafx.geometry.Dimension2D;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,7 +29,7 @@ public class Entity implements Element {
     private Direction direction;
     private double speed;
     private IA attachedIA;
-    private final Dimension dimension;
+    private Dimension dimension;
     private final Map<Entity, Event> collisionEvents;
 
     /**
@@ -108,6 +110,10 @@ public class Entity implements Element {
         return dimension;
     }
 
+    public void setDimension (Dimension dimension) {
+        this.dimension = dimension;
+    }
+
     /**
      * Returns sprite of the entity
      *
@@ -174,4 +180,38 @@ public class Entity implements Element {
         Event event = collisionEvents.get(entity);
         return (event == null) ? new VoidEvent() : event;
     }
+
+    private Collection<Coordinates> getCollisionPoints () {
+        //TODO: voir pour mettre ses points par defaut dans la classe
+        double centerX = coords.getX() + (dimension.getWidth() / 2);
+        double centerY = coords.getY() + (dimension.getHeight() / 2);
+        double maxX = coords.getX() + dimension.getWidth();
+        double maxY = coords.getX() + dimension.getHeight();
+        return List.of(new Coordinates(coords.getX(),coords.getY()), // TOP LEFT
+                new Coordinates(maxX,coords.getY()), // TOP RIGHT
+                new Coordinates(coords.getX(),maxY), // BOT LEFT
+                new Coordinates(maxX,maxY), // BOT RIGHT
+                new Coordinates(centerX,centerY), // CENTER
+                new Coordinates(coords.getX(),centerY), // CENTER LEFT
+                new Coordinates(maxX,centerY), // CENTER RIGHT
+                new Coordinates(centerX,coords.getY()), // CENTER TOP
+                new Coordinates(centerX,maxY) // CENTER BOT
+        );
+    }
+
+    public boolean testCollide (Entity other) {
+        double x = coords.getX();
+        double y = coords.getY();
+        Coordinates otherCoords = other.coords;
+        double minX = otherCoords.getX();
+        double minY = otherCoords.getY();
+        double maxX = otherCoords.getX() + other.dimension.getWidth();
+        double maxY = otherCoords.getX() + other.dimension.getHeight();
+        for (Coordinates collisionPoint : getCollisionPoints()) {
+            if (minX <= x && x <= maxX
+                    && minY <= y && y <= maxY) return true;
+        }
+        return false;
+    }
+
 }

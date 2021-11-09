@@ -12,6 +12,7 @@ import javafx.geometry.Dimension2D;
 public interface Element {
 
     Dimension getDimension();
+    void setDimension (Dimension dimension);
 
     /**
      * Returns sprite of the element
