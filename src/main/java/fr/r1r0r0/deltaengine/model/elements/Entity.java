@@ -4,13 +4,10 @@ import fr.r1r0r0.deltaengine.exceptions.IAAlreadyAttachedException;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.Direction;
-import fr.r1r0r0.deltaengine.model.IA;
-import fr.r1r0r0.deltaengine.model.elements.Element;
 import fr.r1r0r0.deltaengine.model.events.Event;
 import fr.r1r0r0.deltaengine.model.events.VoidEvent;
 import fr.r1r0r0.deltaengine.model.AI;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
-import javafx.geometry.Dimension2D;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -29,7 +26,7 @@ public class Entity implements Element {
     private Coordinates coords;
     private Direction direction;
     private double speed;
-    private AI attachedIA;
+    private AI attachedAI;
     private Dimension dimension;
     private final Map<Entity, Event> collisionEvents;
 
@@ -45,7 +42,7 @@ public class Entity implements Element {
         this.sprite = sprite;
         direction = Direction.IDLE;
         speed = 0;
-        attachedIA = null;
+        attachedAI = null;
         this.dimension = dimension;
         this.collisionEvents = new HashMap<>();
         sprite.setZOrder(100);
@@ -90,20 +87,20 @@ public class Entity implements Element {
      * @param ia AI to attach to the entity
      * @throws IAAlreadyAttachedException if an AI is already attached to the entity
      */
-    public final void setIA(AI ia) throws IAAlreadyAttachedException {
-        if (attachedIA != null)
+    public final void setAI(AI ia) throws IAAlreadyAttachedException {
+        if (attachedAI != null)
             throw new IAAlreadyAttachedException(this);
 
         ia.setEntity(this);
-        this.attachedIA = ia;
+        this.attachedAI = ia;
     }
 
     /**
      * Get attached AI of the entity
      * @return attached AI
      */
-    public final AI getIA() {
-        return attachedIA;
+    public final AI getAI() {
+        return attachedAI;
     }
 
     @Override

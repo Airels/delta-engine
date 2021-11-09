@@ -5,7 +5,6 @@ import fr.r1r0r0.deltaengine.model.elements.Entity;
 import fr.r1r0r0.deltaengine.model.elements.basic_cases.Wall;
 import fr.r1r0r0.deltaengine.model.engines.DeltaEngine;
 import fr.r1r0r0.deltaengine.model.engines.KernelEngine;
-import fr.r1r0r0.deltaengine.model.engines.SoundEngine;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
 import fr.r1r0r0.deltaengine.model.events.InputEvent;
@@ -18,6 +17,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         KernelEngine deltaEngine = DeltaEngine.launch();
+        deltaEngine.setFrameRate(60);
         deltaEngine.printFrameRate(true);
 
         Map map = new Map("test",30,20);
@@ -63,7 +63,7 @@ public class Main {
                 System.out.println("VIDAL E TRO FOR");
             }
         });
-        pacman.setIA(new BasicAI());
+        pacman.setAI(new BasicAI(pacman));
 
         deltaEngine.setCurrentMap("test2");
     }
@@ -86,10 +86,22 @@ class ChangeMove implements Trigger {
     }
 }
 
-class BasicAI extends IA {
+class BasicAI extends AI {
 
+    private Entity entity;
+
+    public BasicAI (Entity entity) {
+        this.entity = entity;
+        this.entity.setDirection(Direction.UP);
+        this.entity.setSpeed(5);
+    }
     @Override
     public void tick() {
-        System.out.println("tick!");
+        Coordinates coordinates = entity.getCoordinates();
+        if (coordinates.getY() >= 8) {
+            entity.setDirection(Direction.UP);
+        } else if (coordinates.getY() <= 4) {
+            entity.setDirection(Direction.DOWN);
+        }
     }
 }

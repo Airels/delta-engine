@@ -387,8 +387,8 @@ public final class KernelEngine {
 
         for (Entity mapEntity : mapEntities) {
             Platform.runLater(() -> graphicsEngine.addElement(mapEntity));
-            if (mapEntity.getIA() != null)
-                iaEngine.addAI(mapEntity.getIA());
+            if (mapEntity.getAI() != null)
+                iaEngine.addAI(mapEntity.getAI());
         }
 
         for (Event event : mapEvents) {
@@ -415,8 +415,8 @@ public final class KernelEngine {
 
         for (Entity entity : mapEntities) {
             Platform.runLater(() -> graphicsEngine.removeElement(entity));
-            if (entity.getIA() != null)
-                iaEngine.removeAI(entity.getIA());
+            if (entity.getAI() != null)
+                iaEngine.removeAI(entity.getAI());
         }
 
         for (Event mapEvent : mapEvents) {

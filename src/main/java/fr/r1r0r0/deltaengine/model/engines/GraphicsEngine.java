@@ -77,8 +77,8 @@ final class GraphicsEngine implements Engine {
         if(!elements.contains(e)) throw new NoSuchElementException();
 
         Node n = e.getSprite().getNode();
-        e.getSprite().getNode().setLayoutX(e.getCoordinates().getX()*CASE_SIZE);
-        e.getSprite().getNode().setLayoutY(e.getCoordinates().getY()*CASE_SIZE);
+        n.setLayoutX(e.getCoordinates().getX()*CASE_SIZE);
+        n.setLayoutY(e.getCoordinates().getY()*CASE_SIZE);
 
     }
 
@@ -88,9 +88,7 @@ final class GraphicsEngine implements Engine {
         for (int i = 0; i < map.getWidth(); i++) {
             for (int j = 0; j < map.getHeight(); j++) {
                 Case c = map.getCase(i, j);
-
                 c.getSprite().resize(CASE_SIZE, CASE_SIZE);
-
                 addElement(c);
             }
         }
