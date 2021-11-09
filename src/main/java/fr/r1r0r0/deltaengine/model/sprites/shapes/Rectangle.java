@@ -2,7 +2,7 @@ package fr.r1r0r0.deltaengine.model.sprites.shapes;
 
 import javafx.scene.paint.Color;
 
-public final class Rectangle extends Shape {
+public class Rectangle extends Shape {
 
     private double width, height;
     private final javafx.scene.shape.Rectangle fxRectangle;

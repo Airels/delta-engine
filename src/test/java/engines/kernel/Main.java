@@ -9,6 +9,7 @@ import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
 import fr.r1r0r0.deltaengine.model.events.InputEvent;
 import fr.r1r0r0.deltaengine.model.events.Trigger;
+import fr.r1r0r0.deltaengine.model.sprites.shapes.Circle;
 import fr.r1r0r0.deltaengine.model.sprites.shapes.Ellipse;
 import fr.r1r0r0.deltaengine.model.sprites.shapes.Rectangle;
 import javafx.scene.paint.Color;
@@ -29,7 +30,7 @@ public class Main {
         deltaEngine.setCurrentMap("test");
 
 
-        Entity pacman = new Entity("pacman", new Coordinates(5, 5), new Ellipse(1, 1, Color.YELLOW), new Dimension(1, 1));
+        Entity pacman = new Entity("pacman", new Coordinates(5, 5), new Circle(1, Color.YELLOW), new Dimension(1, 1));
         pacman.setSpeed(0);
         map.addEntity(pacman);
 
