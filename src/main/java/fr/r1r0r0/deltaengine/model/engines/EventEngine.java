@@ -2,7 +2,17 @@ package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.model.events.Event;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class EventEngine implements Engine {
+
+    private final List<Event> events;
+
+    EventEngine() {
+        this.events = new ArrayList<>();
+    }
+
     @Override
     public void init() {
 
@@ -10,18 +20,20 @@ class EventEngine implements Engine {
 
     @Override
     public void run() {
-
+        synchronized (this) {
+            events.forEach(Event::checkEvent);
+        }
     }
 
-    public void addEvent(Event event) {
-
+    public synchronized void addEvent(Event event) {
+        events.add(event);
     }
 
-    public void removeEvent(Event event) {
-
+    public synchronized void removeEvent(Event event) {
+        events.remove(event);
     }
 
-    public void clearEvents() {
-
+    public synchronized void clearEvents() {
+        events.clear();
     }
 }
