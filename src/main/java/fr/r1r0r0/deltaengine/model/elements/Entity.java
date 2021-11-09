@@ -200,16 +200,15 @@ public class Entity implements Element {
     }
 
     public boolean testCollide (Entity other) {
-        double x = coords.getX();
-        double y = coords.getY();
         Coordinates otherCoords = other.coords;
         double minX = otherCoords.getX();
         double minY = otherCoords.getY();
         double maxX = otherCoords.getX() + other.dimension.getWidth();
-        double maxY = otherCoords.getX() + other.dimension.getHeight();
+        double maxY = otherCoords.getY() + other.dimension.getHeight();
         for (Coordinates collisionPoint : getCollisionPoints()) {
-            if (minX <= x && x <= maxX
-                    && minY <= y && y <= maxY) return true;
+            if (minX <= collisionPoint.getX() && collisionPoint.getX() <= maxX
+                    && minY <= collisionPoint.getY() && collisionPoint.getY() <= maxY)
+                return true;
         }
         return false;
     }

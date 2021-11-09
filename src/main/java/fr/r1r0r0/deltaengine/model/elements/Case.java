@@ -35,6 +35,11 @@ public class Case implements Element {
     }
 
     @Override
+    public void setDimension(Dimension dimension) {
+        throw new IllegalCallerException("Cannot resize a Case");
+    }
+
+    @Override
     public Sprite getSprite() {
         return sprite;
     }

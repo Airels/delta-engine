@@ -37,8 +37,6 @@ public class Main {
         red.setSpeed(0);
         map.addEntity(red);
 
-        Thread.sleep(2000);
-
         InputEvent moveUpEvent = new InputEvent(new ChangeMove(pacman, Direction.UP), null);
         InputEvent moveDownEvent = new InputEvent(new ChangeMove(pacman, Direction.DOWN), null);
         InputEvent moveLeftEvent = new InputEvent(new ChangeMove(pacman, Direction.LEFT), null);
@@ -65,6 +63,7 @@ public class Main {
                 System.out.println("VIDAL E TRO FOR");
             }
         });
+        pacman.setIA(new BasicAI());
 
         deltaEngine.setCurrentMap("test2");
     }
@@ -84,5 +83,13 @@ class ChangeMove implements Trigger {
     public void trigger() {
         e.setSpeed(1);
         e.setDirection(direction);
+    }
+}
+
+class BasicAI extends IA {
+
+    @Override
+    public void tick() {
+        System.out.println("tick!");
     }
 }

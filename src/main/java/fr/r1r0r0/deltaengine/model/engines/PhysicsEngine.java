@@ -66,7 +66,7 @@ class PhysicsEngine implements Engine {
     }
 
     private void checkCollision (Entity source, Entity target) {
-        if (source.testCollide(source)) {
+        if (source.testCollide(target)) {
             source.getCollisionEvent(target).checkEvent();
         }
     }
