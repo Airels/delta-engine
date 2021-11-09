@@ -2,13 +2,13 @@ package fr.r1r0r0.deltaengine.exceptions;
 
 import fr.r1r0r0.deltaengine.model.elements.Entity;
 
-public class IAAlreadyAttachedException extends Exception {
+public class AIAlreadyAttachedException extends Exception {
 
-    public IAAlreadyAttachedException(String msg) {
+    public AIAlreadyAttachedException(String msg) {
         super(msg);
     }
 
-    public IAAlreadyAttachedException(Entity entity) {
+    public AIAlreadyAttachedException(Entity entity) {
         this(entity.getName() + " already have attached AI");
     }
 }

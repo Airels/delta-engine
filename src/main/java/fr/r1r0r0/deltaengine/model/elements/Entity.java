@@ -1,6 +1,6 @@
 package fr.r1r0r0.deltaengine.model.elements;
 
-import fr.r1r0r0.deltaengine.exceptions.IAAlreadyAttachedException;
+import fr.r1r0r0.deltaengine.exceptions.AIAlreadyAttachedException;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.Direction;
@@ -85,11 +85,11 @@ public class Entity implements Element {
     /**
      * AI to attach to the entity. Can be called once. Once AI is attached, it is impossible to remove or change it.
      * @param ia AI to attach to the entity
-     * @throws IAAlreadyAttachedException if an AI is already attached to the entity
+     * @throws AIAlreadyAttachedException if an AI is already attached to the entity
      */
-    public final void setAI(AI ia) throws IAAlreadyAttachedException {
+    public final void setAI(AI ia) throws AIAlreadyAttachedException {
         if (attachedAI != null)
-            throw new IAAlreadyAttachedException(this);
+            throw new AIAlreadyAttachedException(this);
 
         ia.setEntity(this);
         this.attachedAI = ia;
