@@ -6,7 +6,7 @@ import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 import javafx.geometry.Dimension2D;
 
 /**
- * A graphical element. Could be a Case, an Entity or anything graphical.
+ * A graphical element. Could be a Cell, an Entity or anything graphical.
  * Possess coordinates, a Sprite and a Name.
  */
 public interface Element {

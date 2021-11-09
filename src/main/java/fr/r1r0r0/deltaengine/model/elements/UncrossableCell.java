@@ -1,27 +1,26 @@
 package fr.r1r0r0.deltaengine.model.elements;
 
-import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A specific Case in a Grid. An Uncrossable Case, like walls or doors.
+ * A specific Cell in a Grid. An Uncrossable Cell, like walls or doors.
  * Can be parametrized to be crossed by specified entities.
  */
-public class UncrossableCase extends Case {
+public class UncrossableCell extends Cell {
 
     private List<Class<? extends Entity>> authorizedEntitiesToCross;
 
-    public UncrossableCase(int x, int y, Sprite sprite) {
+    public UncrossableCell(int x, int y, Sprite sprite) {
         super(x, y, sprite);
 
         authorizedEntitiesToCross = new ArrayList<>();
     }
 
     /**
-     * Check if an entity con cross this Case
+     * Check if an entity con cross this Cell
      * @param entity entity to check
      * @return true if entity can cross this, false otherwise
      */

@@ -2,7 +2,7 @@ package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Direction;
-import fr.r1r0r0.deltaengine.model.Map;
+import fr.r1r0r0.deltaengine.model.MapLevel;
 import fr.r1r0r0.deltaengine.model.elements.CrossableVisitor;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
 
@@ -23,7 +23,7 @@ class PhysicsEngine implements Engine {
      * qui correspond a un minX maxX minY maxY
      */
 
-    private Map map;
+    private MapLevel mapLevel;
     private long previousRunTime;
     private long maxRunDelta;
 
@@ -31,7 +31,7 @@ class PhysicsEngine implements Engine {
      * Constructor
      */
     public PhysicsEngine () {
-        map = null;
+        mapLevel = null;
         previousRunTime = System.currentTimeMillis();
         maxRunDelta = 0;
     }
@@ -45,7 +45,7 @@ class PhysicsEngine implements Engine {
     }
 
     /**
-     * Update the coordinate of all entity in the current map
+     * Update the coordinate of all entity in the current mapLevel
      */
     @Override
     public void run() {
@@ -53,12 +53,12 @@ class PhysicsEngine implements Engine {
         long deltaTime = currentRunTime - previousRunTime;
         double timeRatio = (double) Math.min(deltaTime, maxRunDelta) / 1000;
         previousRunTime = currentRunTime;
-        if (map != null) {
-            for (Entity entity : map.getEntities()) {
+        if (mapLevel != null) {
+            for (Entity entity : mapLevel.getEntities()) {
                 updateCoordinate(entity,timeRatio);
             }
-            for (Entity source : map.getEntities()) {
-                for (Entity target : map.getEntities()) {
+            for (Entity source : mapLevel.getEntities()) {
+                for (Entity target : mapLevel.getEntities()) {
                     checkCollision(source,target);
                 }
             }
@@ -84,29 +84,29 @@ class PhysicsEngine implements Engine {
     }
 
     /**
-     * Returns if the coordinate is a valid coordinate in the map
+     * Returns if the coordinate is a valid coordinate in the mapLevel
      * @param coordinates a coordinate
-     * @return if the coordinate is a valid coordinate in the map
+     * @return if the coordinate is a valid coordinate in the mapLevel
      */
     private boolean isValidCoordinates (Coordinates coordinates) {
         int x = (coordinates.getX() >= 0) ? (int) coordinates.getX() : ((int) coordinates.getX() - 1);
         int y = (coordinates.getY() >= 0) ? (int) coordinates.getY() : ((int) coordinates.getY() - 1);
-        return CrossableVisitor.isCaseCrossable(map.getCase(x,y));
+        return CrossableVisitor.isCaseCrossable(mapLevel.getCase(x,y));
     }
 
     /**
-     * Replace the current map with another
-     * @param map a map
+     * Replace the current mapLevel with another
+     * @param mapLevel a mapLevel
      */
-    public void setMap(Map map) {
-        this.map = map;
+    public void setMap(MapLevel mapLevel) {
+        this.mapLevel = mapLevel;
     }
 
     /**
-     * Clear the current map
+     * Clear the current mapLevel
      */
     public void clearMap() {
-        map = null;
+        mapLevel = null;
     }
 
     public void setMaxRunDelta(int fps) {

@@ -1,6 +1,6 @@
 package fr.r1r0r0.deltaengine.exceptions;
 
-import fr.r1r0r0.deltaengine.model.Map;
+import fr.r1r0r0.deltaengine.model.MapLevel;
 
 public class MapAlreadyExistException extends Exception {
 
@@ -8,7 +8,7 @@ public class MapAlreadyExistException extends Exception {
         super(msg);
     }
 
-    public MapAlreadyExistException(Map map) {
-        super("Map with name " + map.getName() + " already exist");
+    public MapAlreadyExistException(MapLevel mapLevel) {
+        super("MapLevel with name " + mapLevel.getName() + " already exist");
     }
 }

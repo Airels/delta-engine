@@ -9,7 +9,7 @@ public class MapOutOfBoundException extends Exception {
     }
 
     public MapOutOfBoundException (int width, int height, Coordinates coordinates) {
-        this("Map size can not contain the coordinate : width=" + width + ", height=" + height
+        this("MapLevel size can not contain the coordinate : width=" + width + ", height=" + height
                 + ", coordinate=" + coordinates);
     }
 

@@ -1,17 +1,13 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
-import fr.r1r0r0.deltaengine.model.Coordinates;
-import fr.r1r0r0.deltaengine.model.Map;
+import fr.r1r0r0.deltaengine.model.MapLevel;
 import fr.r1r0r0.deltaengine.model.elements.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.NoSuchElementException;
 
 /**
@@ -82,21 +78,21 @@ final class GraphicsEngine implements Engine {
 
     }
 
-    public void setMap(Map map) {
-        // setCases(map.getCases(), map.getWidth(), map.getHeight());
+    public void setMap(MapLevel mapLevel) {
+        // setCases(mapLevel.getCases(), mapLevel.getWidth(), mapLevel.getHeight());
 
-        for (int i = 0; i < map.getWidth(); i++) {
-            for (int j = 0; j < map.getHeight(); j++) {
-                Case c = map.getCase(i, j);
+        for (int i = 0; i < mapLevel.getWidth(); i++) {
+            for (int j = 0; j < mapLevel.getHeight(); j++) {
+                Cell c = mapLevel.getCase(i, j);
                 c.getSprite().resize(CASE_SIZE, CASE_SIZE);
                 addElement(c);
             }
         }
 
-        stage.setWidth(map.getWidth()*CASE_SIZE);
-        stage.setHeight(map.getHeight()*CASE_SIZE);
+        stage.setWidth(mapLevel.getWidth()*CASE_SIZE);
+        stage.setHeight(mapLevel.getHeight()*CASE_SIZE);
 
-        for (Entity entity : map.getEntities()) {
+        for (Entity entity : mapLevel.getEntities()) {
             entity.getSprite().resize(CASE_SIZE*entity.getDimension().getWidth(),
                     CASE_SIZE*entity.getDimension().getHeight());
             addElement(entity);

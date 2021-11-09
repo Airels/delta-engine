@@ -3,22 +3,22 @@ package fr.r1r0r0.deltaengine.model;
 import fr.r1r0r0.deltaengine.exceptions.MapCaseCoordinateStackingException;
 import fr.r1r0r0.deltaengine.exceptions.MapEntityNameStackingException;
 import fr.r1r0r0.deltaengine.exceptions.MapOutOfBoundException;
-import fr.r1r0r0.deltaengine.model.elements.Case;
+import fr.r1r0r0.deltaengine.model.elements.Cell;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
-import fr.r1r0r0.deltaengine.model.elements.basic_cases.VoidCase;
+import fr.r1r0r0.deltaengine.model.elements.basic_cases.VoidCell;
 import fr.r1r0r0.deltaengine.model.events.Event;
 
 import java.util.*;
 
 /**
- * Map that represent the area where entities move
+ * MapLevel that represent the area where entities move
  */
-public final class Map {
+public final class MapLevel {
 
     private final String name;
     private final int width;
     private final int height;
-    private final java.util.Map<Coordinates,Case> cases;
+    private final java.util.Map<Coordinates, Cell> cases;
     private final java.util.Map<String,Entity> entities;
     private final Set<Event> events;
 
@@ -28,7 +28,7 @@ public final class Map {
      * @param width the width of the map
      * @param height the height of the area
      */
-    public Map (String name, int width, int height) {
+    public MapLevel(String name, int width, int height) {
         this.name = name;
         this.width = width;
         this.height = height;
@@ -69,7 +69,7 @@ public final class Map {
      * @throws MapOutOfBoundException throw if a case with coordinate out of the area define by the
      * map is add
      */
-    public void addCase (Case c) throws MapCaseCoordinateStackingException, MapOutOfBoundException {
+    public void addCase (Cell c) throws MapCaseCoordinateStackingException, MapOutOfBoundException {
         Coordinates coordinates = c.getCoordinates();
         if (cases.containsKey(coordinates) && cases.get(coordinates) != c)
             throw new MapCaseCoordinateStackingException(cases.get(coordinates),c);
@@ -84,12 +84,12 @@ public final class Map {
      * Return the case in the map with coordinate (x,y)
      * @param x the x value
      * @param y the y value
-     * @return the case in the map with coordinate (x,y),or a new VoidCase(x,y)
+     * @return the case in the map with coordinate (x,y),or a new VoidCell(x,y)
      * if map does not contain case with this coordinate
      */
-    public Case getCase (int x, int y) {
-        Case c = cases.get(new Coordinates(x,y));
-        return (c == null) ? new VoidCase(x,y) : c;
+    public Cell getCase (int x, int y) {
+        Cell c = cases.get(new Coordinates(x,y));
+        return (c == null) ? new VoidCell(x,y) : c;
     }
 
     /**
@@ -155,7 +155,7 @@ public final class Map {
      * Return all the cases in map
      * @return a collection of case
      */
-    public Collection<Case> getCases () {
+    public Collection<Cell> getCases () {
         return cases.values();
     }
 

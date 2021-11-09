@@ -9,7 +9,7 @@ public class MapEntityNameStackingException extends Exception {
     }
 
     public MapEntityNameStackingException (Entity entity1, Entity entity2) {
-        this("Map contain 2 entity with the same name : entity1:" + entity1 + ", entity2:" + entity2);
+        this("MapLevel contain 2 entity with the same name : entity1:" + entity1 + ", entity2:" + entity2);
     }
 
 }

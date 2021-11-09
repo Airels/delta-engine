@@ -10,7 +10,6 @@ import fr.r1r0r0.deltaengine.model.events.Event;
 import fr.r1r0r0.deltaengine.model.events.InputEvent;
 import fr.r1r0r0.deltaengine.model.events.Trigger;
 import fr.r1r0r0.deltaengine.model.sprites.shapes.Circle;
-import fr.r1r0r0.deltaengine.model.sprites.shapes.Ellipse;
 import fr.r1r0r0.deltaengine.model.sprites.shapes.Rectangle;
 import javafx.scene.paint.Color;
 
@@ -21,22 +20,22 @@ public class Main {
         deltaEngine.setFrameRate(60);
         deltaEngine.printFrameRate(true);
 
-        Map map = new Map("test",30,20);
-        deltaEngine.addMap(map);
-        map = new Map("test2", 10,10);
-        map.addCase(new Wall(2,2));
-        deltaEngine.addMap(map);
+        MapLevel mapLevel = new MapLevel("test",30,20);
+        deltaEngine.addMap(mapLevel);
+        mapLevel = new MapLevel("test2", 10,10);
+        mapLevel.addCase(new Wall(2,2));
+        deltaEngine.addMap(mapLevel);
 
         deltaEngine.setCurrentMap("test");
 
 
         Entity pacman = new Entity("pacman", new Coordinates(5, 5), new Circle(1, Color.YELLOW), new Dimension(1, 1));
         pacman.setSpeed(0);
-        map.addEntity(pacman);
+        mapLevel.addEntity(pacman);
 
         Entity red = new Entity("red", new Coordinates(7, 7), new Rectangle(Color.RED), new Dimension(1, 1));
         red.setSpeed(0);
-        map.addEntity(red);
+        mapLevel.addEntity(red);
 
         InputEvent moveUpEvent = new InputEvent(new ChangeMove(pacman, Direction.UP), null);
         InputEvent moveDownEvent = new InputEvent(new ChangeMove(pacman, Direction.DOWN), null);

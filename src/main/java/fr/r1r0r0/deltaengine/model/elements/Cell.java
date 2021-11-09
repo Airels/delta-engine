@@ -6,9 +6,9 @@ import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 import javafx.geometry.Dimension2D;
 
 /**
- * A Case in a grid. Atomic element of a Map, used to render background textures.
+ * A Cell in a grid. Atomic element of a MapLevel, used to render background textures.
  */
-public class Case implements Element {
+public class Cell implements Element {
 
     private final static Dimension dimension = new Dimension(1, 1);
     private Coordinates coords;
@@ -21,10 +21,10 @@ public class Case implements Element {
      * @param x the coordinates of the map. Coordinates values are integers. If doubles, it will be truncated.
      * @param sprite the sprite to apply on the case
      */
-    public Case(int x, int y, Sprite sprite) {
+    public Cell(int x, int y, Sprite sprite) {
         this.coords = new Coordinates(x, y);
         this.sprite = sprite;
-        name = String.format("Case(%s;%s)", coords.getX(), coords.getY());
+        name = String.format("Cell(%s;%s)", coords.getX(), coords.getY());
         sprite.setZOrder(1000);
     }
 
@@ -36,7 +36,7 @@ public class Case implements Element {
 
     @Override
     public void setDimension(Dimension dimension) {
-        throw new IllegalCallerException("Cannot resize a Case");
+        throw new IllegalCallerException("Cannot resize a Cell");
     }
 
     @Override
@@ -65,7 +65,7 @@ public class Case implements Element {
     }
 
     /**
-     * If a Case is crossable. Uncrossable case is not crossable, so this methods will return false. True for normal cases.
+     * If a Cell is crossable. Uncrossable case is not crossable, so this methods will return false. True for normal cases.
      * This method is mainly used by PhysicsEngine.
      * @return true if it's a simple case, false otherwise
      */

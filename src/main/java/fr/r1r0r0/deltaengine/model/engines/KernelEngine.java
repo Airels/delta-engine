@@ -3,8 +3,8 @@ package fr.r1r0r0.deltaengine.model.engines;
 import fr.r1r0r0.deltaengine.exceptions.InputKeyStackingError;
 import fr.r1r0r0.deltaengine.exceptions.MapAlreadyExistException;
 import fr.r1r0r0.deltaengine.exceptions.MapDoesNotExistException;
-import fr.r1r0r0.deltaengine.model.Map;
-import fr.r1r0r0.deltaengine.model.elements.Case;
+import fr.r1r0r0.deltaengine.model.MapLevel;
+import fr.r1r0r0.deltaengine.model.elements.Cell;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
 import fr.r1r0r0.deltaengine.model.elements.HUDElement;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
@@ -32,10 +32,10 @@ public final class KernelEngine {
     private final GraphicsEngine graphicsEngine;
     private final SoundEngine soundEngine;
     private final NetworkEngine networkEngine;
-    private final java.util.Map<String, Map> maps;
+    private final java.util.Map<String, MapLevel> maps;
     private final List<Event> globalEvents;
     private final List<HUDElement> hudElements;
-    private Map currentMap;
+    private MapLevel currentMapLevel;
     private boolean currentMapHalted;
     private volatile boolean initialized, started;
     private int frameRate, optimalTime;
@@ -216,16 +216,16 @@ public final class KernelEngine {
     }
 
     /**
-     * Add new map to the engine. Map name must be unique.
+     * Add new mapLevel to the engine. MapLevel name must be unique.
      *
-     * @param map the map to add
-     * @throws MapAlreadyExistException if map's name already been added
+     * @param mapLevel the mapLevel to add
+     * @throws MapAlreadyExistException if mapLevel's name already been added
      */
-    public synchronized void addMap(Map map) throws MapAlreadyExistException {
-        if (maps.containsKey(map.getName()))
-            throw new MapAlreadyExistException(map.getName());
+    public synchronized void addMap(MapLevel mapLevel) throws MapAlreadyExistException {
+        if (maps.containsKey(mapLevel.getName()))
+            throw new MapAlreadyExistException(mapLevel.getName());
 
-        maps.put(map.getName(), map);
+        maps.put(mapLevel.getName(), mapLevel);
     }
 
     /**
@@ -235,7 +235,7 @@ public final class KernelEngine {
      * @return true if removed, false if no map was already been added to this name
      */
     public synchronized boolean removeMap(String name) {
-        if (currentMap != null && currentMap.getName().equals(name))
+        if (currentMapLevel != null && currentMapLevel.getName().equals(name))
             unloadMap();
 
         return maps.remove(name) != null;
@@ -252,10 +252,10 @@ public final class KernelEngine {
     /**
      * Get current loaded and running map
      *
-     * @return Map loaded and running
+     * @return MapLevel loaded and running
      */
-    public Map getCurrentMap() {
-        return currentMap;
+    public MapLevel getCurrentMap() {
+        return currentMapLevel;
     }
 
     /**
@@ -263,15 +263,15 @@ public final class KernelEngine {
      *
      * @param name the name of map to load
      * @throws MapDoesNotExistException if map was not added before
-     * @see KernelEngine#addMap(Map) to add a new map
+     * @see KernelEngine#addMap(MapLevel) to add a new map
      */
     public synchronized void setCurrentMap(String name) throws MapDoesNotExistException {
-        Map mapToLoad = maps.get(name);
+        MapLevel mapLevelToLoad = maps.get(name);
 
-        if (mapToLoad == null)
+        if (mapLevelToLoad == null)
             throw new MapDoesNotExistException(name);
 
-        loadMap(mapToLoad);
+        loadMap(mapLevelToLoad);
     }
 
     /**
@@ -371,19 +371,19 @@ public final class KernelEngine {
     }
 
     /**
-     * Loads given map, loading associated elements, AI, and events
+     * Loads given mapLevel, loading associated elements, AI, and events
      *
-     * @param map the map to load
+     * @param mapLevel the mapLevel to load
      */
-    private void loadMap(Map map) {
-        if (currentMap != null)
+    private void loadMap(MapLevel mapLevel) {
+        if (currentMapLevel != null)
             unloadMap();
 
-        Collection<Entity> mapEntities = map.getEntities();
-        Collection<Event> mapEvents = map.getEvents();
+        Collection<Entity> mapEntities = mapLevel.getEntities();
+        Collection<Event> mapEvents = mapLevel.getEvents();
 
-        physicsEngine.setMap(map);
-        Platform.runLater(() -> graphicsEngine.setMap(map));
+        physicsEngine.setMap(mapLevel);
+        Platform.runLater(() -> graphicsEngine.setMap(mapLevel));
 
         for (Entity mapEntity : mapEntities) {
             Platform.runLater(() -> graphicsEngine.addElement(mapEntity));
@@ -395,21 +395,21 @@ public final class KernelEngine {
             eventEngine.addEvent(event);
         }
 
-        currentMap = map;
+        currentMapLevel = mapLevel;
     }
 
     /**
      * Unload current map, loading associated elements, AI, and events
      */
     private void unloadMap() {
-        Collection<Case> mapCases = currentMap.getCases();
-        Collection<Entity> mapEntities = currentMap.getEntities();
-        Collection<Event> mapEvents = currentMap.getEvents();
+        Collection<Cell> mapCells = currentMapLevel.getCases();
+        Collection<Entity> mapEntities = currentMapLevel.getEntities();
+        Collection<Event> mapEvents = currentMapLevel.getEvents();
 
         physicsEngine.clearMap();
 
 
-        for (Case c : mapCases) {
+        for (Cell c : mapCells) {
             Platform.runLater(() -> graphicsEngine.removeElement(c));
         }
 
@@ -423,6 +423,6 @@ public final class KernelEngine {
             eventEngine.removeEvent(mapEvent);
         }
 
-        currentMap = null;
+        currentMapLevel = null;
     }
 }

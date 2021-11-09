@@ -1,7 +1,7 @@
 package fr.r1r0r0.deltaengine.model.elements.builders;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
-import fr.r1r0r0.deltaengine.model.elements.Case;
+import fr.r1r0r0.deltaengine.model.elements.Cell;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 
 public class CaseBuilder implements ElementBuilder {
@@ -20,7 +20,7 @@ public class CaseBuilder implements ElementBuilder {
         return null;
     }
 
-    public Case build() {
+    public Cell build() {
         return null;
     }
 }
