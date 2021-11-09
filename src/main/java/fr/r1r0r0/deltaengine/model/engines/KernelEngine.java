@@ -347,7 +347,7 @@ public final class KernelEngine {
      */
     public synchronized void addHUDElement(HUDElement hudElement) {
         hudElements.add(hudElement);
-        graphicsEngine.addElement(hudElement);
+        Platform.runLater(() -> graphicsEngine.addElement(hudElement));
     }
 
     /**
@@ -357,7 +357,7 @@ public final class KernelEngine {
      */
     public synchronized void removeHUDElement(HUDElement hudElement) {
         hudElements.remove(hudElement);
-        graphicsEngine.removeElement(hudElement);
+        Platform.runLater(() -> graphicsEngine.removeElement(hudElement));
     }
 
     /**
@@ -365,7 +365,7 @@ public final class KernelEngine {
      */
     public synchronized void clearHUDElements() {
         for (HUDElement hudElement : hudElements)
-            graphicsEngine.removeElement(hudElement);
+            Platform.runLater(() -> graphicsEngine.removeElement(hudElement));
 
         hudElements.clear();
     }
@@ -386,7 +386,7 @@ public final class KernelEngine {
         Platform.runLater(() -> graphicsEngine.setMap(map));
 
         for (Entity mapEntity : mapEntities) {
-            graphicsEngine.addElement(mapEntity);
+            Platform.runLater(() -> graphicsEngine.addElement(mapEntity));
             if (mapEntity.getIA() != null)
                 iaEngine.addIA(mapEntity.getIA());
         }
@@ -410,11 +410,11 @@ public final class KernelEngine {
 
 
         for (Case c : mapCases) {
-            graphicsEngine.removeElement(c);
+            Platform.runLater(() -> graphicsEngine.removeElement(c));
         }
 
         for (Entity entity : mapEntities) {
-            graphicsEngine.removeElement(entity);
+            Platform.runLater(() -> graphicsEngine.removeElement(entity));
             if (entity.getIA() != null)
                 iaEngine.removeIA(entity.getIA());
         }

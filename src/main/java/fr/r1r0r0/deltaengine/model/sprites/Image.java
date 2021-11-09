@@ -21,5 +21,11 @@ public final class Image implements Sprite {
     public Node getNode() {
         return imageView;
     }
+
+    @Override
+    public void resize(double width, double height) {
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(height);
+    }
 }
 

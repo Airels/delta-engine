@@ -10,9 +10,11 @@ import javafx.geometry.Dimension2D;
  */
 public class Case implements Element {
 
+    private final static Dimension dimension = new Dimension(1, 1);
     private Coordinates coords;
     private Sprite sprite;
     private String name;
+
 
     /**
      * Default constructor. Set a case sprite and coordinates in the map.
@@ -29,7 +31,7 @@ public class Case implements Element {
 
     @Override
     public final Dimension getDimension() {
-        return new Dimension(1, 1);
+        return dimension;
     }
 
     @Override

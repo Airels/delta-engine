@@ -40,4 +40,9 @@ public final class Text implements Sprite {
     public Node getNode() {
         return jfxText;
     }
+
+    @Override
+    public void resize(double width, double height) {
+        // TODO
+    }
 }

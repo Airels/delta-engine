@@ -15,6 +15,11 @@ class CaseTest {
             public Node getNode() {
                 return null;
             }
+
+            @Override
+            public void resize(double width, double height) {
+
+            }
         });
 
         assert c.getCoordinates().equals(new Coordinates(0,0));

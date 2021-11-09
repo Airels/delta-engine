@@ -2,9 +2,7 @@ package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Map;
-import fr.r1r0r0.deltaengine.model.elements.Case;
-import fr.r1r0r0.deltaengine.model.elements.Element;
-import fr.r1r0r0.deltaengine.model.elements.HUDElement;
+import fr.r1r0r0.deltaengine.model.elements.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -64,7 +62,7 @@ final class GraphicsEngine implements Engine {
     public void run() {
         if (started) throw new RuntimeException("Graphic Engine is already running");
         started = true;
-        for (Element e:elements){
+        for (Element e : elements){
             updateElement(e);
         }
         started = false;
@@ -79,15 +77,9 @@ final class GraphicsEngine implements Engine {
         if(!elements.contains(e)) throw new NoSuchElementException();
 
         Node n = e.getSprite().getNode();
-        if (e.getSprite().getZOrder() >= z) {
+        e.getSprite().getNode().setLayoutX(e.getCoordinates().getX()*CASE_SIZE);
+        e.getSprite().getNode().setLayoutY(e.getCoordinates().getY()*CASE_SIZE);
 
-            Coordinates c = e.getCoordinates();
-
-            if (c.getX() != n.getLayoutX()) n.setLayoutX(c.getX());
-            if (c.getY() != n.getLayoutY()) n.setLayoutY(c.getY());
-            if (!n.isVisible()) n.setVisible(true);
-        }
-        else if(n.isVisible())n.setVisible(false);
     }
 
     public void setMap(Map map) {
@@ -96,47 +88,21 @@ final class GraphicsEngine implements Engine {
         for (int i = 0; i < map.getWidth(); i++) {
             for (int j = 0; j < map.getHeight(); j++) {
                 Case c = map.getCase(i, j);
-                if (!c.getSprite().getNode().isResizable())
-                    //System.exit(69);
 
-                // c.getSprite().getNode().resize(CASE_SIZE,CASE_SIZE)
-                c.getSprite().getNode().setLayoutX(c.getCoordinates().getX()*CASE_SIZE);
-                c.getSprite().getNode().setLayoutY(c.getCoordinates().getY()*CASE_SIZE);
-                c.getSprite().getNode().minWidth(CASE_SIZE);
-                c.getSprite().getNode().minHeight(CASE_SIZE);
-                c.getSprite().getNode().maxWidth(CASE_SIZE);
-                c.getSprite().getNode().maxHeight(CASE_SIZE);
+                c.getSprite().resize(CASE_SIZE, CASE_SIZE);
 
-                // System.out.println("c.getCoordinates().getX()*CASE_SIZE = " + c.getCoordinates().getX() * CASE_SIZE);
-                System.out.println("c.getSprite().getNode() = " + c.getSprite().getNode());
-
-                Rectangle r = ((Rectangle) c.getSprite().getNode());
-
-                root.getChildren().add(c.getSprite().getNode());
-                // addElement(c);
+                addElement(c);
             }
         }
 
         stage.setWidth(map.getWidth()*CASE_SIZE);
         stage.setHeight(map.getHeight()*CASE_SIZE);
-    }
 
-    /**
-     * set up the cases matrix
-     * @param cases to set up
-     * @param width is the number of case used in the map's width
-     * @param height is the number of case used in the map's height
-     */
-    public void setCases(Collection<Case> cases, int width, int height) {
-        for(Case c:cases){
-            c.getSprite().getNode().resize(CASE_SIZE,CASE_SIZE);
-            c.getSprite().getNode().setTranslateX(c.getCoordinates().getX()*CASE_SIZE);
-            c.getSprite().getNode().setTranslateY(c.getCoordinates().getY()*CASE_SIZE);
-
-            addElement(c);
+        for (Entity entity : map.getEntities()) {
+            entity.getSprite().resize(CASE_SIZE*entity.getDimension().getWidth(),
+                    CASE_SIZE*entity.getDimension().getHeight());
+            addElement(entity);
         }
-        stage.setWidth(width*CASE_SIZE);
-        stage.setHeight(height*CASE_SIZE);
     }
 
     /**
@@ -148,7 +114,7 @@ final class GraphicsEngine implements Engine {
             elements.add(element);
             root.getChildren().add(element.getSprite().getNode());
             if (element.getClass() == HUDElement.class) element.getSprite().getNode().setViewOrder(-1.0);
-            // updateElement(element);
+            updateElement(element);
         }
     }
 

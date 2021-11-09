@@ -38,12 +38,12 @@ class PhysicsEngine implements Engine {
     @Override
     public void run() {
         long currentRunTime = System.currentTimeMillis();
-        long deltaTime = previousRunTime - currentRunTime;
-        deltaTime = Math.min(deltaTime, maxRunDelta);
+        long deltaTime = currentRunTime - previousRunTime;
+        double timeRatio = (double) Math.min(deltaTime, maxRunDelta) / 1000;
         previousRunTime = currentRunTime;
         if (map != null) {
             for (Entity entity : map.getEntities()) {
-                updateCoordinate(entity,deltaTime);
+                updateCoordinate(entity,timeRatio);
             }
         }
     }
@@ -51,11 +51,11 @@ class PhysicsEngine implements Engine {
     /**
      * Update the coordinate of an entity
      * @param entity an entity
-     * @param deltaTime a interval of time used to calc the movement
+     * @param timeRatio a ratio of time used to calc the movement
      */
-    private void updateCoordinate (Entity entity, long deltaTime) {
+    private void updateCoordinate (Entity entity, double timeRatio) {
         Coordinates nextCoordinate = entity.getCoordinates().getNextCoordinates(entity.getDirection(),
-                entity.getSpeed()*deltaTime);
+                entity.getSpeed()*timeRatio);
         if (isValidCoordinates(nextCoordinate)) entity.setCoordinates(nextCoordinate);
         else entity.setDirection(Direction.IDLE);
     }

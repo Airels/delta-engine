@@ -29,4 +29,10 @@ public final class Rectangle extends Shape {
     public javafx.scene.shape.Shape getFXShape() {
         return fxRectangle;
     }
+
+    @Override
+    public void resize(double width, double height) {
+        fxRectangle.setWidth(width);
+        fxRectangle.setHeight(height);
+    }
 }

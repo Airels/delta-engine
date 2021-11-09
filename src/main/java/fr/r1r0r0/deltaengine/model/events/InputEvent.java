@@ -14,8 +14,8 @@ public final class InputEvent {
      * @param releaseTrigger trigger when key is released
      */
     public InputEvent(Trigger pressTrigger, Trigger releaseTrigger) {
-        this.pressTrigger = pressTrigger;
-        this.releaseTrigger = releaseTrigger;
+        this.pressTrigger = (pressTrigger != null) ? pressTrigger : VoidTrigger.INSTANCE;
+        this.releaseTrigger = (releaseTrigger != null) ? releaseTrigger : VoidTrigger.INSTANCE;
     }
 
     /**
