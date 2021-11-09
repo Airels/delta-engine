@@ -6,12 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * The Event Engine.
+ * Executes checkEvent() method of each registered events, each tick.
  */
 final class EventEngine implements Engine {
 
     private final List<Event> events;
 
+    /**
+     * Default constructor
+     */
     EventEngine() {
         this.events = new ArrayList<>();
     }
@@ -29,23 +33,23 @@ final class EventEngine implements Engine {
     }
 
     /**
-     * TODO
-     * @param event
+     * Adding an event to the engine
+     * @param event event to add
      */
     public synchronized void addEvent(Event event) {
         events.add(event);
     }
 
     /**
-     * TODO
-     * @param event
+     * Remove an event to the engine
+     * @param event event to remove
      */
     public synchronized void removeEvent(Event event) {
         events.remove(event);
     }
 
     /**
-     * TODO
+     * Clear all registered events from the engine
      */
     public synchronized void clearEvents() {
         events.clear();
