@@ -1,7 +1,10 @@
 package engines.kernel;
 
+import fr.r1r0r0.deltaengine.exceptions.MapCaseCoordinateStackingException;
+import fr.r1r0r0.deltaengine.exceptions.MapOutOfBoundException;
 import fr.r1r0r0.deltaengine.model.*;
 import fr.r1r0r0.deltaengine.model.Dimension;
+import fr.r1r0r0.deltaengine.model.elements.Cell;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
 import fr.r1r0r0.deltaengine.model.elements.basic_cases.Wall;
 import fr.r1r0r0.deltaengine.model.engines.DeltaEngine;
@@ -16,6 +19,11 @@ import javafx.scene.paint.Color;
 
 import java.awt.*;
 
+/**
+ * TODO: l affichage du moteur graphique est bug, regarder dans le damier la position
+ * du carre par rapport a celle du cercle, notament lorsque leur cocordonne sont identique
+ */
+
 public class Main {
 
     public static void main(String[] args) throws Exception {
@@ -25,8 +33,9 @@ public class Main {
 
         MapLevel mapLevel = new MapLevel("test",30,20);
         deltaEngine.addMap(mapLevel);
-        mapLevel = new MapLevel("test2", 10,10);
-        mapLevel.addCase(new Wall(2,2));
+        mapLevel = createMapLevelDamier("test2", 10,10);
+        //mapLevel = createMapLevelPrison("test2", 10,10,6,8,6,8);
+        //mapLevel.addCase(new Wall(2,2));
         deltaEngine.addMap(mapLevel);
 
         deltaEngine.setCurrentMap("test");
@@ -40,15 +49,15 @@ public class Main {
         red.setSpeed(0);
         mapLevel.addEntity(red);
 
-        InputEvent moveUpEvent = new InputEvent(new ChangeMove(pacman, Direction.UP), null);
-        InputEvent moveDownEvent = new InputEvent(new ChangeMove(pacman, Direction.DOWN), null);
-        InputEvent moveLeftEvent = new InputEvent(new ChangeMove(pacman, Direction.LEFT), null);
-        InputEvent moveRightEvent = new InputEvent(new ChangeMove(pacman, Direction.RIGHT), null);
+        InputEvent moveUpEvent = new InputEvent(new ChangeMove(pacman, Direction.UP), new ChangeMove(pacman, Direction.IDLE));
+        InputEvent moveDownEvent = new InputEvent(new ChangeMove(pacman, Direction.DOWN), new ChangeMove(pacman, Direction.IDLE));
+        InputEvent moveLeftEvent = new InputEvent(new ChangeMove(pacman, Direction.LEFT), new ChangeMove(pacman, Direction.IDLE));
+        InputEvent moveRightEvent = new InputEvent(new ChangeMove(pacman, Direction.RIGHT), new ChangeMove(pacman, Direction.IDLE));
 
-        InputEvent moveUpEventRed = new InputEvent(new ChangeMove(red, Direction.UP), null);
-        InputEvent moveDownEventRed = new InputEvent(new ChangeMove(red, Direction.DOWN), null);
-        InputEvent moveLeftEventRed = new InputEvent(new ChangeMove(red, Direction.LEFT), null);
-        InputEvent moveRightEventRed = new InputEvent(new ChangeMove(red, Direction.RIGHT), null);
+        InputEvent moveUpEventRed = new InputEvent(new ChangeMove(red, Direction.UP), new ChangeMove(red, Direction.IDLE));
+        InputEvent moveDownEventRed = new InputEvent(new ChangeMove(red, Direction.DOWN), new ChangeMove(red, Direction.IDLE));
+        InputEvent moveLeftEventRed = new InputEvent(new ChangeMove(red, Direction.LEFT), new ChangeMove(red, Direction.IDLE));
+        InputEvent moveRightEventRed = new InputEvent(new ChangeMove(red, Direction.RIGHT), new ChangeMove(red, Direction.IDLE));
 
         deltaEngine.setInput(Key.Z, moveUpEvent);
         deltaEngine.setInput(Key.Q, moveLeftEvent);
@@ -66,12 +75,60 @@ public class Main {
                 System.out.println("VIDAL E TRO FOR");
             }
         });
-        pacman.setAI(new BasicAI(pacman));
+        //pacman.setAI(new BasicAI(pacman));
 
         mapLevel.addEvent(new Timer(300));
         deltaEngine.setCurrentMap("test2");
         deltaEngine.addGlobalEvent(new Timer(1000));
+
+        try {
+            for (; ; Thread.sleep(2000)) {
+                System.out.println(pacman.getCoordinates() + " -- " + red.getCoordinates());
+            }
+        } catch (Exception e) {
+
+        }
     }
+
+    private static MapLevel createMapLevelDamier (String name, int width, int height) {
+        //TODO: faire une erreur generique pour les MapLevel, qui se subdivise en toutes les erreurs actuels
+        MapLevel mapLevel = new MapLevel(name,width,height);
+        try {
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    mapLevel.addCase(new Cell(i, j, new Rectangle(((i + j) & 1) == 0 ? Color.BLACK : Color.WHITE)));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return mapLevel;
+    }
+
+    private static MapLevel createMapLevelPrison (String name, int width, int height,
+                                                  int prisonXMin, int prisonXMax,
+                                                  int prisonYMin, int prisonYMax) {
+        MapLevel mapLevel = new MapLevel(name,width,height);
+        try {
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    Cell cell;
+                    if (prisonXMin <= i && i <= prisonXMax
+                            && prisonYMin <= j && j <= prisonYMax) {
+                        cell = new Cell(i, j, new Rectangle(Color.WHITE));
+                    } else {
+                        cell = new Wall(i, j);
+                    }
+                    // TODO: rename le addCase en addCell
+                    mapLevel.addCase(cell);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return mapLevel;
+    }
+
 }
 
 class ChangeMove implements Trigger {
@@ -134,4 +191,7 @@ class Timer extends Event {
             lastTimer = System.currentTimeMillis();
         }
     }
+
+
+
 }
