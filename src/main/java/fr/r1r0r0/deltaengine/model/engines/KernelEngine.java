@@ -5,6 +5,7 @@ import fr.r1r0r0.deltaengine.exceptions.MapAlreadyExistException;
 import fr.r1r0r0.deltaengine.exceptions.MapDoesNotExistException;
 import fr.r1r0r0.deltaengine.model.MapLevel;
 import fr.r1r0r0.deltaengine.model.elements.Cell;
+import fr.r1r0r0.deltaengine.model.elements.Element;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
 import fr.r1r0r0.deltaengine.model.elements.HUDElement;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
@@ -344,7 +345,7 @@ public final class KernelEngine {
      */
     public synchronized void addHUDElement(HUDElement hudElement) {
         hudElements.add(hudElement);
-        Platform.runLater(() -> graphicsEngine.addElement(hudElement));
+        addElementToGraphicsEngine(hudElement);
     }
 
     /**
@@ -354,7 +355,7 @@ public final class KernelEngine {
      */
     public synchronized void removeHUDElement(HUDElement hudElement) {
         hudElements.remove(hudElement);
-        Platform.runLater(() -> graphicsEngine.removeElement(hudElement));
+        removeElementFromGraphicsEngine(hudElement);
     }
 
     /**
@@ -362,7 +363,7 @@ public final class KernelEngine {
      */
     public synchronized void clearHUDElements() {
         for (HUDElement hudElement : hudElements)
-            Platform.runLater(() -> graphicsEngine.removeElement(hudElement));
+            removeElementFromGraphicsEngine(hudElement);
 
         hudElements.clear();
     }
@@ -380,10 +381,11 @@ public final class KernelEngine {
         Collection<Event> mapEvents = mapLevel.getEvents();
 
         physicsEngine.setMap(mapLevel);
-        Platform.runLater(() -> graphicsEngine.setMap(mapLevel));
+        setMapInTheGraphicsEngine(mapLevel);
+
 
         for (Entity mapEntity : mapEntities) {
-            Platform.runLater(() -> graphicsEngine.addElement(mapEntity));
+            addElementToGraphicsEngine(mapEntity);
             if (mapEntity.getAI() != null)
                 iaEngine.addAI(mapEntity.getAI());
         }
@@ -407,11 +409,11 @@ public final class KernelEngine {
 
 
         for (Cell c : mapCells) {
-            Platform.runLater(() -> graphicsEngine.removeElement(c));
+            removeElementFromGraphicsEngine(c);
         }
 
         for (Entity entity : mapEntities) {
-            Platform.runLater(() -> graphicsEngine.removeElement(entity));
+            removeElementFromGraphicsEngine(entity);
             if (entity.getAI() != null)
                 iaEngine.removeAI(entity.getAI());
         }
@@ -421,5 +423,29 @@ public final class KernelEngine {
         }
 
         currentMapLevel = null;
+    }
+
+    /**
+     * Adding an element to the graphics engine, using Platform.runLater of JavaFX
+     * @param element Element to add
+     */
+    private void addElementToGraphicsEngine(Element element) {
+        Platform.runLater(() -> graphicsEngine.addElement(element));
+    }
+
+    /**
+     * Removing an element from the graphics engine, using Platform.runLater of JavaFX
+     * @param element Element to remove
+     */
+    private void removeElementFromGraphicsEngine(Element element) {
+        Platform.runLater(() -> graphicsEngine.removeElement(element));
+    }
+
+    /**
+     * Allowing set up wanted map in the Graphics Engine, using Platform.runLater of JavaFX
+     * @param map
+     */
+    private void setMapInTheGraphicsEngine(MapLevel map) {
+        Platform.runLater(() -> graphicsEngine.setMap(map));
     }
 }
