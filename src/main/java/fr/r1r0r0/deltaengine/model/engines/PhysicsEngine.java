@@ -1,22 +1,20 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
+import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.Direction;
 import fr.r1r0r0.deltaengine.model.MapLevel;
+import fr.r1r0r0.deltaengine.model.elements.CollisionPositions;
 import fr.r1r0r0.deltaengine.model.elements.CrossableVisitor;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
 import fr.r1r0r0.deltaengine.model.events.Event;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * A physical engine
- * TODO: les marge d erreur deplacement pour les recentrer
- * TODO: prendre en compte les dimensions de l entite pour le deplacement
- * TODO: le points est topleft et prendre en compte les dimensions
  */
 final class PhysicsEngine implements Engine {
 
@@ -30,6 +28,9 @@ final class PhysicsEngine implements Engine {
      */
 
     private static final double MOVE_MARGIN_ERROR = 0.05;
+    private static final CollisionPositions[] POSITIONS_CHECK = new CollisionPositions[]{
+            CollisionPositions.LEFT_TOP, CollisionPositions.RIGHT_TOP,
+            CollisionPositions.LEFT_BOT, CollisionPositions.RIGHT_BOT};
 
     private MapLevel mapLevel;
     private long previousRunTime;
@@ -88,28 +89,36 @@ final class PhysicsEngine implements Engine {
     }
 
     /**
-     * Update the coordinates of each entity in an collection of entities
+     * Update the coordinates of each entity in a collection of entity
+     * If the coordinates can not be update, because of an illegal movement, the direction of the entity is set to IDLE
      * @param entities a collection of entity
      * @param timeRatio a ratio of time used to calc the movement
      */
     private void updateCoordinates (Collection<Entity> entities, double timeRatio) {
         for (Entity entity : entities) {
+            if (entity.getDirection() == Direction.IDLE) continue;
             Coordinates nextCoordinate = entity.getCoordinates().getNextCoordinates(entity.getDirection(),
                     entity.getSpeed() * timeRatio);
-            if (isValidCoordinates(nextCoordinate)) entity.setCoordinates(nextCoordinate);
+            if (isValidPosition(nextCoordinate,entity.getDimension())) entity.setCoordinates(nextCoordinate);
             else entity.setDirection(Direction.IDLE);
         }
     }
 
     /**
-     * Returns if the coordinate is a valid coordinate in the mapLevel
-     * @param coordinates a coordinate
-     * @return if the coordinate is a valid coordinate in the mapLevel
+     * Returns if the rectangle given, construct with a top-left point and a dimension,
+     * is in a valid position in the mapLevel
+     * @param initialTopLeft the coordinate of the top-left point of the rectangle
+     * @param dimension the dimension of the rectangle
+     * @return if the position of the rectangle is valid in the mapLevel
      */
-    private boolean isValidCoordinates (Coordinates coordinates) {
-        int x = (coordinates.getX() >= 0) ? (int) coordinates.getX() : ((int) coordinates.getX() - 1);
-        int y = (coordinates.getY() >= 0) ? (int) coordinates.getY() : ((int) coordinates.getY() - 1);
-        return CrossableVisitor.isCaseCrossable(mapLevel.getCell(x,y));
+    private boolean isValidPosition (Coordinates initialTopLeft, Dimension dimension) {
+        for (CollisionPositions collisionPosition : POSITIONS_CHECK) {
+            Coordinates position = collisionPosition.calcPosition(initialTopLeft,dimension,MOVE_MARGIN_ERROR);
+            int x = (position.getX() >= 0) ? (int) position.getX() : ((int) position.getX() - 1);
+            int y = (position.getY() >= 0) ? (int) position.getY() : ((int) position.getY() - 1);
+            if ( ! CrossableVisitor.isCaseCrossable(mapLevel.getCell(x,y))) return false;
+        }
+        return true;
     }
 
     /**
