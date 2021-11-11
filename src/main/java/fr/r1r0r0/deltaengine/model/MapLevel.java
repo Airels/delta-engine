@@ -1,8 +1,8 @@
 package fr.r1r0r0.deltaengine.model;
 
-import fr.r1r0r0.deltaengine.exceptions.MapCaseCoordinateStackingException;
-import fr.r1r0r0.deltaengine.exceptions.MapEntityNameStackingException;
-import fr.r1r0r0.deltaengine.exceptions.MapOutOfBoundException;
+import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelCellCoordinatesStackingException;
+import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelEntityNameStackingException;
+import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelCoordinatesOutOfBoundException;
 import fr.r1r0r0.deltaengine.model.elements.Cell;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
 import fr.r1r0r0.deltaengine.model.elements.basic_cases.VoidCell;
@@ -64,19 +64,19 @@ public final class MapLevel {
     /**
      * Add a case in the map
      * @param c a case
-     * @throws MapCaseCoordinateStackingException throw if a case with the same coordinate is already
+     * @throws MapLevelCellCoordinatesStackingException throw if a case with the same coordinate is already
      * present in the map
-     * @throws MapOutOfBoundException throw if a case with coordinate out of the area define by the
+     * @throws MapLevelCoordinatesOutOfBoundException throw if a case with coordinate out of the area define by the
      * map is added
      */
-    public void addCase (Cell c) throws MapCaseCoordinateStackingException, MapOutOfBoundException {
+    public void addCase (Cell c) throws MapLevelCellCoordinatesStackingException, MapLevelCoordinatesOutOfBoundException {
         Coordinates coordinates = c.getCoordinates();
         if (cases.containsKey(coordinates) && cases.get(coordinates) != c)
-            throw new MapCaseCoordinateStackingException(cases.get(coordinates),c);
+            throw new MapLevelCellCoordinatesStackingException(cases.get(coordinates),c);
         if (coordinates.getX() < 0
                 || coordinates.getX() >= width
                 || coordinates.getY() < 0
-                || coordinates.getY() >= height) throw new MapOutOfBoundException(width,height,coordinates);
+                || coordinates.getY() >= height) throw new MapLevelCoordinatesOutOfBoundException(width,height,coordinates);
         cases.put(coordinates,c);
     }
 
@@ -95,12 +95,12 @@ public final class MapLevel {
     /**
      * Add an entity in the map
      * @param entity an entity
-     * @throws MapEntityNameStackingException throw if the name of the entity is already present in the map
+     * @throws MapLevelEntityNameStackingException throw if the name of the entity is already present in the map
      */
-    public void addEntity (Entity entity) throws MapEntityNameStackingException {
+    public void addEntity (Entity entity) throws MapLevelEntityNameStackingException {
         String name = entity.getName();
         if (entities.containsKey(name) && entities.get(name) != entity)
-            throw new MapEntityNameStackingException(entities.get(name),entity);
+            throw new MapLevelEntityNameStackingException(entities.get(name),entity);
         entities.put(name,entity);
     }
 

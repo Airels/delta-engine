@@ -1,7 +1,5 @@
 package engines.kernel;
 
-import fr.r1r0r0.deltaengine.exceptions.MapCaseCoordinateStackingException;
-import fr.r1r0r0.deltaengine.exceptions.MapOutOfBoundException;
 import fr.r1r0r0.deltaengine.model.*;
 import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.elements.Cell;
