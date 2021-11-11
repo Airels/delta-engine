@@ -99,7 +99,7 @@ final class PhysicsEngine implements Engine {
     private boolean isValidCoordinates (Coordinates coordinates) {
         int x = (coordinates.getX() >= 0) ? (int) coordinates.getX() : ((int) coordinates.getX() - 1);
         int y = (coordinates.getY() >= 0) ? (int) coordinates.getY() : ((int) coordinates.getY() - 1);
-        return CrossableVisitor.isCaseCrossable(mapLevel.getCase(x,y));
+        return CrossableVisitor.isCaseCrossable(mapLevel.getCell(x,y));
     }
 
     /**

@@ -18,7 +18,7 @@ public final class MapLevel {
     private final String name;
     private final int width;
     private final int height;
-    private final java.util.Map<Coordinates, Cell> cases;
+    private final java.util.Map<Coordinates,Cell> cells;
     private final java.util.Map<String,Entity> entities;
     private final Set<Event> events;
 
@@ -28,11 +28,11 @@ public final class MapLevel {
      * @param width the width of the map
      * @param height the height of the area
      */
-    public MapLevel(String name, int width, int height) {
+    public MapLevel (String name, int width, int height) {
         this.name = name;
         this.width = width;
         this.height = height;
-        cases = new HashMap<>();
+        cells = new HashMap<>();
         entities = new HashMap<>();
         events = new LinkedHashSet<>();
     }
@@ -63,33 +63,33 @@ public final class MapLevel {
 
     /**
      * Add a case in the map
-     * @param c a case
-     * @throws MapLevelCellCoordinatesStackingException throw if a case with the same coordinate is already
+     * @param cell a cell
+     * @throws MapLevelCellCoordinatesStackingException throw if a cell with the same coordinate is already
      * present in the map
-     * @throws MapLevelCoordinatesOutOfBoundException throw if a case with coordinate out of the area define by the
+     * @throws MapLevelCoordinatesOutOfBoundException throw if a cell with coordinate out of the area define by the
      * map is added
      */
-    public void addCase (Cell c) throws MapLevelCellCoordinatesStackingException, MapLevelCoordinatesOutOfBoundException {
-        Coordinates coordinates = c.getCoordinates();
-        if (cases.containsKey(coordinates) && cases.get(coordinates) != c)
-            throw new MapLevelCellCoordinatesStackingException(cases.get(coordinates),c);
+    public void addCase (Cell cell) throws MapLevelCellCoordinatesStackingException, MapLevelCoordinatesOutOfBoundException {
+        Coordinates coordinates = cell.getCoordinates();
+        if (cells.containsKey(coordinates) && cells.get(coordinates) != cell)
+            throw new MapLevelCellCoordinatesStackingException(cells.get(coordinates),cell);
         if (coordinates.getX() < 0
                 || coordinates.getX() >= width
                 || coordinates.getY() < 0
                 || coordinates.getY() >= height) throw new MapLevelCoordinatesOutOfBoundException(width,height,coordinates);
-        cases.put(coordinates,c);
+        cells.put(coordinates,cell);
     }
 
     /**
-     * Return the case in the map with coordinate (x,y)
+     * Return the cell in the map with coordinate (x,y)
      * @param x the x value
      * @param y the y value
-     * @return the case in the map with coordinate (x,y),or a new VoidCell(x,y)
-     * if map does not contain case with this coordinate
+     * @return the cell in the map with coordinate (x,y),or a new VoidCell(x,y)
+     * if map does not contain cell with this coordinate
      */
-    public Cell getCase (int x, int y) {
-        Cell c = cases.get(new Coordinates(x,y));
-        return (c == null) ? new VoidCell(x,y) : c;
+    public Cell getCell (int x, int y) {
+        Cell cell = cells.get(new Coordinates(x,y));
+        return (cell == null) ? new VoidCell(x,y) : cell;
     }
 
     /**
@@ -152,11 +152,11 @@ public final class MapLevel {
     }
 
     /**
-     * Return all the cases in map
+     * Return all the cells in map
      * @return a collection of case
      */
-    public Collection<Cell> getCases () {
-        return cases.values();
+    public Collection<Cell> getCells () {
+        return cells.values();
     }
 
     /**

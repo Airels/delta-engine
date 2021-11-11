@@ -83,7 +83,7 @@ final class GraphicsEngine implements Engine {
 
         for (int i = 0; i < mapLevel.getWidth(); i++) {
             for (int j = 0; j < mapLevel.getHeight(); j++) {
-                Cell c = mapLevel.getCase(i, j);
+                Cell c = mapLevel.getCell(i, j);
                 c.getSprite().resize(CASE_SIZE, CASE_SIZE);
                 addElement(c);
             }

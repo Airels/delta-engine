@@ -401,7 +401,7 @@ public final class KernelEngine {
      * Unload current map, loading associated elements, AI, and events
      */
     private void unloadMap() {
-        Collection<Cell> mapCells = currentMapLevel.getCases();
+        Collection<Cell> mapCells = currentMapLevel.getCells();
         Collection<Entity> mapEntities = currentMapLevel.getEntities();
         Collection<Event> mapEvents = currentMapLevel.getEvents();
 
