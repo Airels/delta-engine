@@ -163,18 +163,30 @@ public class Entity implements Element {
     }
 
     /**
-     * TODO
-     * @param entity
-     * @return
+     * Return the event matching to the entity given
+     * @param entity an entity
+     * @return the event matching to the entity given, the VodiEvent is return if there is no matching event
      */
-    public Event getCollisionEvent(Entity entity) {
+    public Event getCollisionEvent (Entity entity) {
         Event event = collisionEvents.get(entity);
         return (event == null) ? VoidEvent.getInstance() : event;
     }
 
     /**
-     * TODO
-     * @return
+     * Return the collision points, a list of coordinates used to calc if there is a collision between 2 entities.
+     * The hit-box is a rectangle, with a left-top point corresponding to attribute coords,
+     * and width/height are determined by the attribute dimension.
+     * Collisions points are 9 points of this rectangle :
+     *      - the top-left
+     *      - the top right
+     *      - the bot left
+     *      - the bot right
+     *      - the center center
+     *      - the center top
+     *      - the center bot
+     *      - the left center
+     *      - the right center
+     * @return a list of coordinates representing collision points
      */
     private Collection<Coordinates> getCollisionPoints () {
         double centerX = coords.getX() + (dimension.getWidth() / 2);
@@ -185,29 +197,43 @@ public class Entity implements Element {
                 new Coordinates(maxX,coords.getY()), // TOP RIGHT
                 new Coordinates(coords.getX(),maxY), // BOT LEFT
                 new Coordinates(maxX,maxY), // BOT RIGHT
-                new Coordinates(centerX,centerY), // CENTER
-                new Coordinates(coords.getX(),centerY), // CENTER LEFT
-                new Coordinates(maxX,centerY), // CENTER RIGHT
+                new Coordinates(centerX,centerY), // CENTER CENTER
                 new Coordinates(centerX,coords.getY()), // CENTER TOP
-                new Coordinates(centerX,maxY) // CENTER BOT
+                new Coordinates(centerX,maxY), // CENTER BOT
+                new Coordinates(coords.getX(),centerY), // LEFT CENTER
+                new Coordinates(maxX,centerY) // RIGHT CENTER
         );
     }
 
     /**
-     * TODO
-     * @param other
-     * @return
+     * Return if the points given is contain in the hit-box of the entity.
+     * The hit-box is a rectangle, with a left-top point corresponding to attribute coords,
+     * and width/height are determined by the attribute dimension.
+     * The points is contain in the rectangle if the condition are satisfied :
+     *      -his X is contain between the minX and maxX of the rectangle,
+     *          between coords.getX() and coords.getX() + dimension.getWidth()
+     *      -his Y is contain between the minY and maxY of the rectangle,
+     *          between coords.getY() and coords.getY() + dimension.getHeight()
+     * @param coordinates a point
+     * @return if the points given is contain in the hit-box of the entity
+     */
+    private boolean isInHitBox (Coordinates coordinates) {
+        return coords.getX() <= coordinates.getX()
+                && coordinates.getX() <= (coords.getX() + dimension.getWidth())
+                && coords.getY() <= coordinates.getY()
+                && coordinates.getY() <= (coords.getY() + dimension.getHeight());
+    }
+
+    /**
+     * Return is there is the current entity is colliding the other entity given.
+     * There is a collision if one of the collision points of the current entity is contained in the
+     * hit-box of the other entity.
+     * @param other an entity
+     * @return if there is a collision
      */
     public boolean testCollide (Entity other) {
-        Coordinates otherCoords = other.coords;
-        double minX = otherCoords.getX();
-        double minY = otherCoords.getY();
-        double maxX = otherCoords.getX() + other.dimension.getWidth();
-        double maxY = otherCoords.getY() + other.dimension.getHeight();
         for (Coordinates collisionPoint : getCollisionPoints()) {
-            if (minX <= collisionPoint.getX() && collisionPoint.getX() <= maxX
-                    && minY <= collisionPoint.getY() && collisionPoint.getY() <= maxY)
-                return true;
+            if (other.isInHitBox(collisionPoint)) return true;
         }
         return false;
     }
