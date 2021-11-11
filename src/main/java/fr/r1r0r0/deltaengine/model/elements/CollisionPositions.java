@@ -58,7 +58,7 @@ public enum CollisionPositions {
         if (1 < margin) throw new IllegalArgumentException("Margin must be lesser than 1 : " + margin);
         return new Coordinates(
                 topLeft.getX() + (ratioDimensionX + margin*ratioMarginX)*dimension.getWidth(),
-                topLeft.getY() + (ratioDimensionY + margin*ratioDimensionY)*dimension.getHeight()
+                topLeft.getY() + (ratioDimensionY + margin*ratioMarginY)*dimension.getHeight()
         );
     }
 

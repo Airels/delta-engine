@@ -31,8 +31,8 @@ public class Main {
 
         MapLevel mapLevel = new MapLevel("test",30,20);
         deltaEngine.addMap(mapLevel);
-        mapLevel = createMapLevelDamier("test2", 10,10);
-        //mapLevel = createMapLevelPrison("test2", 10,10,6,8,6,8);
+        //mapLevel = createMapLevelDamier("test2", 10,10);
+        mapLevel = createMapLevelPrison("test2", 10,10,6,8,6,8);
         //mapLevel.addCase(new Wall(2,2));
         deltaEngine.addMap(mapLevel);
 
@@ -117,7 +117,6 @@ public class Main {
                     } else {
                         cell = new Wall(i, j);
                     }
-                    // TODO: rename le addCase en addCell
                     mapLevel.addCase(cell);
                 }
             }
