@@ -231,7 +231,7 @@ public class Entity implements Element {
      * @param other an entity
      * @return if there is a collision
      */
-    public boolean testCollide (Entity other) {
+    public final boolean testCollide (Entity other) {
         for (Coordinates collisionPoint : getCollisionPoints()) {
             if (other.isInHitBox(collisionPoint)) return true;
         }
