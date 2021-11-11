@@ -5,13 +5,18 @@ import fr.r1r0r0.deltaengine.model.Direction;
 import fr.r1r0r0.deltaengine.model.MapLevel;
 import fr.r1r0r0.deltaengine.model.elements.CrossableVisitor;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
+import fr.r1r0r0.deltaengine.model.events.Event;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A physical engine
  * TODO: les marge d erreur deplacement pour les recentrer
  * TODO: prendre en compte les dimensions de l entite pour le deplacement
  * TODO: le points est topleft et prendre en compte les dimensions
- * TODO: On synchronise le run en cas de modif de map
  */
 final class PhysicsEngine implements Engine {
 
@@ -23,6 +28,8 @@ final class PhysicsEngine implements Engine {
      * puis on va tester l appartenance d un de ces points dans la hitbox de la cible
      * qui correspond a un minX maxX minY maxY
      */
+
+    private static final double MOVE_MARGIN_ERROR = 0.05;
 
     private MapLevel mapLevel;
     private long previousRunTime;
@@ -49,46 +56,49 @@ final class PhysicsEngine implements Engine {
      * Update the coordinate of all entity in the current mapLevel
      */
     @Override
-    public void run() {
-        synchronized (this) {
-            long currentRunTime = System.currentTimeMillis();
-            long deltaTime = currentRunTime - previousRunTime;
-            double timeRatio = (double) Math.min(deltaTime, maxRunDelta) / 1000;
-            previousRunTime = currentRunTime;
-            if (mapLevel != null) {
-                for (Entity entity : mapLevel.getEntities()) {
-                    updateCoordinate(entity,timeRatio);
-                }
-                for (Entity source : mapLevel.getEntities()) {
-                    for (Entity target : mapLevel.getEntities()) {
-                        checkCollision(source,target);
-                    }
+    public synchronized void run() {
+        long currentRunTime = System.currentTimeMillis();
+        double timeRatio = (double) Math.min(currentRunTime - previousRunTime, maxRunDelta) / 1000;
+        previousRunTime = currentRunTime;
+        if (mapLevel != null) {
+            Collection<Entity> entities = mapLevel.getEntities();
+            updateCoordinates(entities,timeRatio);
+            checkCollisions(entities).forEach(Event::checkEvent);
+        }
+    }
+
+    /**
+     Return a list of event providing from collisions between all entities in the collection given
+     * If there is a collision between 2 entity A and B, the list of event that will be return will contain
+     * the event from A to B and the event from B to A.
+     * @param entities a collection of entity
+     * @return a set of event (without duplicate element)
+     */
+    private Set<Event> checkCollisions (Collection<Entity> entities) {
+        Set<Event> collisionEvents = new HashSet<>(entities.size());
+        for (Entity source : entities) {
+            for (Entity target : entities) {
+                if (source.testCollide(target)) {
+                    collisionEvents.add(source.getCollisionEvent(target));
+                    collisionEvents.add(target.getCollisionEvent(source));
                 }
             }
         }
+        return collisionEvents;
     }
 
     /**
-     * TODO
-     * @param source
-     * @param target
-     */
-    private void checkCollision (Entity source, Entity target) {
-        if (source.testCollide(target)) {
-            source.getCollisionEvent(target).checkEvent();
-        }
-    }
-
-    /**
-     * Update the coordinate of an entity
-     * @param entity an entity
+     * Update the coordinates of each entity in an collection of entities
+     * @param entities a collection of entity
      * @param timeRatio a ratio of time used to calc the movement
      */
-    private void updateCoordinate (Entity entity, double timeRatio) {
-        Coordinates nextCoordinate = entity.getCoordinates().getNextCoordinates(entity.getDirection(),
-                entity.getSpeed()*timeRatio);
-        if (isValidCoordinates(nextCoordinate)) entity.setCoordinates(nextCoordinate);
-        else entity.setDirection(Direction.IDLE);
+    private void updateCoordinates (Collection<Entity> entities, double timeRatio) {
+        for (Entity entity : entities) {
+            Coordinates nextCoordinate = entity.getCoordinates().getNextCoordinates(entity.getDirection(),
+                    entity.getSpeed() * timeRatio);
+            if (isValidCoordinates(nextCoordinate)) entity.setCoordinates(nextCoordinate);
+            else entity.setDirection(Direction.IDLE);
+        }
     }
 
     /**
@@ -106,22 +116,24 @@ final class PhysicsEngine implements Engine {
      * Replace the current mapLevel with another
      * @param mapLevel a mapLevel
      */
-    public synchronized void setMap(MapLevel mapLevel) {
+    public synchronized void setMap (MapLevel mapLevel) {
         this.mapLevel = mapLevel;
     }
 
     /**
      * Clear the current mapLevel
      */
-    public synchronized void clearMap() {
+    public synchronized void clearMap () {
         mapLevel = null;
     }
 
     /**
-     * TODO
-     * @param fps
+     * Setter for the attribute maxRunDelta
+     * The new value of the attribute is calc by using the number of fps
+     * @param fps the number of fps
      */
-    public void setMaxRunDelta(int fps) {
+    public synchronized void setMaxRunDelta (int fps) {
         maxRunDelta = 1000 / fps;
     }
+
 }
