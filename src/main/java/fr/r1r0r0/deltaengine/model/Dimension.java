@@ -1,35 +1,37 @@
 package fr.r1r0r0.deltaengine.model;
 
 /**
- * TODO
+ * Represent the 2D dimension of an elements, a rectangle, used for the graphic size and the hit-box
  */
 public final class Dimension {
 
-    private final double width, height;
+    private final double width;
+    private final double height;
 
     /**
-     * TODO
-     * @param width
-     * @param height
+     * Constructor
+     * @param width the width
+     * @param height the height
      */
-    public Dimension(double width, double height) {
+    public Dimension (double width, double height) {
         this.width = width;
         this.height = height;
     }
 
     /**
-     * TODO
-     * @return
+     * Return the attribute width
+     * @return the attribute width
      */
-    public double getWidth() {
+    public double getWidth () {
         return width;
     }
 
     /**
-     * TODO
-     * @return
+     * Return the attribute height
+     * @return the attribute height
      */
-    public double getHeight() {
+    public double getHeight () {
         return height;
     }
 }
+
