@@ -34,6 +34,11 @@ public final class DeltaEngine extends Application {
         }
     }
 
+    @Override
+    public void stop() {
+        System.exit(0);
+    }
+
     /**
      * DeltaEngine launcher. Main entry point of the Engine. <br>
      * Once initialized and started, it will return the Kernel of the engine,
