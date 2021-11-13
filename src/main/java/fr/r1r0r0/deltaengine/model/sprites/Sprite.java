@@ -3,17 +3,18 @@ package fr.r1r0r0.deltaengine.model.sprites;
 import javafx.scene.Node;
 
 /**
- * TODO
+ * The Sprite is the graphical component of an element,
+ * it can be displayed through it's node
  */
 public interface Sprite{
     /**
-     * TODO
-     * @return
+     * The Sprite object
+     * @return the Sprite object
      */
     Node getNode();
 
     /**
-     * TODO
+     * resize the sprite to the following width and height
      * @param width
      * @param height
      */
@@ -25,16 +26,16 @@ public interface Sprite{
     }
 
     /**
-     * TODO
-     * @param z
+     * Update the order or depth of the sprite
+     * @param z is the new depth
      */
     default void setZOrder(double z){
         this.getNode().setViewOrder(z);
     };
 
     /**
-     * TODO
-     * @return
+     * The depth of the sprite
+     * @return the depth of the sprite
      */
     default double getZOrder(){
         return this.getNode().getViewOrder();
