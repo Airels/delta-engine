@@ -5,19 +5,19 @@ package fr.r1r0r0.deltaengine.model;
  */
 public enum Direction {
 
-    LEFT(new Coordinates(-1,0)),
-    UP(new Coordinates(0,-1)),
-    RIGHT(new Coordinates(1,0)),
-    DOWN(new Coordinates(0,1)),
-    IDLE(new Coordinates(0,0));
+    LEFT(new Coordinates<>(-1,0)),
+    UP(new Coordinates<>(0,-1)),
+    RIGHT(new Coordinates<>(1,0)),
+    DOWN(new Coordinates<>(0,1)),
+    IDLE(new Coordinates<>(0,0));
 
-    private final Coordinates coordinates;
+    private final Coordinates<Integer> coordinates;
 
     /**
      * TODO
      * @param coordinates
      */
-    Direction (Coordinates coordinates) {
+    Direction (Coordinates<Integer> coordinates) {
         this.coordinates = coordinates;
     }
 
@@ -25,7 +25,7 @@ public enum Direction {
      * TODO
      * @return
      */
-    public Coordinates getCoordinates () {
+    public Coordinates<Integer> getCoordinates () {
         return coordinates;
     }
 

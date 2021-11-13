@@ -16,14 +16,14 @@ class ColorTest {
         Color c = new Color(255, 255, 255, 255);
         Color c2 = new Color(255, 0, 0, 0);
 
-        Assertions.assertEquals(1, c.getJFXColor().getRed());
-        Assertions.assertEquals(1, c.getJFXColor().getGreen());
-        Assertions.assertEquals(1, c.getJFXColor().getBlue());
-        Assertions.assertEquals(1, c.getJFXColor().getOpacity());
+        Assertions.assertEquals(1, c.getFXColor().getRed());
+        Assertions.assertEquals(1, c.getFXColor().getGreen());
+        Assertions.assertEquals(1, c.getFXColor().getBlue());
+        Assertions.assertEquals(1, c.getFXColor().getOpacity());
 
-        Assertions.assertEquals(1, c2.getJFXColor().getRed());
-        Assertions.assertEquals(0, c2.getJFXColor().getGreen());
-        Assertions.assertEquals(0, c2.getJFXColor().getBlue());
-        Assertions.assertEquals(0, c2.getJFXColor().getOpacity());
+        Assertions.assertEquals(1, c2.getFXColor().getRed());
+        Assertions.assertEquals(0, c2.getFXColor().getGreen());
+        Assertions.assertEquals(0, c2.getFXColor().getBlue());
+        Assertions.assertEquals(0, c2.getFXColor().getOpacity());
     }
 }

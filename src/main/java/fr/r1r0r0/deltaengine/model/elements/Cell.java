@@ -8,10 +8,10 @@ import javafx.geometry.Dimension2D;
 /**
  * A Cell in a grid. Atomic element of a MapLevel, used to render background textures.
  */
-public class Cell implements Element {
+public class Cell implements Element<Integer> {
 
     private final static Dimension dimension = new Dimension(1, 1);
-    private Coordinates coords;
+    private Coordinates<Integer> coords;
     private Sprite sprite;
     private String name;
 
@@ -22,7 +22,7 @@ public class Cell implements Element {
      * @param sprite the sprite to apply on the case
      */
     public Cell(int x, int y, Sprite sprite) {
-        this.coords = new Coordinates(x, y);
+        this.coords = new Coordinates<>(x, y);
         this.sprite = sprite;
         name = String.format("Cell(%s;%s)", coords.getX(), coords.getY());
         sprite.setZOrder(1000);
@@ -50,12 +50,12 @@ public class Cell implements Element {
     }
 
     @Override
-    public Coordinates getCoordinates() {
+    public Coordinates<Integer> getCoordinates() {
         return coords;
     }
 
     @Override
-    public void setCoordinates(Coordinates coordinates) {
+    public void setCoordinates(Coordinates<Integer> coordinates) {
         this.coords = coordinates;
     }
 

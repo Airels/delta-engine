@@ -35,7 +35,7 @@ public final class Text implements Sprite {
      * @param size the new size of the text
      */
     public void setSize(int size) {
-        String style = String.format("-fx-font: %s %s;", font, size);
+        String style = String.format("-fx-font: %s \"%s\";", size, font);
         this.size = size;
         jfxText.setStyle(style);
     }
@@ -45,7 +45,7 @@ public final class Text implements Sprite {
      * @param font the new font of the text
      */
     public void setFont(String font) {
-        String style = String.format("-fx-font: %s %s;", font, size);
+        String style = String.format("-fx-font: %s \"%s\";", size, font);
         this.font = font;
         jfxText.setStyle(style);
     }
@@ -56,7 +56,7 @@ public final class Text implements Sprite {
      */
     public void setColor(Color color) {
         this.color = color;
-        jfxText.setFill(color.getJFXColor());
+        jfxText.setFill(color.getFXColor());
     }
 
     @Override

@@ -105,10 +105,6 @@ final class GraphicsEngine implements Engine {
             }
         }
 
-        for (Cell c : mapLevel.getCases()){
-
-        }
-
         stage.setWidth(mapLevel.getWidth()*CASE_SIZE);
         stage.setHeight(mapLevel.getHeight()*CASE_SIZE);
 
@@ -150,10 +146,6 @@ final class GraphicsEngine implements Engine {
         root.getChildren().clear();
     }
 
-    /**
-     * Set the stage used for containing and displaying Spites
-     * @param stage
-     */
     public void setStage(Stage stage) {
         this.stage = stage;
 

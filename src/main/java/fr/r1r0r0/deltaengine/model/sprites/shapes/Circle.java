@@ -1,6 +1,6 @@
 package fr.r1r0r0.deltaengine.model.sprites.shapes;
 
-import javafx.scene.paint.Color;
+import fr.r1r0r0.deltaengine.view.colors.Color;
 
 /**
  * Circle Sprite

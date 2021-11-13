@@ -9,21 +9,18 @@ import fr.r1r0r0.deltaengine.model.events.VoidEvent;
 import fr.r1r0r0.deltaengine.model.AI;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * An entity of the engine. An entity is detached from cases, and can freely move on them.
  * Every object of the game could be an entity.
  * An AI could also be attached to an Entity.
  */
-public class Entity implements Element {
+public class Entity implements Element<Double> {
 
     private Sprite sprite;
     private final String name;
-    private Coordinates coords;
+    private Coordinates<Double> coords;
     private Direction direction;
     private double speed;
     private AI attachedAI;
@@ -36,7 +33,7 @@ public class Entity implements Element {
      * @param coords coordinates of the entity
      * @param sprite sprite of the entity
      */
-    public Entity(String name, Coordinates coords, Sprite sprite, Dimension dimension) {
+    public Entity(String name, Coordinates<Double> coords, Sprite sprite, Dimension dimension) {
         this.name = name;
         this.coords = coords;
         this.sprite = sprite;
@@ -124,12 +121,12 @@ public class Entity implements Element {
     }
 
     @Override
-    public Coordinates getCoordinates() {
+    public Coordinates<Double> getCoordinates() {
         return coords;
     }
 
     @Override
-    public void setCoordinates(Coordinates coordinates) {
+    public void setCoordinates(Coordinates<Double> coordinates) {
         this.coords = coordinates;
     }
 
@@ -163,51 +160,40 @@ public class Entity implements Element {
     }
 
     /**
-     * TODO
-     * @param entity
-     * @return
+     * Return the event matching to the entity given
+     * @param entity an entity
+     * @return the event matching to the entity given, the VodiEvent is return if there is no matching event
      */
-    public Event getCollisionEvent(Entity entity) {
+    public Event getCollisionEvent (Entity entity) {
         Event event = collisionEvents.get(entity);
         return (event == null) ? VoidEvent.getInstance() : event;
     }
 
     /**
-     * TODO
-     * @return
+     * Return the collision points, a list of coordinates used to calc if there is a collision between 2 entities.
+     * The hit-box is a rectangle, with a left-top point corresponding to attribute coords,
+     * and width/height are determined by the attribute dimension.
+     * Collisions points are calc using class CollisionPoints
+     * @return a list of coordinates representing collision points
      */
-    private Collection<Coordinates> getCollisionPoints () {
-        double centerX = coords.getX() + (dimension.getWidth() / 2);
-        double centerY = coords.getY() + (dimension.getHeight() / 2);
-        double maxX = coords.getX() + dimension.getWidth();
-        double maxY = coords.getX() + dimension.getHeight();
-        return List.of(new Coordinates(coords.getX(),coords.getY()), // TOP LEFT
-                new Coordinates(maxX,coords.getY()), // TOP RIGHT
-                new Coordinates(coords.getX(),maxY), // BOT LEFT
-                new Coordinates(maxX,maxY), // BOT RIGHT
-                new Coordinates(centerX,centerY), // CENTER
-                new Coordinates(coords.getX(),centerY), // CENTER LEFT
-                new Coordinates(maxX,centerY), // CENTER RIGHT
-                new Coordinates(centerX,coords.getY()), // CENTER TOP
-                new Coordinates(centerX,maxY) // CENTER BOT
-        );
+    private Collection<Coordinates<Double>> getCollisionPoints () {
+        Collection<Coordinates<Double>> collisionPoints = new ArrayList<>(CollisionPositions.values().length);
+        for (CollisionPositions collisionPosition : CollisionPositions.values()) {
+            collisionPoints.add(collisionPosition.calcPosition(coords,dimension));
+        }
+        return collisionPoints;
     }
 
     /**
-     * TODO
-     * @param other
-     * @return
+     * Return is there is the current entity is colliding the other entity given.
+     * There is a collision if one of the collision points of the current entity is contained in the
+     * hit-box of the other entity.
+     * @param other an entity
+     * @return if there is a collision
      */
-    public boolean testCollide (Entity other) {
-        Coordinates otherCoords = other.coords;
-        double minX = otherCoords.getX();
-        double minY = otherCoords.getY();
-        double maxX = otherCoords.getX() + other.dimension.getWidth();
-        double maxY = otherCoords.getY() + other.dimension.getHeight();
-        for (Coordinates collisionPoint : getCollisionPoints()) {
-            if (minX <= collisionPoint.getX() && collisionPoint.getX() <= maxX
-                    && minY <= collisionPoint.getY() && collisionPoint.getY() <= maxY)
-                return true;
+    public final boolean testCollide (Entity other) {
+        for (Coordinates<Double> collisionPoint : getCollisionPoints()) {
+            if (CollisionPositions.isInHitBox(other.coords,other.dimension,collisionPoint)) return true;
         }
         return false;
     }

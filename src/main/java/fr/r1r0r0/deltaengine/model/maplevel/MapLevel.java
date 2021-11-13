@@ -1,8 +1,10 @@
-package fr.r1r0r0.deltaengine.model;
+package fr.r1r0r0.deltaengine.model.maplevel;
 
-import fr.r1r0r0.deltaengine.exceptions.MapCaseCoordinateStackingException;
-import fr.r1r0r0.deltaengine.exceptions.MapEntityNameStackingException;
-import fr.r1r0r0.deltaengine.exceptions.MapOutOfBoundException;
+import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelCellCoordinatesStackingException;
+import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelEntityNameStackingException;
+import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelCoordinatesOutOfBoundException;
+import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelException;
+import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.elements.Cell;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
 import fr.r1r0r0.deltaengine.model.elements.basic_cases.VoidCell;
@@ -18,23 +20,30 @@ public final class MapLevel {
     private final String name;
     private final int width;
     private final int height;
-    private final java.util.Map<Coordinates, Cell> cases;
+    private final java.util.Map<Coordinates<Integer>,Cell> cells;
     private final java.util.Map<String,Entity> entities;
     private final Set<Event> events;
 
     /**
-     * Constructor
-     * @param name the name of the map
-     * @param width the width of the map
-     * @param height the height of the area
+     * TODO
+     * @param cells
      */
-    public MapLevel(String name, int width, int height) {
+    protected MapLevel (String name, Cell[][] cells) {
         this.name = name;
-        this.width = width;
-        this.height = height;
-        cases = new HashMap<>();
+        this.width = cells.length;
+        this.height = (cells.length != 0) ? cells[0].length : 0;
+        this.cells = new HashMap<>();
         entities = new HashMap<>();
         events = new LinkedHashSet<>();
+        try {
+            for (Cell[] cells1 : cells) {
+                for (Cell cell : cells1) {
+                    replaceCell(cell);
+                }
+            }
+        } catch (MapLevelException e) {
+            //e.printStackTrace();
+        }
     }
 
     /**
@@ -63,44 +72,39 @@ public final class MapLevel {
 
     /**
      * Add a case in the map
-     * @param c a case
-     * @throws MapCaseCoordinateStackingException throw if a case with the same coordinate is already
-     * present in the map
-     * @throws MapOutOfBoundException throw if a case with coordinate out of the area define by the
+     * @param cell a cell
+     * @throws MapLevelCoordinatesOutOfBoundException throw if a cell with coordinate out of the area define by the
      * map is added
      */
-    public void addCase (Cell c) throws MapCaseCoordinateStackingException, MapOutOfBoundException {
-        Coordinates coordinates = c.getCoordinates();
-        if (cases.containsKey(coordinates) && cases.get(coordinates) != c)
-            throw new MapCaseCoordinateStackingException(cases.get(coordinates),c);
+    public void replaceCell (Cell cell) throws MapLevelCoordinatesOutOfBoundException {
+        Coordinates<Integer> coordinates = cell.getCoordinates();
         if (coordinates.getX() < 0
                 || coordinates.getX() >= width
                 || coordinates.getY() < 0
-                || coordinates.getY() >= height) throw new MapOutOfBoundException(width,height,coordinates);
-        cases.put(coordinates,c);
+                || coordinates.getY() >= height)
+            throw new MapLevelCoordinatesOutOfBoundException(width,height,coordinates);
+        cells.put(coordinates,cell);
     }
 
     /**
-     * Return the case in the map with coordinate (x,y)
+     * Return the cell in the map with coordinate (x,y)
      * @param x the x value
      * @param y the y value
-     * @return the case in the map with coordinate (x,y),or a new VoidCell(x,y)
-     * if map does not contain case with this coordinate
+     * @return the cell in the map with coordinate (x,y)
      */
-    public Cell getCase (int x, int y) {
-        Cell c = cases.get(new Coordinates(x,y));
-        return (c == null) ? new VoidCell(x,y) : c;
+    public Cell getCell (int x, int y) {
+        return cells.get(new Coordinates<>(x,y));
     }
 
     /**
      * Add an entity in the map
      * @param entity an entity
-     * @throws MapEntityNameStackingException throw if the name of the entity is already present in the map
+     * @throws MapLevelEntityNameStackingException throw if the name of the entity is already present in the map
      */
-    public void addEntity (Entity entity) throws MapEntityNameStackingException {
+    public void addEntity (Entity entity) throws MapLevelEntityNameStackingException {
         String name = entity.getName();
         if (entities.containsKey(name) && entities.get(name) != entity)
-            throw new MapEntityNameStackingException(entities.get(name),entity);
+            throw new MapLevelEntityNameStackingException(entities.get(name),entity);
         entities.put(name,entity);
     }
 
@@ -152,11 +156,11 @@ public final class MapLevel {
     }
 
     /**
-     * Return all the cases in map
+     * Return all the cells in map
      * @return a collection of case
      */
-    public Collection<Cell> getCases () {
-        return cases.values();
+    public Collection<Cell> getCells () {
+        return cells.values();
     }
 
     /**
