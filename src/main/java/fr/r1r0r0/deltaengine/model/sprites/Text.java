@@ -1,7 +1,7 @@
 package fr.r1r0r0.deltaengine.model.sprites;
 
+import fr.r1r0r0.deltaengine.view.colors.Color;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 
 /**
  * TODO
@@ -56,7 +56,7 @@ public final class Text implements Sprite {
      */
     public void setColor(Color color) {
         this.color = color;
-        jfxText.setFill(color);
+        jfxText.setFill(color.getJFXColor());
     }
 
     @Override
