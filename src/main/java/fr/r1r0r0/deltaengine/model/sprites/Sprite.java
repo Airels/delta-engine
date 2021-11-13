@@ -19,6 +19,11 @@ public interface Sprite{
      */
     void resize(double width, double height);
 
+    default void setLayout(Double x, Double y){
+        this.getNode().setLayoutX(x);
+        this.getNode().setLayoutY(y);
+    }
+
     /**
      * TODO
      * @param z

@@ -2,6 +2,7 @@ package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.model.MapLevel;
 import fr.r1r0r0.deltaengine.model.elements.*;
+import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -72,10 +73,8 @@ final class GraphicsEngine implements Engine {
     private void updateElement(Element e){
         if(!elements.contains(e)) throw new NoSuchElementException();
 
-        Node n = e.getSprite().getNode();
-        n.setLayoutX(e.getCoordinates().getX()*CASE_SIZE);
-        n.setLayoutY(e.getCoordinates().getY()*CASE_SIZE);
-
+        e.getSprite().setLayout(e.getCoordinates().getX()*CASE_SIZE,
+                e.getCoordinates().getY()*CASE_SIZE);
     }
 
     public void setMap(MapLevel mapLevel) {

@@ -52,4 +52,5 @@ public class Rectangle extends Shape {
         fxRectangle.setWidth(width);
         fxRectangle.setHeight(height);
     }
+
 }
