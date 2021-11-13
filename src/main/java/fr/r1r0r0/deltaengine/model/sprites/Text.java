@@ -56,7 +56,7 @@ public final class Text implements Sprite {
      */
     public void setColor(Color color) {
         this.color = color;
-        jfxText.setFill(color.getJFXColor());
+        jfxText.setFill(color.getFXColor());
     }
 
     @Override

@@ -15,7 +15,7 @@ import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevelBuilder;
 import fr.r1r0r0.deltaengine.model.sprites.shapes.Circle;
 import fr.r1r0r0.deltaengine.model.sprites.shapes.Rectangle;
-import javafx.scene.paint.Color;
+import fr.r1r0r0.deltaengine.view.colors.Color;
 
 import java.awt.*;
 
@@ -35,6 +35,7 @@ public class Main {
         deltaEngine.addMap(mapLevel);
         //mapLevel = createMapLevelDamier("test2", 10,10);
         mapLevel = createMapLevelPrison("test2", 10,10,6,8,6,8);
+        mapLevel.replaceCell(new Wall(7, 7));
         //mapLevel.addCase(new Wall(2,2));
         deltaEngine.addMap(mapLevel);
 
@@ -45,7 +46,7 @@ public class Main {
         pacman.setSpeed(0);
         mapLevel.addEntity(pacman);
 
-        Entity red = new Entity("red", new Coordinates<>(7., 7.), new Rectangle(Color.RED), new Dimension(1, 1));
+        Entity red = new Entity("red", new Coordinates<>(8., 8.), new Rectangle(Color.RED), new Dimension(1, 1));
         red.setSpeed(0);
         mapLevel.addEntity(red);
 

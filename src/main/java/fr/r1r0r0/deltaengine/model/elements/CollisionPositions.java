@@ -55,7 +55,7 @@ public enum CollisionPositions {
      */
     public  Coordinates<Double> calcPosition (Coordinates<Double> topLeft, Dimension dimension, double margin) {
         if (margin < 0) throw new IllegalArgumentException("Margin must be greater than 0 : " + margin);
-        if (1 < margin) throw new IllegalArgumentException("Margin must be lesser than 1 : " + margin);
+        if (1 < margin) throw new IllegalArgumentException("Margin must be lower than 1 : " + margin);
         return new Coordinates<>(
                 topLeft.getX() + (ratioDimensionX + margin*ratioMarginX)*dimension.getWidth(),
                 topLeft.getY() + (ratioDimensionY + margin*ratioMarginY)*dimension.getHeight()

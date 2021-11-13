@@ -1,13 +1,13 @@
 package fr.r1r0r0.deltaengine.model.sprites.shapes;
 
-import javafx.scene.paint.Color;
+import fr.r1r0r0.deltaengine.view.colors.Color;
 
 /**
  * TODO
  */
 public class Ellipse extends Shape{
 
-    private javafx.scene.shape.Ellipse ellipse;
+    private final javafx.scene.shape.Ellipse ellipse;
 
     /**
      * TODO
@@ -57,7 +57,7 @@ public class Ellipse extends Shape{
      * @param color
      */
     public void setColor(Color color){
-        ellipse.setFill(color);
+        ellipse.setFill(color.getFXColor());
     }
 
     @Override

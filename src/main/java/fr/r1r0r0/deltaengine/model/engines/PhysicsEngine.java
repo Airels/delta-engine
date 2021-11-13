@@ -27,7 +27,7 @@ final class PhysicsEngine implements Engine {
      * qui correspond a un minX maxX minY maxY
      */
 
-    private static final double MOVE_MARGIN_ERROR = 0.03;
+    private static final double MOVE_MARGIN_ERROR = 0.01;
     private static final CollisionPositions[] POSITIONS_CHECK = new CollisionPositions[]{
             CollisionPositions.LEFT_TOP, CollisionPositions.RIGHT_TOP,
             CollisionPositions.LEFT_BOT, CollisionPositions.RIGHT_BOT};
