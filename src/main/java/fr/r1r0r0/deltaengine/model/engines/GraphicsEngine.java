@@ -127,7 +127,7 @@ final class GraphicsEngine implements Engine {
             elementSpriteMap.put(element, element.getSprite());
             elements.add(element);
             root.getChildren().add(element.getSprite().getNode());
-            if (element.getClass() == HUDElement.class) element.getSprite().getNode().setViewOrder(-1.0);
+            // if (element.getClass() == HUDElement.class) element.getSprite().getNode().setViewOrder(-1.0);
             updateElement(element);
         }
     }
