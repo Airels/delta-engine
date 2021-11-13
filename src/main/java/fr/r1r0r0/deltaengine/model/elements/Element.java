@@ -9,7 +9,7 @@ import javafx.geometry.Dimension2D;
  * A graphical element. Could be a Cell, an Entity or anything graphical.
  * Possess coordinates, a Sprite and a Name.
  */
-public interface Element {
+public interface Element <E extends Number> {
 
     /**
      * Return dimension of the Element. Represents the size of the Element.
@@ -44,14 +44,14 @@ public interface Element {
      *
      * @return Coordinates of the element
      */
-    Coordinates getCoordinates();
+    Coordinates<E> getCoordinates();
 
     /**
      * Allows setting new coordinates for the element.
      *
      * @param coordinates new coordinates
      */
-    void setCoordinates(Coordinates coordinates);
+    void setCoordinates(Coordinates<E> coordinates);
 
     /**
      * Name getter of the element

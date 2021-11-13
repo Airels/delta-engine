@@ -1,9 +1,9 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.exceptions.InputKeyStackingError;
-import fr.r1r0r0.deltaengine.exceptions.MapAlreadyExistException;
-import fr.r1r0r0.deltaengine.exceptions.MapDoesNotExistException;
-import fr.r1r0r0.deltaengine.model.MapLevel;
+import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelAlreadyExistException;
+import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelDoesNotExistException;
+import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.elements.Cell;
 import fr.r1r0r0.deltaengine.model.elements.Element;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
@@ -217,11 +217,11 @@ public final class KernelEngine {
      * Add new mapLevel to the engine. MapLevel name must be unique.
      *
      * @param mapLevel the mapLevel to add
-     * @throws MapAlreadyExistException if mapLevel's name already been added
+     * @throws MapLevelAlreadyExistException if mapLevel's name already been added
      */
-    public synchronized void addMap(MapLevel mapLevel) throws MapAlreadyExistException {
+    public synchronized void addMap(MapLevel mapLevel) throws MapLevelAlreadyExistException {
         if (maps.containsKey(mapLevel.getName()))
-            throw new MapAlreadyExistException(mapLevel.getName());
+            throw new MapLevelAlreadyExistException(mapLevel.getName());
 
         maps.put(mapLevel.getName(), mapLevel);
     }
@@ -260,14 +260,14 @@ public final class KernelEngine {
      * Load a previous added map on the Engine by its name
      *
      * @param name the name of map to load
-     * @throws MapDoesNotExistException if map was not added before
+     * @throws MapLevelDoesNotExistException if map was not added before
      * @see KernelEngine#addMap(MapLevel) to add a new map
      */
-    public synchronized void setCurrentMap(String name) throws MapDoesNotExistException {
+    public synchronized void setCurrentMap(String name) throws MapLevelDoesNotExistException {
         MapLevel mapLevelToLoad = maps.get(name);
 
         if (mapLevelToLoad == null)
-            throw new MapDoesNotExistException(name);
+            throw new MapLevelDoesNotExistException(name);
 
         loadMap(mapLevelToLoad);
     }
@@ -401,7 +401,7 @@ public final class KernelEngine {
      * Unload current map, loading associated elements, AI, and events
      */
     private void unloadMap() {
-        Collection<Cell> mapCells = currentMapLevel.getCases();
+        Collection<Cell> mapCells = currentMapLevel.getCells();
         Collection<Entity> mapEntities = currentMapLevel.getEntities();
         Collection<Event> mapEvents = currentMapLevel.getEvents();
 
