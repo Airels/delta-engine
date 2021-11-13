@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -17,6 +19,7 @@ import java.util.NoSuchElementException;
 final class GraphicsEngine implements Engine {
 
     private ArrayList<Element> elements;
+    private Map<Element, Sprite> elementSpriteMap;
     private final int CASE_SIZE = 40;
     private Stage stage;
     private Group root;
@@ -39,6 +42,7 @@ final class GraphicsEngine implements Engine {
      */
     @Override
     public void init() {
+        elementSpriteMap = new HashMap<>();
         elements = new ArrayList<>();
         z = 0.0;
 
@@ -73,10 +77,23 @@ final class GraphicsEngine implements Engine {
     private void updateElement(Element e){
         if(!elements.contains(e)) throw new NoSuchElementException();
 
-        e.getSprite().setLayout(e.getCoordinates().getX()*CASE_SIZE,
+        Sprite oldSprite = elementSpriteMap.get(e);
+        Sprite newSprite = e.getSprite();
+
+        if (newSprite != oldSprite) {
+            root.getChildren().remove(oldSprite.getNode());
+            root.getChildren().add(newSprite.getNode());
+            elementSpriteMap.put(e,newSprite);
+        }
+
+        newSprite.setLayout(e.getCoordinates().getX()*CASE_SIZE,
                 e.getCoordinates().getY()*CASE_SIZE);
     }
 
+    /**
+     *
+     * @param mapLevel
+     */
     public void setMap(MapLevel mapLevel) {
         // setCases(mapLevel.getCases(), mapLevel.getWidth(), mapLevel.getHeight());
 
@@ -104,6 +121,7 @@ final class GraphicsEngine implements Engine {
      */
     public void addElement(Element element) {
         if (!elements.contains(element)){
+            elementSpriteMap.put(element,element.getSprite());
             elements.add(element);
             root.getChildren().add(element.getSprite().getNode());
             if (element.getClass() == HUDElement.class) element.getSprite().getNode().setViewOrder(-1.0);

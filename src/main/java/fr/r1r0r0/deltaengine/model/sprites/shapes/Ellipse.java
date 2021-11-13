@@ -70,4 +70,10 @@ public class Ellipse extends Shape{
         setRadiusX(width/2);
         setRadiusY(height/2);
     }
+
+    @Override
+    public void setLayout(double x, double y) {
+        this.getNode().setLayoutX(x + getRadiusX());
+        this.getNode().setLayoutY(y + getRadiusY());
+    }
 }

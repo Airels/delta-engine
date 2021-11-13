@@ -20,7 +20,12 @@ public interface Sprite{
      */
     void resize(double width, double height);
 
-    default void setLayout(Double x, Double y){
+    /**
+     * Set the graphical position
+     * @param x position
+     * @param y position
+     */
+    default void setLayout(double x, double y){
         this.getNode().setLayoutX(x);
         this.getNode().setLayoutY(y);
     }
