@@ -5,25 +5,20 @@ import fr.r1r0r0.deltaengine.model.Builder;
 /**
  * TODO
  */
-public abstract class CellBuilder implements Builder<Cell> {
-
-    /**
-     * TODO
-     */
-    public CellBuilder () {}
+public interface CellBuilder extends Builder<Cell> {
 
     /**
      * TODO
      * @param x
      * @return
      */
-    public abstract CellBuilder setX (int x);
+    CellBuilder setX (int x);
 
     /**
      * TODO
      * @param y
      * @return
      */
-    public abstract CellBuilder setY (int y);
+    CellBuilder setY (int y);
 
 }

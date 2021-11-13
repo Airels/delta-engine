@@ -20,7 +20,7 @@ public final class MapLevel {
     private final String name;
     private final int width;
     private final int height;
-    private final java.util.Map<Coordinates,Cell> cells;
+    private final java.util.Map<Coordinates<Integer>,Cell> cells;
     private final java.util.Map<String,Entity> entities;
     private final Set<Event> events;
 
@@ -73,20 +73,16 @@ public final class MapLevel {
     /**
      * Add a case in the map
      * @param cell a cell
-     * @throws MapLevelCellCoordinatesStackingException throw if a cell with the same coordinate is already
-     * present in the map
      * @throws MapLevelCoordinatesOutOfBoundException throw if a cell with coordinate out of the area define by the
      * map is added
      */
-    public void replaceCell (Cell cell)
-            throws MapLevelCellCoordinatesStackingException, MapLevelCoordinatesOutOfBoundException {
+    public void replaceCell (Cell cell) throws MapLevelCoordinatesOutOfBoundException {
         Coordinates<Integer> coordinates = cell.getCoordinates();
-        if (cells.containsKey(coordinates) && cells.get(coordinates) != cell)
-            throw new MapLevelCellCoordinatesStackingException(cells.get(coordinates),cell);
         if (coordinates.getX() < 0
                 || coordinates.getX() >= width
                 || coordinates.getY() < 0
-                || coordinates.getY() >= height) throw new MapLevelCoordinatesOutOfBoundException(width,height,coordinates);
+                || coordinates.getY() >= height)
+            throw new MapLevelCoordinatesOutOfBoundException(width,height,coordinates);
         cells.put(coordinates,cell);
     }
 
@@ -94,12 +90,10 @@ public final class MapLevel {
      * Return the cell in the map with coordinate (x,y)
      * @param x the x value
      * @param y the y value
-     * @return the cell in the map with coordinate (x,y),or a new VoidCell(x,y)
-     * if map does not contain cell with this coordinate
+     * @return the cell in the map with coordinate (x,y)
      */
     public Cell getCell (int x, int y) {
-        Cell cell = cells.get(new Coordinates<>(x,y));
-        return (cell == null) ? new VoidCell(x,y) : cell;
+        return cells.get(new Coordinates<>(x,y));
     }
 
     /**
