@@ -2,8 +2,16 @@ package fr.r1r0r0.deltaengine.model.sprites.shapes;
 
 import javafx.scene.paint.Color;
 
+/**
+ * Circle Sprite
+ */
 public class Circle extends Ellipse {
 
+    /**
+     * Instantiate an Image Sprite with a color and a radius
+     * @param radius of the circle
+     * @param color of the circle
+     */
     public Circle(double radius, Color color) {
         super(radius, radius, color);
     }

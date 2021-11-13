@@ -3,17 +3,17 @@ package fr.r1r0r0.deltaengine.model.sprites.shapes;
 import javafx.scene.paint.Color;
 
 /**
- * TODO
+ * Ellipse Sprite
  */
 public class Ellipse extends Shape{
 
     private javafx.scene.shape.Ellipse ellipse;
 
     /**
-     * TODO
-     * @param radiusX
-     * @param radiusY
-     * @param color
+     * Instantiate Ellipse Sprite
+     * @param radiusX radius in the X direction
+     * @param radiusY radius in the Y direction
+     * @param color of the ellipse
      */
     public Ellipse(double radiusX, double radiusY, Color color){
         ellipse = new javafx.scene.shape.Ellipse(radiusX, radiusY);
@@ -21,40 +21,40 @@ public class Ellipse extends Shape{
     }
 
     /**
-     * TODO
-     * @return
+     * get the radius of the ellipse in the x direction
+     * @return the radius of the ellipse in the x direction
      */
     public double getRadiusX(){
         return ellipse.getRadiusX();
     }
 
     /**
-     * TODO
-     * @return
+     * get the radius of the ellipse in the y direction
+     * @return the radius of the ellipse in the y direction
      */
     public double getRadiusY() {
         return ellipse.getRadiusY();
     }
 
     /**
-     * TODO
-     * @param radiusX
+     * set the radius of the ellipse in the x direction
+     * @param radiusX the new radius of the ellipse in the x direction
      */
     public void setRadiusX(double radiusX){
         ellipse.setRadiusX(radiusX);
     }
 
     /**
-     * TODO
-     * @param radiusY
+     * set the radius of the ellipse in the y direction
+     * @param radiusY the new radius of the ellipse in the y direction
      */
     public void setRadiusY(double radiusY) {
         ellipse.setRadiusY(radiusY);
     }
 
     /**
-     * TODO
-     * @param color
+     * set the color of the ellipse
+     * @param color the new color of the ellipse
      */
     public void setColor(Color color){
         ellipse.setFill(color);

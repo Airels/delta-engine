@@ -4,7 +4,7 @@ import fr.r1r0r0.deltaengine.view.colors.Color;
 import javafx.scene.Node;
 
 /**
- * TODO
+ * Text Sprite, used to display text
  */
 public final class Text implements Sprite {
 
@@ -14,8 +14,8 @@ public final class Text implements Sprite {
     private javafx.scene.text.Text jfxText;
 
     /**
-     * TODO
-     * @param text
+     * Instantiate Text Sprite, used to display text
+     * @param text to be displayed
      */
     public Text(String text) {
         jfxText = new javafx.scene.text.Text();
@@ -23,16 +23,16 @@ public final class Text implements Sprite {
     }
 
     /**
-     * TODO
-     * @param text
+     * set the text to be displayed
+     * @param text the new text to be displayed
      */
     public void setText(String text) {
         jfxText.setText(text);
     }
 
     /**
-     * TODO
-     * @param size
+     * set the size of the text to be displayed
+     * @param size the new size of the text
      */
     public void setSize(int size) {
         String style = String.format("-fx-font: %s %s;", font, size);
@@ -41,8 +41,8 @@ public final class Text implements Sprite {
     }
 
     /**
-     * TODO
-     * @param font
+     * set the font of the text to be displayed
+     * @param font the new font of the text
      */
     public void setFont(String font) {
         String style = String.format("-fx-font: %s %s;", font, size);
@@ -51,8 +51,8 @@ public final class Text implements Sprite {
     }
 
     /**
-     * TODO
-     * @param color
+     * set the color of the text to be displayed
+     * @param color the new color of the text
      */
     public void setColor(Color color) {
         this.color = color;

@@ -3,7 +3,7 @@ package fr.r1r0r0.deltaengine.model.sprites.shapes;
 import javafx.scene.paint.Color;
 
 /**
- * TODO
+ * Rectangle Sprite
  */
 public class Rectangle extends Shape {
 
@@ -11,18 +11,18 @@ public class Rectangle extends Shape {
     private final javafx.scene.shape.Rectangle fxRectangle;
 
     /**
-     * TODO
-     * @param color
+     * Instantiate the Rectangle Sprite
+     * @param color of the Rectangle
      */
     public Rectangle(Color color) {
         this(0, 0, color);
     }
 
     /**
-     * TODO
-     * @param width
-     * @param height
-     * @param color
+     * Instantiate the Rectangle Sprite
+     * @param width of the Rectangle
+     * @param height of the Rectangle
+     * @param color of the Rectangle
      */
     public Rectangle(double width, double height, Color color) {
         this.width = width;
@@ -35,8 +35,8 @@ public class Rectangle extends Shape {
     }
 
     /**
-     * TODO
-     * @param color
+     * set the color of the Rectangle
+     * @param color the new color of the Rectangle
      */
     public void setColor(Color color){
         fxRectangle.setFill(color);

@@ -4,12 +4,12 @@ import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
 
 /**
- * TODO
+ * Invisible Sprite
  */
 public final class InvisibleSprite implements Sprite {
 
     /**
-     * TODO
+     * used to get an instance Invisible Sprite
      */
     public final static InvisibleSprite INSTANCE = new InvisibleSprite();
 
@@ -34,8 +34,8 @@ public final class InvisibleSprite implements Sprite {
     }
 
     /**
-     * TODO
-     * @return
+     * Get an instance Invisible Sprite
+     * @return an instance Invisible Sprite
      */
     public static InvisibleSprite getInstance() {
         return INSTANCE;

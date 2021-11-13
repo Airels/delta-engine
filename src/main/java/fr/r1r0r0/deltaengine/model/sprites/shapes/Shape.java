@@ -4,13 +4,14 @@ import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 import javafx.scene.Node;
 
 /**
- * TODO
+ * Shape Sprite
+ * abstract class for closed shapes
  */
 public abstract class Shape implements Sprite {
 
     /**
-     * TODO
-     * @return
+     * more often than not, Javafx is used for shapes
+     * @return the javafx shape used if any
      */
     public abstract javafx.scene.shape.Shape getFXShape();
 
