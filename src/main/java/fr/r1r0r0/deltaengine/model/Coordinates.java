@@ -5,15 +5,16 @@ import java.util.Objects;
 /**
  * Coordinates of a point, or object, coded by two doubles for 2D position.
  */
-public final class Coordinates {
-    private double x, y;
+public final class Coordinates <E extends Number> {
+
+    private E x, y;
 
     /**
      * Default constructor. Creates a Coordinates given x and y positions.
      * @param x horizontal position
      * @param y vertical position
      */
-    public Coordinates(double x, double y) {
+    public Coordinates(E x, E y) {
         this.x = x;
         this.y = y;
     }
@@ -22,7 +23,7 @@ public final class Coordinates {
      * Get saved x position.
      * @return x double current x of an element
      */
-    public double getX() {
+    public E getX() {
         return x;
     }
 
@@ -30,7 +31,7 @@ public final class Coordinates {
      * Get saved y position.
      * @return y double current y of an element
      */
-    public double getY() {
+    public E getY() {
         return y;
     }
 
@@ -41,17 +42,17 @@ public final class Coordinates {
      * @param delta the delta of movement
      * @return the next coordinate
      */
-    public Coordinates getNextCoordinates (Direction direction, double delta) {
-        Coordinates other = direction.getCoordinates();
-        return new Coordinates(x + other.x * delta,y + other.y * delta);
+    public Coordinates<Double> getNextCoordinates (Direction direction, double delta) {
+        Coordinates<Integer> other = direction.getCoordinates();
+        return new Coordinates<>(x.doubleValue() + other.x * delta,y.doubleValue() + other.y * delta);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Coordinates that = (Coordinates) o;
-        return Double.compare(that.x, x) == 0 && Double.compare(that.y, y) == 0;
+        Coordinates<E> that = (Coordinates<E>) o;
+        return x.equals(that.x) && y.equals(that.y);
     }
 
     @Override

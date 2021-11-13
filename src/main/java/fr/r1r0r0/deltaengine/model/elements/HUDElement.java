@@ -9,10 +9,10 @@ import fr.r1r0r0.deltaengine.model.sprites.Sprite;
  * A graphical element for user. Can be used for HP bar or score text for example.
  * HUDElement is completely detached from current level or anything else
  */
-public class HUDElement implements Element {
+public class HUDElement implements Element<Double> {
 
     private Sprite sprite;
-    private Coordinates coordinates;
+    private Coordinates<Double> coordinates;
     private String name;
     private Dimension dimension;
 
@@ -23,7 +23,7 @@ public class HUDElement implements Element {
      * @param sprite Sprite of the element
      * @param dimension Dimension of the element
      */
-    public HUDElement(String name, Coordinates coordinates, Sprite sprite, Dimension dimension) {
+    public HUDElement(String name, Coordinates<Double> coordinates, Sprite sprite, Dimension dimension) {
         this.name = name;
         this.coordinates = coordinates;
         this.sprite = sprite;
@@ -52,12 +52,12 @@ public class HUDElement implements Element {
     }
 
     @Override
-    public Coordinates getCoordinates() {
+    public Coordinates<Double> getCoordinates() {
         return coordinates;
     }
 
     @Override
-    public void setCoordinates(Coordinates coordinates) {
+    public void setCoordinates(Coordinates<Double> coordinates) {
         this.coordinates = coordinates;
     }
 

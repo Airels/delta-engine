@@ -3,7 +3,7 @@ package fr.r1r0r0.deltaengine.model.engines;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.Direction;
-import fr.r1r0r0.deltaengine.model.MapLevel;
+import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.elements.CollisionPositions;
 import fr.r1r0r0.deltaengine.model.elements.CrossableVisitor;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
@@ -97,7 +97,7 @@ final class PhysicsEngine implements Engine {
     private void updateCoordinates (Collection<Entity> entities, double timeRatio) {
         for (Entity entity : entities) {
             if (entity.getDirection() == Direction.IDLE) continue;
-            Coordinates nextCoordinate = entity.getCoordinates().getNextCoordinates(entity.getDirection(),
+            Coordinates<Double> nextCoordinate = entity.getCoordinates().getNextCoordinates(entity.getDirection(),
                     entity.getSpeed() * timeRatio);
             if (isValidPosition(nextCoordinate,entity.getDimension())) entity.setCoordinates(nextCoordinate);
             else entity.setDirection(Direction.IDLE);
@@ -111,11 +111,11 @@ final class PhysicsEngine implements Engine {
      * @param dimension the dimension of the rectangle
      * @return if the position of the rectangle is valid in the mapLevel
      */
-    private boolean isValidPosition (Coordinates initialTopLeft, Dimension dimension) {
+    private boolean isValidPosition (Coordinates<Double> initialTopLeft, Dimension dimension) {
         for (CollisionPositions collisionPosition : POSITIONS_CHECK) {
-            Coordinates position = collisionPosition.calcPosition(initialTopLeft,dimension,MOVE_MARGIN_ERROR);
-            int x = (position.getX() >= 0) ? (int) position.getX() : ((int) position.getX() - 1);
-            int y = (position.getY() >= 0) ? (int) position.getY() : ((int) position.getY() - 1);
+            Coordinates<Double> position = collisionPosition.calcPosition(initialTopLeft,dimension,MOVE_MARGIN_ERROR);
+            int x = (position.getX() >= 0) ? position.getX().intValue() : (position.getX().intValue() - 1);
+            int y = (position.getY() >= 0) ? position.getY().intValue() : (position.getY().intValue() - 1);
             if ( ! CrossableVisitor.isCaseCrossable(mapLevel.getCell(x,y))) return false;
         }
         return true;

@@ -1,8 +1,10 @@
-package fr.r1r0r0.deltaengine.model;
+package fr.r1r0r0.deltaengine.model.maplevel;
 
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelCellCoordinatesStackingException;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelEntityNameStackingException;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelCoordinatesOutOfBoundException;
+import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelException;
+import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.elements.Cell;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
 import fr.r1r0r0.deltaengine.model.elements.basic_cases.VoidCell;
@@ -23,18 +25,25 @@ public final class MapLevel {
     private final Set<Event> events;
 
     /**
-     * Constructor
-     * @param name the name of the map
-     * @param width the width of the map
-     * @param height the height of the area
+     * TODO
+     * @param cells
      */
-    public MapLevel (String name, int width, int height) {
+    protected MapLevel (String name, Cell[][] cells) {
         this.name = name;
-        this.width = width;
-        this.height = height;
-        cells = new HashMap<>();
+        this.width = cells.length;
+        this.height = (cells.length != 0) ? cells[0].length : 0;
+        this.cells = new HashMap<>();
         entities = new HashMap<>();
         events = new LinkedHashSet<>();
+        try {
+            for (Cell[] cells1 : cells) {
+                for (Cell cell : cells1) {
+                    replaceCell(cell);
+                }
+            }
+        } catch (MapLevelException e) {
+            //e.printStackTrace();
+        }
     }
 
     /**
@@ -69,8 +78,9 @@ public final class MapLevel {
      * @throws MapLevelCoordinatesOutOfBoundException throw if a cell with coordinate out of the area define by the
      * map is added
      */
-    public void addCase (Cell cell) throws MapLevelCellCoordinatesStackingException, MapLevelCoordinatesOutOfBoundException {
-        Coordinates coordinates = cell.getCoordinates();
+    public void replaceCell (Cell cell)
+            throws MapLevelCellCoordinatesStackingException, MapLevelCoordinatesOutOfBoundException {
+        Coordinates<Integer> coordinates = cell.getCoordinates();
         if (cells.containsKey(coordinates) && cells.get(coordinates) != cell)
             throw new MapLevelCellCoordinatesStackingException(cells.get(coordinates),cell);
         if (coordinates.getX() < 0
@@ -88,7 +98,7 @@ public final class MapLevel {
      * if map does not contain cell with this coordinate
      */
     public Cell getCell (int x, int y) {
-        Cell cell = cells.get(new Coordinates(x,y));
+        Cell cell = cells.get(new Coordinates<>(x,y));
         return (cell == null) ? new VoidCell(x,y) : cell;
     }
 

@@ -41,7 +41,7 @@ public enum CollisionPositions {
      * @param dimension the dimension of the rectangle
      * @return the position calculate in a rectangle
      */
-    public Coordinates calcPosition (Coordinates topLeft, Dimension dimension) {
+    public Coordinates<Double> calcPosition (Coordinates<Double> topLeft, Dimension dimension) {
         return calcPosition(topLeft,dimension,0);
     }
 
@@ -53,10 +53,10 @@ public enum CollisionPositions {
      * @param margin a margin
      * @return the position calculate in a rectangle with a margin.
      */
-    public Coordinates calcPosition (Coordinates topLeft, Dimension dimension, double margin) {
+    public  Coordinates<Double> calcPosition (Coordinates<Double> topLeft, Dimension dimension, double margin) {
         if (margin < 0) throw new IllegalArgumentException("Margin must be greater than 0 : " + margin);
         if (1 < margin) throw new IllegalArgumentException("Margin must be lesser than 1 : " + margin);
-        return new Coordinates(
+        return new Coordinates<>(
                 topLeft.getX() + (ratioDimensionX + margin*ratioMarginX)*dimension.getWidth(),
                 topLeft.getY() + (ratioDimensionY + margin*ratioMarginY)*dimension.getHeight()
         );
@@ -75,7 +75,8 @@ public enum CollisionPositions {
      * @param collisionPoint a point
      * @return if the collisionPoint is include in the rectangle described by the topLeft point and the dimension.
      */
-    public static boolean isInHitBox (Coordinates topLeft, Dimension dimension, Coordinates collisionPoint) {
+    public static boolean isInHitBox (Coordinates<Double> topLeft, Dimension dimension,
+                                      Coordinates<Double> collisionPoint) {
         return topLeft.getX() <= collisionPoint.getX()
                 && collisionPoint.getX() <= (topLeft.getX() + dimension.getWidth())
                 && topLeft.getY() <= collisionPoint.getY()

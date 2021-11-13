@@ -16,11 +16,11 @@ import java.util.*;
  * Every object of the game could be an entity.
  * An AI could also be attached to an Entity.
  */
-public class Entity implements Element {
+public class Entity implements Element<Double> {
 
     private Sprite sprite;
     private final String name;
-    private Coordinates coords;
+    private Coordinates<Double> coords;
     private Direction direction;
     private double speed;
     private AI attachedAI;
@@ -33,7 +33,7 @@ public class Entity implements Element {
      * @param coords coordinates of the entity
      * @param sprite sprite of the entity
      */
-    public Entity(String name, Coordinates coords, Sprite sprite, Dimension dimension) {
+    public Entity(String name, Coordinates<Double> coords, Sprite sprite, Dimension dimension) {
         this.name = name;
         this.coords = coords;
         this.sprite = sprite;
@@ -121,12 +121,12 @@ public class Entity implements Element {
     }
 
     @Override
-    public Coordinates getCoordinates() {
+    public Coordinates<Double> getCoordinates() {
         return coords;
     }
 
     @Override
-    public void setCoordinates(Coordinates coordinates) {
+    public void setCoordinates(Coordinates<Double> coordinates) {
         this.coords = coordinates;
     }
 
@@ -176,8 +176,8 @@ public class Entity implements Element {
      * Collisions points are calc using class CollisionPoints
      * @return a list of coordinates representing collision points
      */
-    private Collection<Coordinates> getCollisionPoints () {
-        Collection<Coordinates> collisionPoints = new ArrayList<>(CollisionPositions.values().length);
+    private Collection<Coordinates<Double>> getCollisionPoints () {
+        Collection<Coordinates<Double>> collisionPoints = new ArrayList<>(CollisionPositions.values().length);
         for (CollisionPositions collisionPosition : CollisionPositions.values()) {
             collisionPoints.add(collisionPosition.calcPosition(coords,dimension));
         }
@@ -192,7 +192,7 @@ public class Entity implements Element {
      * @return if there is a collision
      */
     public final boolean testCollide (Entity other) {
-        for (Coordinates collisionPoint : getCollisionPoints()) {
+        for (Coordinates<Double> collisionPoint : getCollisionPoints()) {
             if (CollisionPositions.isInHitBox(other.coords,other.dimension,collisionPoint)) return true;
         }
         return false;

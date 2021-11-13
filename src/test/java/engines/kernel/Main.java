@@ -11,6 +11,8 @@ import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
 import fr.r1r0r0.deltaengine.model.events.InputEvent;
 import fr.r1r0r0.deltaengine.model.events.Trigger;
+import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
+import fr.r1r0r0.deltaengine.model.maplevel.MapLevelBuilder;
 import fr.r1r0r0.deltaengine.model.sprites.shapes.Circle;
 import fr.r1r0r0.deltaengine.model.sprites.shapes.Rectangle;
 import javafx.scene.paint.Color;
@@ -29,7 +31,7 @@ public class Main {
         deltaEngine.setFrameRate(60);
         deltaEngine.printFrameRate(true);
 
-        MapLevel mapLevel = new MapLevel("test",30,20);
+        MapLevel mapLevel = new MapLevelBuilder("test",30,20).build();
         deltaEngine.addMap(mapLevel);
         //mapLevel = createMapLevelDamier("test2", 10,10);
         mapLevel = createMapLevelPrison("test2", 10,10,6,8,6,8);
@@ -39,11 +41,11 @@ public class Main {
         deltaEngine.setCurrentMap("test");
 
 
-        Entity pacman = new Entity("pacman", new Coordinates(5, 5), new Circle(1, Color.YELLOW), new Dimension(1, 1));
+        Entity pacman = new Entity("pacman", new Coordinates<>(5., 5.), new Circle(1, Color.YELLOW), new Dimension(1, 1));
         pacman.setSpeed(0);
         mapLevel.addEntity(pacman);
 
-        Entity red = new Entity("red", new Coordinates(7, 7), new Rectangle(Color.RED), new Dimension(1, 1));
+        Entity red = new Entity("red", new Coordinates<>(7., 7.), new Rectangle(Color.RED), new Dimension(1, 1));
         red.setSpeed(0);
         mapLevel.addEntity(red);
 
@@ -90,23 +92,25 @@ public class Main {
 
     private static MapLevel createMapLevelDamier (String name, int width, int height) {
         //TODO: faire une erreur generique pour les MapLevel, qui se subdivise en toutes les erreurs actuels
-        MapLevel mapLevel = new MapLevel(name,width,height);
+        MapLevelBuilder mapLevelBuilder = new MapLevelBuilder(name,width,height);
         try {
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
-                    mapLevel.addCase(new Cell(i, j, new Rectangle(((i + j) & 1) == 0 ? Color.BLACK : Color.WHITE)));
+                    mapLevelBuilder.setCell(
+                            new Cell(i, j,new Rectangle(((i + j) & 1) == 0 ? Color.BLACK : Color.WHITE))
+                    );
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return mapLevel;
+        return mapLevelBuilder.build();
     }
 
     private static MapLevel createMapLevelPrison (String name, int width, int height,
                                                   int prisonXMin, int prisonXMax,
                                                   int prisonYMin, int prisonYMax) {
-        MapLevel mapLevel = new MapLevel(name,width,height);
+        MapLevelBuilder mapLevelBuilder = new MapLevelBuilder(name,width,height);
         try {
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
@@ -117,13 +121,13 @@ public class Main {
                     } else {
                         cell = new Wall(i, j);
                     }
-                    mapLevel.addCase(cell);
+                    mapLevelBuilder.setCell(cell);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return mapLevel;
+        return mapLevelBuilder.build();
     }
 
 }
@@ -156,7 +160,7 @@ class BasicAI extends AI {
     }
     @Override
     public void tick() {
-        Coordinates coordinates = entity.getCoordinates();
+        Coordinates<Double> coordinates = entity.getCoordinates();
         if (coordinates.getY() >= 8) {
             entity.setDirection(Direction.UP);
         } else if (coordinates.getY() <= 4) {

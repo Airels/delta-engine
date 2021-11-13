@@ -1,6 +1,6 @@
 package fr.r1r0r0.deltaengine.exceptions.maplevel;
 
-import fr.r1r0r0.deltaengine.model.MapLevel;
+import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 
 public class MapLevelAlreadyExistException extends MapLevelException {
 
