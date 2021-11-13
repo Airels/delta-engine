@@ -8,7 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 /**
- * TODO
+ * Image Sprite to display image
  */
 public final class Image implements Sprite {
 
@@ -16,8 +16,8 @@ public final class Image implements Sprite {
     private ImageView imageView;
 
     /**
-     * TODO
-     * @param path
+     * Instantiate an Image Sprite with an image
+     * @param path to the image file
      * @throws FileNotFoundException
      */
     public Image(String path) throws FileNotFoundException {
@@ -35,5 +35,6 @@ public final class Image implements Sprite {
         imageView.setFitWidth(width);
         imageView.setFitHeight(height);
     }
+
 }
 
