@@ -14,16 +14,16 @@ public enum Direction {
     private final Coordinates<Integer> coordinates;
 
     /**
-     * TODO
-     * @param coordinates
+     * Constructor
+     * @param coordinates a coordinate
      */
     Direction (Coordinates<Integer> coordinates) {
         this.coordinates = coordinates;
     }
 
     /**
-     * TODO
-     * @return
+     * Getter of attribute coordinates
+     * @return attribute coordinates
      */
     public Coordinates<Integer> getCoordinates () {
         return coordinates;

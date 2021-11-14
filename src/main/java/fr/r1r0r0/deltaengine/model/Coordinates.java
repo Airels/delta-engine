@@ -4,17 +4,19 @@ import java.util.Objects;
 
 /**
  * Coordinates of a point, or object, coded by two doubles for 2D position.
+ * @param <E> the type of Number used, example : Integer, Double..
  */
 public final class Coordinates <E extends Number> {
 
-    private E x, y;
+    private final E x;
+    private final E y;
 
     /**
      * Default constructor. Creates a Coordinates given x and y positions.
      * @param x horizontal position
      * @param y vertical position
      */
-    public Coordinates(E x, E y) {
+    public Coordinates (E x, E y) {
         this.x = x;
         this.y = y;
     }
@@ -23,7 +25,7 @@ public final class Coordinates <E extends Number> {
      * Get saved x position.
      * @return x double current x of an element
      */
-    public E getX() {
+    public E getX () {
         return x;
     }
 
@@ -31,7 +33,7 @@ public final class Coordinates <E extends Number> {
      * Get saved y position.
      * @return y double current y of an element
      */
-    public E getY() {
+    public E getY () {
         return y;
     }
 
