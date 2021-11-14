@@ -12,6 +12,8 @@ import java.util.*;
 
 /**
  * MapLevel that represent the area where entities move
+ * TODO: voir pour remplacer la Map<Coordinates<Integer>,Cell> par un Cell[][] pour faciliter la suite
+ *      mais oblige a modifier la maniere d obtenir la Collection de Cell
  */
 public final class MapLevel {
 
@@ -76,12 +78,19 @@ public final class MapLevel {
      */
     public void replaceCell (Cell cell) throws MapLevelCoordinatesOutOfBoundException {
         Coordinates<Integer> coordinates = cell.getCoordinates();
-        if (coordinates.getX() < 0
-                || coordinates.getX() >= width
-                || coordinates.getY() < 0
-                || coordinates.getY() >= height)
+        if ( ! isValidCoordinate(coordinates))
             throw new MapLevelCoordinatesOutOfBoundException(this,cell);
         cells.put(coordinates,cell);
+    }
+
+    /**
+     * Return if the coordinates given are include in the area of the map
+     * @param coordinates a coordinate
+     * @return if the coordinates are valid (include in the area of the map)
+     */
+    private boolean isValidCoordinate (Coordinates<Integer> coordinates) {
+        return 0 <= coordinates.getX() && coordinates.getX() < width
+                && 0 <= coordinates.getY() && coordinates.getY() < height;
     }
 
     /**
