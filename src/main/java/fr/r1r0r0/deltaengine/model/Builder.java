@@ -1,15 +1,15 @@
 package fr.r1r0r0.deltaengine.model;
 
 /**
- * TODO
- * @param <T>
+ * Interface used to create builder of an object
+ * @param <E> teh type of the object created
  */
-public interface Builder <T> {
+public interface Builder <E> {
 
     /**
-     *
-     * @return
+     * A method to build an object of type E
+     * @return an object of type E
      */
-    T build ();
+    E build ();
 
 }
