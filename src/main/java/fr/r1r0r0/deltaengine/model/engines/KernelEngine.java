@@ -220,10 +220,11 @@ public final class KernelEngine {
      * @throws MapLevelAlreadyExistException if mapLevel's name already been added
      */
     public synchronized void addMap(MapLevel mapLevel) throws MapLevelAlreadyExistException {
-        if (maps.containsKey(mapLevel.getName()))
-            throw new MapLevelAlreadyExistException(mapLevel.getName());
+        String name = mapLevel.getName();
+        if (maps.containsKey(name))
+            throw new MapLevelAlreadyExistException(maps.get(name),mapLevel);
 
-        maps.put(mapLevel.getName(), mapLevel);
+        maps.put(name,mapLevel);
     }
 
     /**

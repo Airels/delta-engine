@@ -1,13 +1,11 @@
 package fr.r1r0r0.deltaengine.model.maplevel;
 
-import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelCellCoordinatesStackingException;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelEntityNameStackingException;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelCoordinatesOutOfBoundException;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelException;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.elements.Cell;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
-import fr.r1r0r0.deltaengine.model.elements.basic_cases.VoidCell;
 import fr.r1r0r0.deltaengine.model.events.Event;
 
 import java.util.*;
@@ -82,7 +80,7 @@ public final class MapLevel {
                 || coordinates.getX() >= width
                 || coordinates.getY() < 0
                 || coordinates.getY() >= height)
-            throw new MapLevelCoordinatesOutOfBoundException(width,height,coordinates);
+            throw new MapLevelCoordinatesOutOfBoundException(this,cell);
         cells.put(coordinates,cell);
     }
 
@@ -104,7 +102,7 @@ public final class MapLevel {
     public void addEntity (Entity entity) throws MapLevelEntityNameStackingException {
         String name = entity.getName();
         if (entities.containsKey(name) && entities.get(name) != entity)
-            throw new MapLevelEntityNameStackingException(entities.get(name),entity);
+            throw new MapLevelEntityNameStackingException(this,entities.get(name),entity);
         entities.put(name,entity);
     }
 
