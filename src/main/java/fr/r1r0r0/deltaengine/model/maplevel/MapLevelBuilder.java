@@ -1,5 +1,6 @@
 package fr.r1r0r0.deltaengine.model.maplevel;
 
+import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelBuilderCellCoordinatesStackingException;
 import fr.r1r0r0.deltaengine.model.Builder;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.elements.Cell;
@@ -7,20 +8,33 @@ import fr.r1r0r0.deltaengine.model.elements.CellBuilder;
 import fr.r1r0r0.deltaengine.model.elements.basic_cases.VoidCell;
 
 /**
- * TODO
+ * A Builder of MapLevel
+ * @see MapLevel
+ * @see Builder
+ * @see CellBuilder
  */
-public class MapLevelBuilder implements Builder<MapLevel> {
+public final class MapLevelBuilder implements Builder<MapLevel> {
 
+    /**
+     * A CellBuilder of VoidCell
+     * TODO: sera surement deplacer autre part car peu etre utile a beaucoup d endroit
+     */
     private static final CellBuilder VOID_CELL_BUILDER = new CellBuilder() {
         private int x;
         private int y;
+        @Override
         public CellBuilder setX (int x) {
             this.x = x;
             return this;
         }
+        @Override
         public CellBuilder setY (int y) {
             this.y = y;
             return this;
+        }
+        @Override
+        public Cell build(int x, int y) {
+            return new VoidCell(x,y);
         }
         @Override
         public Cell build() {
@@ -32,41 +46,48 @@ public class MapLevelBuilder implements Builder<MapLevel> {
     private final int width;
     private final int height;
     private final Cell[][] cells;
-    private CellBuilder nullCellBuilder;
+    private final CellBuilder defaultCellBuilder;
 
     /**
-     * TODO
-     * @param name
-     * @param width
-     * @param height
+     * Constructor
+     * @param name name of the map
+     * @param width with of the map
+     * @param height height of the map
+     * @param defaultCellBuilder defaultCellBuilder for the cell not difined in the map
      */
-    public MapLevelBuilder (String name, int width, int height) {
+    public MapLevelBuilder (String name, int width, int height, CellBuilder defaultCellBuilder) {
         if (width < 0) throw new IllegalArgumentException();
         if (height < 0) throw new IllegalArgumentException();
         this.name = name;
         this.width = width;
         this.height = height;
         cells = new Cell[width][height];
-        nullCellBuilder = VOID_CELL_BUILDER;
+        this.defaultCellBuilder = defaultCellBuilder;
     }
 
     /**
-     * TODO
-     * @param nullCellBuilder
-     * @return
+     * Constructor
+     * The attribute defaultCellBuilder is set to VOID_CELL_BUILDER
+     * @param name name of the map
+     * @param width with of the map
+     * @param height height of the map
      */
-    public Builder<MapLevel> setNullCellBuilder (CellBuilder nullCellBuilder) {
-        this.nullCellBuilder = nullCellBuilder;
-        return this;
+    public MapLevelBuilder (String name, int width, int height) {
+        this(name,width,height,VOID_CELL_BUILDER);
     }
 
     /**
-     * TODO
-     * @param cell
-     * @return
+     * Setter for the cell at the coordinate given by the cell coordinates
+     * @param cell a cell
+     * @return the current object
+     * @throws MapLevelBuilderCellCoordinatesStackingException throw of the cell given replace an other cell
+     *  with the same coordinates
      */
-    public Builder<MapLevel> setCell (Cell cell) {
+    public Builder<MapLevel> setCell (Cell cell) throws MapLevelBuilderCellCoordinatesStackingException {
         Coordinates<Integer> coordinates = cell.getCoordinates();
+        Cell oldCell = cells[coordinates.getX()][coordinates.getY()];
+        if (oldCell != null && oldCell != cell)
+            throw new MapLevelBuilderCellCoordinatesStackingException(this,oldCell,cell);
         cells[coordinates.getX()][coordinates.getY()] = cell;
         return this;
     }
@@ -74,12 +95,16 @@ public class MapLevelBuilder implements Builder<MapLevel> {
     @Override
     public MapLevel build() {
         for (int x = 0 ; x < width ; x++) {
-            nullCellBuilder.setX(x);
             for (int y = 0 ; y < height ; y++) {
-                if (cells[x][y] == null) cells[x][y] = nullCellBuilder.setY(y).build();
+                if (cells[x][y] == null) cells[x][y] = defaultCellBuilder.build(x,y);
             }
         }
         return new MapLevel(name,cells);
+    }
+
+    @Override
+    public String toString () {
+        return name;
     }
 
 }

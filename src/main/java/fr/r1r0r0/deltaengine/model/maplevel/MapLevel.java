@@ -13,6 +13,7 @@ import java.util.*;
 /**
  * MapLevel that represent the area where entities move
  * It is compose of cells, entities and events
+ * @see MapLevelBuilder
  * TODO: voir pour remplacer la Map<Coordinates<Integer>,Cell> par un Cell[][] pour faciliter la suite
  *      mais oblige a modifier la maniere d obtenir la Collection de Cell
  */
