@@ -12,6 +12,7 @@ import java.util.*;
 
 /**
  * MapLevel that represent the area where entities move
+ * It is compose of cells, entities and events
  * TODO: voir pour remplacer la Map<Coordinates<Integer>,Cell> par un Cell[][] pour faciliter la suite
  *      mais oblige a modifier la maniere d obtenir la Collection de Cell
  */
@@ -25,8 +26,9 @@ public final class MapLevel {
     private final Set<Event> events;
 
     /**
-     * TODO
-     * @param cells
+     * Constructor
+     * @param name name of the map
+     * @param cells cells that compose the map, can not contain null
      */
     protected MapLevel (String name, Cell[][] cells) {
         this.name = name;
@@ -38,6 +40,8 @@ public final class MapLevel {
         try {
             for (Cell[] cells1 : cells) {
                 for (Cell cell : cells1) {
+                    if (cell == null)
+                        throw new IllegalArgumentException("Argument Cells can not contain null");
                     replaceCell(cell);
                 }
             }

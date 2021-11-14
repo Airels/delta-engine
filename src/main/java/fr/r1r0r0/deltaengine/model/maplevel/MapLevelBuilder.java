@@ -6,6 +6,9 @@ import fr.r1r0r0.deltaengine.model.elements.Cell;
 import fr.r1r0r0.deltaengine.model.elements.CellBuilder;
 import fr.r1r0r0.deltaengine.model.elements.basic_cases.VoidCell;
 
+/**
+ * TODO
+ */
 public class MapLevelBuilder implements Builder<MapLevel> {
 
     private static final CellBuilder VOID_CELL_BUILDER = new CellBuilder() {
