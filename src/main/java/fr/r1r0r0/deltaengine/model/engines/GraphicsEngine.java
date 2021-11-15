@@ -8,10 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * Graphic engine takes care of maintaining the view updated
@@ -19,7 +16,6 @@ import java.util.NoSuchElementException;
 final class GraphicsEngine implements Engine {
 
     private ArrayList<Element> elements;
-    private ArrayList<Element> mapElements;
     private Map<Element, Sprite> elementSpriteMap;
     private final int CASE_SIZE = 40;
     private MapLevel mapLevel;
@@ -46,7 +42,6 @@ final class GraphicsEngine implements Engine {
     public void init() {
         elementSpriteMap = new HashMap<>();
         elements = new ArrayList<>();
-        mapElements = new ArrayList<>();
         mapLevel = null;
         z = 0.0;
 
@@ -67,6 +62,19 @@ final class GraphicsEngine implements Engine {
     public void run() {
         if (started) throw new RuntimeException("Graphic Engine is already running");
         started = true;
+
+        if (mapLevel != null){
+            for (Cell c:mapLevel.getBufferedCells().getPreviousAdd())
+                addElement(c);
+            for (Cell c:mapLevel.getBufferedCells().getPreviousRemove())
+                removeElement(c);
+
+            for (Element e:mapLevel.getBufferedEntities().getPreviousAdd())
+                addElement(e);
+            for (Element e:mapLevel.getBufferedEntities().getPreviousRemove())
+                removeElement(e);
+        }
+
         for (Element e : elements) {
             updateElement(e);
         }
@@ -82,17 +90,25 @@ final class GraphicsEngine implements Engine {
     private void updateElement(Element e) {
         if (!elements.contains(e)) throw new NoSuchElementException();
 
+
         Sprite oldSprite = elementSpriteMap.get(e);
         Sprite newSprite = e.getSprite();
+        if(e.getSprite().getZOrder() < z){
+            newSprite.getNode().setVisible(false);
+        }
+        else {
+            if (newSprite != oldSprite) {
+                root.getChildren().remove(oldSprite.getNode());
+                root.getChildren().add(newSprite.getNode());
+                elementSpriteMap.put(e, newSprite);
+            }
+            newSprite.getNode().setVisible(true);
 
-        if (newSprite != oldSprite) {
-            root.getChildren().remove(oldSprite.getNode());
-            root.getChildren().add(newSprite.getNode());
-            elementSpriteMap.put(e, newSprite);
+            newSprite.setLayout(e.getCoordinates().getX().doubleValue() * CASE_SIZE,
+                    e.getCoordinates().getY().doubleValue() * CASE_SIZE);
+
         }
 
-        newSprite.setLayout(e.getCoordinates().getX().doubleValue() * CASE_SIZE,
-                e.getCoordinates().getY().doubleValue() * CASE_SIZE);
     }
 
     /**
@@ -101,21 +117,23 @@ final class GraphicsEngine implements Engine {
      */
     public void setMap(MapLevel mapLevel) {
 
-        for (Element e:this.mapLevel.getCells()) removeElement(e);
-        for (Element e:this.mapLevel.getEntities()) removeElement(e);
 
+        if (this.mapLevel != null){
+            for (Element e:this.mapLevel.getCells()) removeElement(e);
+            for (Element e:this.mapLevel.getEntities()) removeElement(e);
+        }
         this.mapLevel = mapLevel;
 
         for (Cell c : mapLevel.getCells()) {
             c.getSprite().resize(CASE_SIZE, CASE_SIZE);
             addElement(c);
         }
-
         stage.setWidth(mapLevel.getWidth() * CASE_SIZE);
         stage.setHeight(mapLevel.getHeight() * CASE_SIZE);
 
         for (Entity entity : mapLevel.getEntities()) {
-            entity.getSprite().resize(CASE_SIZE * entity.getDimension().getWidth(),
+            entity.getSprite().resize(
+                    CASE_SIZE * entity.getDimension().getWidth(),
                     CASE_SIZE * entity.getDimension().getHeight());
             addElement(entity);
         }
@@ -131,14 +149,8 @@ final class GraphicsEngine implements Engine {
             elementSpriteMap.put(element, element.getSprite());
             elements.add(element);
             root.getChildren().add(element.getSprite().getNode());
-            if (element.getClass() == HUDElement.class) element.getSprite().getNode().setViewOrder(-1.0);
             updateElement(element);
         }
-    }
-
-    public void addMapElement(Element element){
-        addElement(element);
-        mapElements.add(element);
     }
 
     /**
@@ -148,6 +160,7 @@ final class GraphicsEngine implements Engine {
      */
     public void removeElement(Element element) {
         elements.remove(element);
+        elementSpriteMap.remove(element);
         root.getChildren().remove(element.getSprite().getNode());
     }
 
@@ -155,7 +168,9 @@ final class GraphicsEngine implements Engine {
      * Empty the all element from the graphic engine and from the view
      */
     public void clearElements() {
+        for (Element e:elements) removeElement(e);
         elements.clear();
+        elementSpriteMap.clear();
         root.getChildren().clear();
     }
 
