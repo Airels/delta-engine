@@ -7,6 +7,7 @@ import fr.r1r0r0.deltaengine.model.BufferedHashMap;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.elements.Cell;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
+import fr.r1r0r0.deltaengine.model.elements.basic_cases.VoidCell;
 import fr.r1r0r0.deltaengine.model.events.Event;
 
 import java.util.*;
@@ -106,7 +107,8 @@ public final class MapLevel {
      * @return the cell in the map with coordinate (x,y)
      */
     public Cell getCell (int x, int y) {
-        return cells.get(new Coordinates<>(x,y));
+        Cell cell = cells.get(new Coordinates<>(x,y));
+        return (cell == null) ? new VoidCell(x,y) : cell;
     }
 
     /**

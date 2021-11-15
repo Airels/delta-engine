@@ -9,8 +9,8 @@ import java.util.*;
  */
 public class BufferedHashMap<E,F> extends HashMap<E,F> {
 
-    private final Collection<F> previousAdd;
-    private final Collection<F> previousRemove;
+    private Collection<F> previousAdd;
+    private Collection<F> previousRemove;
 
     /**
      * Constructor
@@ -52,37 +52,34 @@ public class BufferedHashMap<E,F> extends HashMap<E,F> {
      */
     @Override
     public void clear() {
+        previousRemove.addAll(values());
         super.clear();
     }
 
     /**
-     * Getter of the attribute previousAdd
-     * @return the attribute previousAdd
+     * Get elements previously added to the HashMap, and reset it for future usage
+     * @return Collection of added elements
      */
-    public Collection<F> getPreviousAdd () {
-        return previousAdd;
+    public Collection<F> getAndResetAddedElements() {
+        try {
+            return previousAdd;
+        } finally {
+            previousAdd = new Stack<>();
+        }
     }
 
     /**
-     * Getter of the attribute previousRemove
-     * @return the attribute previousRemove
+     * Get elements previously removed from the HashMap, and reset it for future usage
+     * @return Collection of removed elements
      */
-    public Collection<F> getPreviousRemove () {
-        return previousRemove;
+    public Collection<F> getAndResetRemovedElements() {
+        try{
+            return previousRemove;
+        }finally {
+            previousRemove = new Stack<>();
+        }
     }
 
-    /**
-     * Clear the attribute previousAdd
-     */
-    public void clearPreviousAdd () {
-        previousAdd.clear();
-    }
 
-    /**
-     * Clear the attribute previousRemove
-     */
-    public void clearPreviousRemove () {
-        previousRemove.clear();
-    }
 
 }
