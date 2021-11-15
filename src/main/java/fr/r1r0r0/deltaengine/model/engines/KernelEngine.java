@@ -37,7 +37,7 @@ public final class KernelEngine {
     private final List<Event> globalEvents;
     private final List<HUDElement> hudElements;
     private MapLevel currentMapLevel;
-    private boolean currentMapHalted;
+    private volatile boolean currentMapHalted;
     private volatile boolean initialized, started;
     private int frameRate, optimalTime;
     private volatile int currentFrameRate;
