@@ -61,14 +61,14 @@ final class GraphicsEngine implements Engine {
         started = true;
 
         if (mapLevel != null){
-            for (Cell c:mapLevel.getBufferedCells().getPreviousAdd())
+tkt            for (Cell c:mapLevel.getBufferedCells().getAndResetAddedElements())
                 addElement(c);
-            for (Cell c:mapLevel.getBufferedCells().getPreviousRemove())
+            for (Cell c:mapLevel.getBufferedCells().getAndResetRemovedElements())
                 removeElement(c);
 
-            for (Element e:mapLevel.getBufferedEntities().getPreviousAdd())
+            for (Element e:mapLevel.getBufferedEntities().getAndResetAddedElements())
                 addElement(e);
-            for (Element e:mapLevel.getBufferedEntities().getPreviousRemove())
+            for (Element e:mapLevel.getBufferedEntities().getAndResetRemovedElements())
                 removeElement(e);
         }
 
