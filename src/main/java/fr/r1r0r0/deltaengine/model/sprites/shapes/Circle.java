@@ -17,13 +17,30 @@ public class Circle extends Shape {
         this.ellipse = new Ellipse(radius,radius,color);
     }
 
+    public void setRadius(double radius){
+        ellipse.setRadiusX(radius);
+        ellipse.setRadiusY(radius);
+    }
+
+    public double getRadius(){
+        return ellipse.getRadiusX();
+    }
+
     @Override
     public void resize(double width, double height) {
-
+        double diameter = Math.max(width, height);
+        setRadius(diameter/2);
     }
 
     @Override
     public javafx.scene.shape.Shape getFXShape() {
         return ellipse.getFXShape();
     }
+
+    @Override
+    public void setLayout(double x, double y) {
+        this.getNode().setLayoutX(x + getRadius());
+        this.getNode().setLayoutY(y + getRadius());
+    }
+
 }
