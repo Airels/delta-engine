@@ -6,8 +6,6 @@ import fr.r1r0r0.deltaengine.view.colors.Color;
  * Rectangle Sprite
  */
 public class Rectangle extends Shape {
-
-    private double width, height;
     private final javafx.scene.shape.Rectangle fxRectangle;
 
     /**
@@ -15,7 +13,7 @@ public class Rectangle extends Shape {
      * @param color of the Rectangle
      */
     public Rectangle(Color color) {
-        this(0, 0, color);
+        this(1,1,color);
     }
 
     /**
@@ -25,10 +23,7 @@ public class Rectangle extends Shape {
      * @param color of the Rectangle
      */
     public Rectangle(double width, double height, Color color) {
-        this.width = width;
-        this.height = height;
         this.fxRectangle = new javafx.scene.shape.Rectangle();
-
         fxRectangle.setWidth(width);
         fxRectangle.setHeight(height);
         fxRectangle.setFill(color.getFXColor());
