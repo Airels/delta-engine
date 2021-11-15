@@ -36,7 +36,9 @@ public class Main {
         //mapLevel = createMapLevelDamier("test2", 10,10);
         mapLevel = createMapLevelPrison("test2", 10,10,6,8,6,8);
         mapLevel.replaceCell(new Wall(7, 7));
-        mapLevel.replaceCell(new Wall(2,2));
+
+        Wall w =new Wall(2,2);
+        mapLevel.replaceCell(new Cell(2,2,new Rectangle(Color.RED)));
         deltaEngine.addMap(mapLevel);
 
         deltaEngine.setCurrentMap("test");
@@ -46,9 +48,9 @@ public class Main {
         pacman.setSpeed(0);
         mapLevel.addEntity(pacman);
 
-        Entity red = new Entity("red", new Coordinates<>(8., 8.), new Rectangle(Color.RED), new Dimension(1, 1));
+        Entity red = new Entity("red", new Coordinates<>(8., 8.), new Rectangle(0.5,0.5,Color.RED), new Dimension(0.8, 0.8));
         red.setSpeed(0);
-        mapLevel.addEntity(red);
+
 
         InputEvent moveUpEvent = new InputEvent(new ChangeMove(pacman, Direction.UP), new ChangeMove(pacman, Direction.IDLE));
         InputEvent moveDownEvent = new InputEvent(new ChangeMove(pacman, Direction.DOWN), new ChangeMove(pacman, Direction.IDLE));
@@ -81,6 +83,9 @@ public class Main {
         mapLevel.addEvent(new Timer(300));
         deltaEngine.setCurrentMap("test2");
         deltaEngine.addGlobalEvent(new Timer(1000));
+
+        Thread.sleep(3000);
+        mapLevel.addEntity(red);
 
         try {
             for (; ; Thread.sleep(2000)) {

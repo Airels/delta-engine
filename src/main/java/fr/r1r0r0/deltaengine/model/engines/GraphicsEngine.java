@@ -22,8 +22,6 @@ final class GraphicsEngine implements Engine {
     private Stage stage;
     private Group root;
     private Scene scene;
-    private double z;
-
     private boolean initialized;
     private boolean started;
 
@@ -43,7 +41,6 @@ final class GraphicsEngine implements Engine {
         elementSpriteMap = new HashMap<>();
         elements = new ArrayList<>();
         mapLevel = null;
-        z = 0.0;
 
         root = new Group();
         scene = new Scene(root, 10, 10);
@@ -90,24 +87,18 @@ final class GraphicsEngine implements Engine {
     private void updateElement(Element e) {
         if (!elements.contains(e)) throw new NoSuchElementException();
 
-
         Sprite oldSprite = elementSpriteMap.get(e);
         Sprite newSprite = e.getSprite();
-        if(e.getSprite().getZOrder() < z){
-            newSprite.getNode().setVisible(false);
-        }
-        else {
-            if (newSprite != oldSprite) {
-                root.getChildren().remove(oldSprite.getNode());
-                root.getChildren().add(newSprite.getNode());
-                elementSpriteMap.put(e, newSprite);
-            }
-            newSprite.getNode().setVisible(true);
 
-            newSprite.setLayout(e.getCoordinates().getX().doubleValue() * CASE_SIZE,
-                    e.getCoordinates().getY().doubleValue() * CASE_SIZE);
-
+        if (newSprite != oldSprite) {
+            root.getChildren().remove(oldSprite.getNode());
+            root.getChildren().add(newSprite.getNode());
+            elementSpriteMap.put(e, newSprite);
         }
+
+        newSprite.setLayout(e.getCoordinates().getX().doubleValue() * CASE_SIZE,
+                e.getCoordinates().getY().doubleValue() * CASE_SIZE);
+
 
     }
 
@@ -116,26 +107,21 @@ final class GraphicsEngine implements Engine {
      * @param mapLevel map to be shown
      */
     public void setMap(MapLevel mapLevel) {
-
-
         if (this.mapLevel != null){
             for (Element e:this.mapLevel.getCells()) removeElement(e);
             for (Element e:this.mapLevel.getEntities()) removeElement(e);
         }
-        this.mapLevel = mapLevel;
 
-        for (Cell c : mapLevel.getCells()) {
-            c.getSprite().resize(CASE_SIZE, CASE_SIZE);
-            addElement(c);
-        }
+        this.mapLevel = mapLevel;
         stage.setWidth(mapLevel.getWidth() * CASE_SIZE);
         stage.setHeight(mapLevel.getHeight() * CASE_SIZE);
 
-        for (Entity entity : mapLevel.getEntities()) {
-            entity.getSprite().resize(
-                    CASE_SIZE * entity.getDimension().getWidth(),
-                    CASE_SIZE * entity.getDimension().getHeight());
-            addElement(entity);
+        for (Cell c : mapLevel.getCells()) {
+            addElement(c);
+        }
+
+        for (Entity element : mapLevel.getEntities()) {
+            addElement(element);
         }
     }
 
@@ -145,12 +131,16 @@ final class GraphicsEngine implements Engine {
      * @param element element to display
      */
     public void addElement(Element element) {
-        if (!elements.contains(element)) {
-            elementSpriteMap.put(element, element.getSprite());
-            elements.add(element);
-            root.getChildren().add(element.getSprite().getNode());
-            updateElement(element);
+        if (elements.contains(element)) {
+            removeElement(element);
         }
+        elementSpriteMap.put(element, element.getSprite());
+        elements.add(element);
+        root.getChildren().add(element.getSprite().getNode());
+        element.getSprite().resize(
+                    CASE_SIZE * element.getDimension().getWidth(),
+                    CASE_SIZE * element.getDimension().getHeight());
+        updateElement(element);
     }
 
     /**
