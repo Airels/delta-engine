@@ -3,6 +3,7 @@ package fr.r1r0r0.deltaengine.model.maplevel;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelEntityNameStackingException;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelCoordinatesOutOfBoundException;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelException;
+import fr.r1r0r0.deltaengine.model.BufferedHashMap;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.elements.Cell;
 import fr.r1r0r0.deltaengine.model.elements.Entity;
@@ -22,8 +23,8 @@ public final class MapLevel {
     private final String name;
     private final int width;
     private final int height;
-    private final java.util.Map<Coordinates<Integer>,Cell> cells;
-    private final java.util.Map<String,Entity> entities;
+    private final BufferedHashMap<Coordinates<Integer>,Cell> cells;
+    private final BufferedHashMap<String,Entity> entities;
     private final Set<Event> events;
 
     /**
@@ -31,12 +32,12 @@ public final class MapLevel {
      * @param name name of the map
      * @param cells cells that compose the map, can not contain null
      */
-    protected MapLevel (String name, Cell[][] cells) {
+    MapLevel (String name, Cell[][] cells) {
         this.name = name;
         this.width = cells.length;
         this.height = (cells.length != 0) ? cells[0].length : 0;
-        this.cells = new HashMap<>();
-        entities = new HashMap<>();
+        this.cells = new BufferedHashMap<>();
+        entities = new BufferedHashMap<>();
         events = new LinkedHashSet<>();
         try {
             for (Cell[] cells1 : cells) {
@@ -189,6 +190,22 @@ public final class MapLevel {
      */
     public Collection<Event> getEvents () {
         return events;
+    }
+
+    /**
+     * Getter of attribute cells
+     * @return attribute cells
+     */
+    public BufferedHashMap<Coordinates<Integer>,Cell> getBufferedCells () {
+        return cells;
+    }
+
+    /**
+     * Getter of attribute entities
+     * @return attributes entities
+     */
+    public BufferedHashMap<String,Entity> getBufferedEntities () {
+        return entities;
     }
 
 }

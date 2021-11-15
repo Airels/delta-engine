@@ -386,7 +386,7 @@ public final class KernelEngine {
 
 
         for (Entity mapEntity : mapEntities) {
-            addElementToGraphicsEngine(mapEntity);
+            // addElementToGraphicsEngine(mapEntity);
             if (mapEntity.getAI() != null)
                 iaEngine.addAI(mapEntity.getAI());
         }

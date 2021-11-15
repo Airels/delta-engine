@@ -19,8 +19,10 @@ import java.util.NoSuchElementException;
 final class GraphicsEngine implements Engine {
 
     private ArrayList<Element> elements;
+    private ArrayList<Element> mapElements;
     private Map<Element, Sprite> elementSpriteMap;
     private final int CASE_SIZE = 40;
+    private MapLevel mapLevel;
     private Stage stage;
     private Group root;
     private Scene scene;
@@ -44,6 +46,8 @@ final class GraphicsEngine implements Engine {
     public void init() {
         elementSpriteMap = new HashMap<>();
         elements = new ArrayList<>();
+        mapElements = new ArrayList<>();
+        mapLevel = null;
         z = 0.0;
 
         root = new Group();
@@ -92,9 +96,16 @@ final class GraphicsEngine implements Engine {
     }
 
     /**
-     * @param mapLevel
+     * Set the map to be diplayed, replace the old map
+     * @param mapLevel map to be shown
      */
     public void setMap(MapLevel mapLevel) {
+
+        for (Element e:this.mapLevel.getCells()) removeElement(e);
+        for (Element e:this.mapLevel.getEntities()) removeElement(e);
+
+        this.mapLevel = mapLevel;
+
         for (Cell c : mapLevel.getCells()) {
             c.getSprite().resize(CASE_SIZE, CASE_SIZE);
             addElement(c);
@@ -123,6 +134,11 @@ final class GraphicsEngine implements Engine {
             if (element.getClass() == HUDElement.class) element.getSprite().getNode().setViewOrder(-1.0);
             updateElement(element);
         }
+    }
+
+    public void addMapElement(Element element){
+        addElement(element);
+        mapElements.add(element);
     }
 
     /**
