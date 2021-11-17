@@ -3,12 +3,10 @@ package fr.r1r0r0.deltaengine.model.engines;
 import fr.r1r0r0.deltaengine.model.elements.*;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.*;
@@ -20,10 +18,10 @@ final class GraphicsEngine implements Engine {
 
     private ArrayList<Element> elements;
     private Map<Element, Sprite> elementSpriteMap;
-    private final int CASE_SIZE = 40;
+    private double caseSize = 40;
     private MapLevel mapLevel;
     private Stage stage;
-    private Group root;
+    private Pane root;
     private Scene scene;
     private boolean initialized;
     private boolean started;
@@ -49,9 +47,10 @@ final class GraphicsEngine implements Engine {
 
         int initialWidth = 1, initialHeight = 1;
 
-        root = new Group();
+        root = new Pane();
         scene = new Scene(root, initialWidth, initialHeight);
         root.setVisible(true);
+        // root.setBackground();
 
         stage.setScene(scene);
         stage.setResizable(false);
@@ -110,8 +109,8 @@ final class GraphicsEngine implements Engine {
             elementSpriteMap.put(e, newSprite);
         }
 
-        newSprite.setLayout(e.getCoordinates().getX().doubleValue() * CASE_SIZE,
-                e.getCoordinates().getY().doubleValue() * CASE_SIZE);
+        newSprite.setLayout(e.getCoordinates().getX().doubleValue() * caseSize,
+                e.getCoordinates().getY().doubleValue() * caseSize);
 
 
     }
@@ -127,8 +126,13 @@ final class GraphicsEngine implements Engine {
         }
 
         this.mapLevel = mapLevel;
-        stage.setWidth(mapLevel.getWidth() * CASE_SIZE + widthMargin);
-        stage.setHeight(mapLevel.getHeight() * CASE_SIZE + heightMargin);
+        // stage.setWidth(mapLevel.getWidth() * caseSize + widthMargin);
+        // stage.setHeight(mapLevel.getHeight() * caseSize + heightMargin);
+
+        double caseSizeWidth = stage.getWidth() / mapLevel.getWidth();
+        double caseSizeHeight = stage.getHeight() / mapLevel.getHeight();
+        caseSize = Math.min(caseSizeWidth, caseSizeHeight);
+
 
         for (Cell c : mapLevel.getCells()) {
             addElement(c);
@@ -152,8 +156,8 @@ final class GraphicsEngine implements Engine {
         elements.add(element);
         root.getChildren().add(element.getSprite().getNode());
         element.getSprite().resize(
-                    CASE_SIZE * element.getDimension().getWidth(),
-                    CASE_SIZE * element.getDimension().getHeight());
+                    caseSize * element.getDimension().getWidth(),
+                    caseSize * element.getDimension().getHeight());
         updateElement(element);
     }
 
