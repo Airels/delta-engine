@@ -21,6 +21,14 @@ public class Ellipse extends Shape{
     }
 
     /**
+     * Instantiate Ellipse Sprite
+     * @param color of the ellipse
+     */
+    public Ellipse(Color color) {
+        this(1, 1, color);
+    }
+
+    /**
      * get the radius of the ellipse in the x direction
      * @return the radius of the ellipse in the x direction
      */
