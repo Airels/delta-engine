@@ -75,6 +75,9 @@ public class Main {
         InputEvent exitEvent = new InputEvent(() -> System.exit(0), null);
         deltaEngine.setInput(Key.ESCAPE, exitEvent);
 
+        InputEvent pauseEvent = new InputEvent(deltaEngine::haltCurrentMap, deltaEngine::resumeCurrentMap);
+        deltaEngine.setInput(Key.P, pauseEvent);
+
         pacman.setCollisionEvent(red, new Event() {
             @Override
             public void checkEvent() {

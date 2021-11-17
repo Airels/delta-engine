@@ -128,7 +128,12 @@ public final class KernelEngine {
                 }
             } else {
                 inputEngine.run();
-                Platform.runLater(graphicsEngine);
+                Platform.runLater(() -> {
+                    graphicsEngine.run();
+                    synchronized (lock) {
+                        lock.notifyAll();
+                    }
+                });
             }
 
             try {
