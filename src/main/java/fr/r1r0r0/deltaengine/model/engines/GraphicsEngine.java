@@ -25,6 +25,8 @@ final class GraphicsEngine implements Engine {
     private boolean initialized;
     private boolean started;
 
+    private double widthMargin, heightMargin;
+
     /**
      * Constructor to instantiate the engine but not initialising its components
      */
@@ -42,12 +44,17 @@ final class GraphicsEngine implements Engine {
         elements = new ArrayList<>();
         mapLevel = null;
 
+        int initialWidth = 1, initialHeight = 1;
+
         root = new Group();
-        scene = new Scene(root, 10, 10);
+        scene = new Scene(root, initialWidth, initialHeight);
         root.setVisible(true);
 
         stage.setScene(scene);
         stage.show();
+
+        widthMargin = stage.getWidth() - initialWidth-1;
+        heightMargin = stage.getHeight() - initialHeight-1;
 
         initialized = true;
     }
@@ -113,8 +120,8 @@ final class GraphicsEngine implements Engine {
         }
 
         this.mapLevel = mapLevel;
-        stage.setWidth(mapLevel.getWidth() * CASE_SIZE);
-        stage.setHeight(mapLevel.getHeight() * CASE_SIZE);
+        stage.setWidth(mapLevel.getWidth() * CASE_SIZE + widthMargin);
+        stage.setHeight(mapLevel.getHeight() * CASE_SIZE + heightMargin);
 
         for (Cell c : mapLevel.getCells()) {
             addElement(c);
