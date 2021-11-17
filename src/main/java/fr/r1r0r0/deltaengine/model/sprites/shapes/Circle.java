@@ -17,6 +17,14 @@ public class Circle extends Shape {
         this.ellipse = new Ellipse(radius,radius,color);
     }
 
+    /**
+     * Second constructor used if Circle is an Entity
+     * @param color of the circle
+     */
+    public Circle(Color color) {
+        this(1, color);
+    }
+
     public void setRadius(double radius){
         ellipse.setRadiusX(radius);
         ellipse.setRadiusY(radius);
