@@ -5,10 +5,14 @@ import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -58,6 +62,7 @@ final class GraphicsEngine implements Engine {
         stage.setFullScreen(true);
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+
         stage.show();
 
         widthMargin = stage.getWidth() - initialWidth-1;
@@ -153,6 +158,7 @@ final class GraphicsEngine implements Engine {
         else {
             offsetX = (stage.getWidth()- mapLevel.getWidth()*caseSize)/2;
         }
+        stage.setTitle(mapLevel.getName());
     }
 
     /**
@@ -207,6 +213,15 @@ final class GraphicsEngine implements Engine {
         elements.clear();
         elementSpriteMap.clear();
         root.getChildren().clear();
+    }
+
+    /**
+     * set the icon used for the engine's
+     * @param image icon used
+     */
+    public void setStageIcon(Image image){
+        stage.getIcons().clear();
+        stage.getIcons().add(image);
     }
 
     public void setStage(Stage stage) {
