@@ -346,7 +346,8 @@ public final class KernelEngine {
      */
     public synchronized void addHUDElement(HUDElement hudElement) {
         hudElements.add(hudElement);
-        addElementToGraphicsEngine(hudElement);
+        addHUDElementToGraphicsEngine(hudElement);
+        // addElementToGraphicsEngine(hudElement);
     }
 
     /**
@@ -432,6 +433,14 @@ public final class KernelEngine {
      */
     private void addElementToGraphicsEngine(Element element) {
         Platform.runLater(() -> graphicsEngine.addElement(element));
+    }
+
+    /**
+     * Adding an HUD element to the graphics engine, using Platform.runLater of JavaFX
+     * @param element Element to add
+     */
+    private void addHUDElementToGraphicsEngine(HUDElement element) {
+        Platform.runLater(() -> graphicsEngine.addHudElement(element));
     }
 
     /**
