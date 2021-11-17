@@ -127,7 +127,7 @@ final class GraphicsEngine implements Engine {
 
     /**
      * add an element to display
-     *
+     * element is resized according to CASE_SIZE
      * @param element element to display
      */
     public void addElement(Element element) {
@@ -140,6 +140,21 @@ final class GraphicsEngine implements Engine {
         element.getSprite().resize(
                     CASE_SIZE * element.getDimension().getWidth(),
                     CASE_SIZE * element.getDimension().getHeight());
+        updateElement(element);
+    }
+
+    /**
+     * add an element to display
+     * element is NOT resized
+     * @param element element to display
+     */
+    public void addHudElement(Element element){
+        if (elements.contains(element)) {
+            removeElement(element);
+        }
+        elementSpriteMap.put(element, element.getSprite());
+        elements.add(element);
+        root.getChildren().add(element.getSprite().getNode());
         updateElement(element);
     }
 
