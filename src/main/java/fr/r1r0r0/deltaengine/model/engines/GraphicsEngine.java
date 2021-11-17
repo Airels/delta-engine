@@ -19,6 +19,7 @@ final class GraphicsEngine implements Engine {
     private ArrayList<Element> elements;
     private Map<Element, Sprite> elementSpriteMap;
     private double caseSize = 40;
+    private double offsetX = 0.0, offsetY = 0.0;
     private MapLevel mapLevel;
     private Stage stage;
     private Pane root;
@@ -50,7 +51,7 @@ final class GraphicsEngine implements Engine {
         root = new Pane();
         scene = new Scene(root, initialWidth, initialHeight);
         root.setVisible(true);
-        // root.setBackground();
+        root.setStyle("-fx-background-color: #000000");
 
         stage.setScene(scene);
         stage.setResizable(false);
@@ -109,8 +110,8 @@ final class GraphicsEngine implements Engine {
             elementSpriteMap.put(e, newSprite);
         }
 
-        newSprite.setLayout(e.getCoordinates().getX().doubleValue() * caseSize,
-                e.getCoordinates().getY().doubleValue() * caseSize);
+        newSprite.setLayout(offsetX + e.getCoordinates().getX().doubleValue() * caseSize,
+                offsetY + e.getCoordinates().getY().doubleValue() * caseSize);
 
 
     }
@@ -126,13 +127,7 @@ final class GraphicsEngine implements Engine {
         }
 
         this.mapLevel = mapLevel;
-        // stage.setWidth(mapLevel.getWidth() * caseSize + widthMargin);
-        // stage.setHeight(mapLevel.getHeight() * caseSize + heightMargin);
-
-        double caseSizeWidth = stage.getWidth() / mapLevel.getWidth();
-        double caseSizeHeight = stage.getHeight() / mapLevel.getHeight();
-        caseSize = Math.min(caseSizeWidth, caseSizeHeight);
-
+        fitMapToStage();
 
         for (Cell c : mapLevel.getCells()) {
             addElement(c);
@@ -140,6 +135,23 @@ final class GraphicsEngine implements Engine {
 
         for (Entity element : mapLevel.getEntities()) {
             addElement(element);
+        }
+    }
+
+    /**
+     * fit the map to the screen,
+     * caseSize is calculated to fit exactly,
+     * the offset are calculated to center the elements
+     */
+    private void fitMapToStage() {
+        double caseSizeWidth = stage.getWidth() / mapLevel.getWidth();
+        double caseSizeHeight = stage.getHeight() / mapLevel.getHeight();
+        caseSize = Math.min(caseSizeWidth, caseSizeHeight);
+        if (caseSizeHeight>caseSizeWidth){
+            offsetY = (stage.getHeight() - mapLevel.getHeight()*caseSize)/2;
+        }
+        else {
+            offsetX = (stage.getWidth()- mapLevel.getWidth()*caseSize)/2;
         }
     }
 
