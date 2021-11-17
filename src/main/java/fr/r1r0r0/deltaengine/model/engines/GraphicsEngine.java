@@ -6,6 +6,7 @@ import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.*;
@@ -20,7 +21,7 @@ final class GraphicsEngine implements Engine {
     private double caseSize = 40;
     private MapLevel mapLevel;
     private Stage stage;
-    private Group root;
+    private Pane root;
     private Scene scene;
     private boolean initialized;
     private boolean started;
@@ -46,9 +47,10 @@ final class GraphicsEngine implements Engine {
 
         int initialWidth = 1, initialHeight = 1;
 
-        root = new Group();
+        root = new Pane();
         scene = new Scene(root, initialWidth, initialHeight);
         root.setVisible(true);
+        // root.setBackground();
 
         stage.setScene(scene);
         stage.setResizable(false);
@@ -123,13 +125,14 @@ final class GraphicsEngine implements Engine {
             for (Element e:this.mapLevel.getEntities()) removeElement(e);
         }
 
-        caseSize = (int) Math.min(stage.getWidth()/mapLevel.getWidth(),
-                stage.getHeight()/mapLevel.getHeight());
-
-
         this.mapLevel = mapLevel;
-        stage.setWidth(mapLevel.getWidth() * caseSize + widthMargin);
-        stage.setHeight(mapLevel.getHeight() * caseSize + heightMargin);
+        // stage.setWidth(mapLevel.getWidth() * caseSize + widthMargin);
+        // stage.setHeight(mapLevel.getHeight() * caseSize + heightMargin);
+
+        double caseSizeWidth = stage.getWidth() / mapLevel.getWidth();
+        double caseSizeHeight = stage.getHeight() / mapLevel.getHeight();
+        caseSize = Math.min(caseSizeWidth, caseSizeHeight);
+
 
         for (Cell c : mapLevel.getCells()) {
             addElement(c);

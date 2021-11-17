@@ -72,6 +72,9 @@ public class Main {
         deltaEngine.setInput(Key.ARROW_DOWN, moveDownEventRed);
         deltaEngine.setInput(Key.ARROW_RIGHT, moveRightEventRed);
 
+        InputEvent exitEvent = new InputEvent(() -> System.exit(0), null);
+        deltaEngine.setInput(Key.ESCAPE, exitEvent);
+
         pacman.setCollisionEvent(red, new Event() {
             @Override
             public void checkEvent() {
