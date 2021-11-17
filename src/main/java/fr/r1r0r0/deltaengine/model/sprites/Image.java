@@ -36,5 +36,12 @@ public final class Image implements Sprite {
         imageView.setFitHeight(height);
     }
 
+    /**
+     * Path to image file
+     * @return String path to file
+     */
+    public String getPath() {
+        return path;
+    }
 }
 

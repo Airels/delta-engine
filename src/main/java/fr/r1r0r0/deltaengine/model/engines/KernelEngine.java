@@ -11,9 +11,11 @@ import fr.r1r0r0.deltaengine.model.elements.HUDElement;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
 import fr.r1r0r0.deltaengine.model.events.InputEvent;
+import fr.r1r0r0.deltaengine.model.sprites.Image;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -425,6 +427,14 @@ public final class KernelEngine {
         }
 
         currentMapLevel = null;
+    }
+
+    /**
+     * Set up icon of the Engine in the OS Environment
+     * @param img logo image to set
+     */
+    public void setGameImage(Image img) {
+        Platform.runLater(() -> graphicsEngine.setStageIcon(new javafx.scene.image.Image(img.getPath())));
     }
 
     /**
