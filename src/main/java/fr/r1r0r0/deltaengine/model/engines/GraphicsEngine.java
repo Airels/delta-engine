@@ -56,7 +56,6 @@ final class GraphicsEngine implements Engine {
 
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.setFullScreen(true);
         stage.setFullScreenExitHint("");
         try {
             setStageIcon(new Image(getClass().getResourceAsStream("/icon.png")));
@@ -70,6 +69,8 @@ final class GraphicsEngine implements Engine {
 
         widthMargin = stage.getWidth() - initialWidth-1;
         heightMargin = stage.getHeight() - initialHeight-1;
+
+        stage.setFullScreen(true);
 
         initialized = true;
     }
@@ -155,11 +156,12 @@ final class GraphicsEngine implements Engine {
         double caseSizeWidth = stage.getWidth() / mapLevel.getWidth();
         double caseSizeHeight = stage.getHeight() / mapLevel.getHeight();
         caseSize = Math.min(caseSizeWidth, caseSizeHeight);
+
         if (caseSizeHeight>caseSizeWidth){
-            offsetY = (stage.getHeight() - mapLevel.getHeight()*caseSize)/2;
+            offsetY = (stage.getHeight() - mapLevel.getHeight()*caseSize)/2 - heightMargin;
         }
         else {
-            offsetX = (stage.getWidth()- mapLevel.getWidth()*caseSize)/2;
+            offsetX = (stage.getWidth()- mapLevel.getWidth()*caseSize)/2 - widthMargin;
         }
         stage.setTitle(mapLevel.getName());
     }
