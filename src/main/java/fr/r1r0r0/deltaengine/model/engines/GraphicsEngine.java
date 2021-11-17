@@ -3,16 +3,13 @@ package fr.r1r0r0.deltaengine.model.engines;
 import fr.r1r0r0.deltaengine.model.elements.*;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -61,6 +58,12 @@ final class GraphicsEngine implements Engine {
         stage.setResizable(false);
         stage.setFullScreen(true);
         stage.setFullScreenExitHint("");
+        try {
+            setStageIcon(new Image(getClass().getResource("icon.png").getPath()));
+        }catch (Exception e){
+            e.printStackTrace();
+            System.exit(1);
+        }
         stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
         stage.show();
