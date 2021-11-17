@@ -11,15 +11,17 @@ import fr.r1r0r0.deltaengine.model.elements.HUDElement;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
 import fr.r1r0r0.deltaengine.model.events.InputEvent;
-import fr.r1r0r0.deltaengine.model.sprites.Image;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Core of the engine, oversees all engines and use them to render final game. <br>
@@ -430,11 +432,13 @@ public final class KernelEngine {
     }
 
     /**
-     * Set up icon of the Engine in the OS Environment
-     * @param img logo image to set
+     * Set up icon of the Engine in the OS Environment.
+     * @param img logo image path to set
+     * @throws FileNotFoundException if specified file doesn't exist
      */
-    public void setGameImage(Image img) {
-        Platform.runLater(() -> graphicsEngine.setStageIcon(new javafx.scene.image.Image(img.getPath())));
+    public void setGameIcon(String img) throws FileNotFoundException {
+        InputStream sin = new FileInputStream(img);
+        Platform.runLater(() -> graphicsEngine.setStageIcon(new javafx.scene.image.Image(sin)));
     }
 
     /**

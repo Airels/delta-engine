@@ -59,7 +59,7 @@ final class GraphicsEngine implements Engine {
         stage.setFullScreen(true);
         stage.setFullScreenExitHint("");
         try {
-            setStageIcon(new Image(getClass().getResource("icon.png").getPath()));
+            setStageIcon(new Image(getClass().getResourceAsStream("/icon.png")));
         }catch (Exception e){
             e.printStackTrace();
             System.exit(1);
