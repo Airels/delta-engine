@@ -97,11 +97,49 @@ final class PhysicsEngine implements Engine {
     private void updateCoordinates (Collection<Entity> entities, double timeRatio) {
         for (Entity entity : entities) {
             if (entity.getDirection() == Direction.IDLE) continue;
-            Coordinates<Double> nextCoordinate = entity.getCoordinates().getNextCoordinates(entity.getDirection(),
-                    entity.getSpeed() * timeRatio);
+            Coordinates<Double> nextCoordinate = calcNextPosition(entity,timeRatio);
             if (isValidPosition(nextCoordinate,entity.getDimension())) entity.setCoordinates(nextCoordinate);
             else entity.setDirection(Direction.IDLE);
         }
+    }
+
+    /**
+     * Return the next position of the entity
+     * @param entity an entity
+     * @param deltaTime a delta of time
+     * @return the next position of the entity
+     */
+    private Coordinates<Double> calcNextPosition (Entity entity, double deltaTime) {
+        return calcNextPosition(entity.getCoordinates(),entity.getDirection(),entity.getSpeed(),deltaTime);
+    }
+
+    /**
+     * Return the next position of the object describe by a topLeft, a direction, a speed, and
+     * a delta of time
+     * @param topLeft a position topLeft of the object
+     * @param direction the direction of the object
+     * @param speed the speed of the object
+     * @param deltaTime a delta of time
+     * @return the next position of the object describe
+     */
+    private Coordinates<Double> calcNextPosition (Coordinates<Double> topLeft, Direction direction,
+                                                  double speed, double deltaTime) {
+        return topLeft.getNextCoordinates(direction,speed * deltaTime);
+    }
+
+    /**
+     * Return if it is possible to apply this direction to an object
+     * describe by a position, a dimension, and a speed
+     * @param topLeft a position topLeft of the object
+     * @param dimension the dimension of the object
+     * @param direction the direction of the object
+     * @param speed the speed of the object
+     * @return if it is possible to apply this direction to an object
+     *  describe by a position, a dimension, and a speed
+     */
+    public boolean IsMovementAvailable (Coordinates<Double> topLeft, Dimension dimension,
+                                        Direction direction, double speed) {
+        return isValidPosition(calcNextPosition(topLeft,direction,speed,maxRunDelta),dimension);
     }
 
     /**
@@ -113,9 +151,12 @@ final class PhysicsEngine implements Engine {
      */
     private boolean isValidPosition (Coordinates<Double> initialTopLeft, Dimension dimension) {
         for (CollisionPositions collisionPosition : POSITIONS_CHECK) {
-            Coordinates<Double> position = collisionPosition.calcPosition(initialTopLeft,dimension,MOVE_MARGIN_ERROR);
-            int x = (position.getX() >= 0) ? position.getX().intValue() : (position.getX().intValue() - 1);
-            int y = (position.getY() >= 0) ? position.getY().intValue() : (position.getY().intValue() - 1);
+            Coordinates<Double> position =
+                    collisionPosition.calcPosition(initialTopLeft,dimension,MOVE_MARGIN_ERROR);
+            int x = (position.getX() >= 0) ? position.getX().intValue()
+                    : (position.getX().intValue() - 1);
+            int y = (position.getY() >= 0) ? position.getY().intValue()
+                    : (position.getY().intValue() - 1);
             if ( ! CrossableVisitor.isCaseCrossable(mapLevel.getCell(x,y))) return false;
         }
         return true;
