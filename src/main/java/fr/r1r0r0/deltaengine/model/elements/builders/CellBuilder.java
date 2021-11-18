@@ -4,7 +4,7 @@ import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.elements.Cell;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 
-public class CaseBuilder implements ElementBuilder {
+public class CellBuilder implements ElementBuilder {
     @Override
     public ElementBuilder setSprite(Sprite sprite) {
         return null;
