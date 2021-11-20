@@ -1,6 +1,6 @@
 package fr.r1r0r0.deltaengine.model;
 
-import fr.r1r0r0.deltaengine.model.elements.Entity;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 
 /**
  * An abstract class that defines an AI. An AI can be attached to an Entity

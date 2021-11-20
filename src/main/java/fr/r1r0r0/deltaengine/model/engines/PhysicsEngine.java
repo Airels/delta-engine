@@ -6,7 +6,7 @@ import fr.r1r0r0.deltaengine.model.Direction;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.elements.CollisionPositions;
 import fr.r1r0r0.deltaengine.model.elements.CrossableVisitor;
-import fr.r1r0r0.deltaengine.model.elements.Entity;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.events.Event;
 
 import java.util.Collection;

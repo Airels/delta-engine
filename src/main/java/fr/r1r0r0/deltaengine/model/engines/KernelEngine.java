@@ -6,7 +6,7 @@ import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelDoesNotExistException;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.elements.Cell;
 import fr.r1r0r0.deltaengine.model.elements.Element;
-import fr.r1r0r0.deltaengine.model.elements.Entity;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.elements.HUDElement;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;

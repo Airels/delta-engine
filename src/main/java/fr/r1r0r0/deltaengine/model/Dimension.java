@@ -5,6 +5,11 @@ package fr.r1r0r0.deltaengine.model;
  */
 public final class Dimension {
 
+    /**
+     * Default dimension
+     */
+    public final static Dimension DEFAULT_DIMENSION = new Dimension(1, 1);
+
     private final static double MIN_WIDTH = 0;
     private final static double MAX_WIDTH = 1;
     private final static double MIN_HEIGHT = 0;

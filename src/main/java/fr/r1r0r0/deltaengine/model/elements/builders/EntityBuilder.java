@@ -1,7 +1,7 @@
 package fr.r1r0r0.deltaengine.model.elements.builders;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
-import fr.r1r0r0.deltaengine.model.elements.Entity;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 
 public class EntityBuilder implements ElementBuilder {

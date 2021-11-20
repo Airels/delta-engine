@@ -1,6 +1,6 @@
 package fr.r1r0r0.deltaengine.exceptions;
 
-import fr.r1r0r0.deltaengine.model.elements.Entity;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 
 public class AIAlreadyAttachedException extends Exception {
 

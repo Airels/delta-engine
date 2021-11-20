@@ -6,7 +6,7 @@ import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelException;
 import fr.r1r0r0.deltaengine.model.BufferedHashMap;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.elements.Cell;
-import fr.r1r0r0.deltaengine.model.elements.Entity;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.elements.basic_cases.VoidCell;
 import fr.r1r0r0.deltaengine.model.events.Event;
 

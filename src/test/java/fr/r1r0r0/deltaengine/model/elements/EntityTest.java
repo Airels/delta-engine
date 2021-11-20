@@ -2,13 +2,12 @@ package fr.r1r0r0.deltaengine.model.elements;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Dimension;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class EntityTest {
 

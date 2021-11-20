@@ -3,7 +3,7 @@ package engines.kernel;
 import fr.r1r0r0.deltaengine.model.*;
 import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.elements.Cell;
-import fr.r1r0r0.deltaengine.model.elements.Entity;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.elements.basic_cases.Wall;
 import fr.r1r0r0.deltaengine.model.engines.DeltaEngine;
 import fr.r1r0r0.deltaengine.model.engines.KernelEngine;

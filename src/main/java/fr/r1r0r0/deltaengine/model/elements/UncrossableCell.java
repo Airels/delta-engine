@@ -1,5 +1,6 @@
 package fr.r1r0r0.deltaengine.model.elements;
 
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public class UncrossableCell extends Cell {
 
-    private List<Class<? extends Entity>> authorizedEntitiesToCross;
+    private final List<Class<? extends Entity>> authorizedEntitiesToCross;
 
     /**
      * Default constructor
