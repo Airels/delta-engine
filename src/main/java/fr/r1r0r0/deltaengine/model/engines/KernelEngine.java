@@ -3,6 +3,7 @@ package fr.r1r0r0.deltaengine.model.engines;
 import fr.r1r0r0.deltaengine.exceptions.InputKeyStackingError;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelAlreadyExistException;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelDoesNotExistException;
+import fr.r1r0r0.deltaengine.model.Direction;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.elements.cells.Cell;
 import fr.r1r0r0.deltaengine.model.elements.Element;
@@ -443,6 +444,16 @@ public final class KernelEngine {
     public void setGameIcon(String img) throws FileNotFoundException {
         InputStream sin = new FileInputStream(img);
         Platform.runLater(() -> graphicsEngine.setStageIcon(new javafx.scene.image.Image(sin)));
+    }
+
+    /**
+     * Return if the entity can move with the direction given in argument
+     * @param entity an entity
+     * @param direction a direction
+     * @return if the entity can move with the direction given
+     */
+    public boolean isAvailableDirection(Entity entity, Direction direction) {
+        return physicsEngine.isAvailableDirection(entity, direction);
     }
 
     /**
