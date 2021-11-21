@@ -131,7 +131,7 @@ final class PhysicsEngine implements Engine {
      * @param direction a direction
      * @return if the entity can move with the direction given
      */
-    public boolean IsAvailableDirection (Entity entity, Direction direction) {
+    public boolean isAvailableDirection (Entity entity, Direction direction) {
         return isValidNextPosition(entity,
                 calcNextPosition(entity.getCoordinates(),direction,entity.getSpeed(),maxRunDelta));
     }
