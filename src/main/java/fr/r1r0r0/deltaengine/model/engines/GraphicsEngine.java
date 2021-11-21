@@ -157,12 +157,16 @@ final class GraphicsEngine implements Engine {
         double caseSizeHeight = stage.getHeight() / mapLevel.getHeight();
         caseSize = Math.min(caseSizeWidth, caseSizeHeight);
 
-        if (caseSizeHeight>caseSizeWidth){
+        offsetX = 0;
+        offsetY = 0;
+
+        if (caseSizeHeight > caseSizeWidth){
             offsetY = (stage.getHeight() - mapLevel.getHeight()*caseSize)/2 - heightMargin;
         }
         else {
             offsetX = (stage.getWidth()- mapLevel.getWidth()*caseSize)/2 - widthMargin;
         }
+
         stage.setTitle(mapLevel.getName());
     }
 
