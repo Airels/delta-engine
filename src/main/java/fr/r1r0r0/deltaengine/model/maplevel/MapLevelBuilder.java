@@ -3,9 +3,9 @@ package fr.r1r0r0.deltaengine.model.maplevel;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelBuilderCellCoordinatesStackingException;
 import fr.r1r0r0.deltaengine.model.Builder;
 import fr.r1r0r0.deltaengine.model.Coordinates;
-import fr.r1r0r0.deltaengine.model.elements.Cell;
-import fr.r1r0r0.deltaengine.model.elements.CellBuilder;
-import fr.r1r0r0.deltaengine.model.elements.basic_cases.VoidCell;
+import fr.r1r0r0.deltaengine.model.elements.cells.Cell;
+import fr.r1r0r0.deltaengine.model.elements.cells.CellBuilder;
+import fr.r1r0r0.deltaengine.model.elements.cells.default_cells.VoidCell;
 
 /**
  * A Builder of MapLevel

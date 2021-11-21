@@ -1,6 +1,7 @@
 package fr.r1r0r0.deltaengine.model.elements;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
+import fr.r1r0r0.deltaengine.model.elements.cells.Cell;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 import javafx.scene.Node;
 import org.junit.jupiter.api.Test;

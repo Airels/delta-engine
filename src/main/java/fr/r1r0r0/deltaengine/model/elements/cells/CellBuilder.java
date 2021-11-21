@@ -1,4 +1,4 @@
-package fr.r1r0r0.deltaengine.model.elements;
+package fr.r1r0r0.deltaengine.model.elements.cells;
 
 import fr.r1r0r0.deltaengine.model.Builder;
 
