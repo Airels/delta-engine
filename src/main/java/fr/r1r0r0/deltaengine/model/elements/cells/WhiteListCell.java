@@ -9,7 +9,7 @@ import java.util.Collection;
  * A specific RestrictiveCell, who only allows every given entities to cross it.
  * If entity class was not given, it will refuse to be crossed by it.
  */
-public class WhiteListCell extends RestrictiveCell {
+public final class WhiteListCell extends RestrictiveCell {
 
     /**
      * Default constructor. Set a case sprite and coordinates in the map, and a collection of entities' class.
