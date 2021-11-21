@@ -7,7 +7,7 @@ import fr.r1r0r0.deltaengine.view.colors.Color;
 /**
  * A VoidCell black case. Just to represent nothing.
  */
-public class VoidCell extends CrossableCell {
+public final class VoidCell extends CrossableCell {
 
     public VoidCell(int x, int y) {
         super(x, y, new Rectangle(Color.BLACK));

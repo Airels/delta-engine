@@ -7,11 +7,12 @@ import fr.r1r0r0.deltaengine.view.colors.Color;
 /**
  * A default Wall case, just to represent simple default Wall.
  */
-public class Wall extends UncrossableCell {
+public final class Wall extends UncrossableCell {
+
+    public final static Color DEFAULT_WALL_COLOR = Color.GRAY;
 
     public Wall(int x, int y) {
-        super(x, y, new Rectangle(Color.GRAY));
+        super(x, y, new Rectangle(DEFAULT_WALL_COLOR));
     }
-
 
 }

@@ -9,7 +9,7 @@ import java.util.Collection;
  * A specific RestrictiveCell, who will deny every given entities to cross it.
  * If entity class was not given, it will allow to be crossed by it.
  */
-public class BlackListCell extends RestrictiveCell {
+public final class BlackListCell extends RestrictiveCell {
 
     /**
      * Default constructor. Set a case sprite and coordinates in the map.
