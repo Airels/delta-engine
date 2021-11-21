@@ -3,6 +3,7 @@ package engines.kernel;
 import fr.r1r0r0.deltaengine.model.*;
 import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.elements.cells.Cell;
+import fr.r1r0r0.deltaengine.model.elements.cells.CrossableCell;
 import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.elements.cells.default_cells.Wall;
 import fr.r1r0r0.deltaengine.model.engines.DeltaEngine;
@@ -38,7 +39,7 @@ public class Main {
         mapLevel.replaceCell(new Wall(7, 7));
 
         Wall w =new Wall(2,2);
-        mapLevel.replaceCell(new Cell(2,2,new Rectangle(Color.RED)));
+        mapLevel.replaceCell(new CrossableCell(2,2,new Rectangle(Color.RED)));
         deltaEngine.addMap(mapLevel);
 
         deltaEngine.setCurrentMap("test");
@@ -109,7 +110,7 @@ public class Main {
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
                     mapLevelBuilder.setCell(
-                            new Cell(i, j,new Rectangle(((i + j) & 1) == 0 ? Color.BLACK : Color.WHITE))
+                            new CrossableCell(i, j,new Rectangle(((i + j) & 1) == 0 ? Color.BLACK : Color.WHITE))
                     );
                 }
             }
@@ -129,7 +130,7 @@ public class Main {
                     Cell cell;
                     if (prisonXMin <= i && i <= prisonXMax
                             && prisonYMin <= j && j <= prisonYMax) {
-                        cell = new Cell(i, j, new Rectangle(Color.WHITE));
+                        cell = new CrossableCell(i, j, new Rectangle(Color.WHITE));
                     } else {
                         cell = new Wall(i, j);
                     }
