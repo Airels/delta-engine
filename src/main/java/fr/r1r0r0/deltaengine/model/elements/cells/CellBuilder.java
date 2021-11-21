@@ -1,6 +1,7 @@
 package fr.r1r0r0.deltaengine.model.elements.cells;
 
 import fr.r1r0r0.deltaengine.model.Builder;
+import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 
 /**
  * An interface used to create object Cell
@@ -23,6 +24,13 @@ public interface CellBuilder extends Builder<Cell> {
      * @return the current object
      */
     CellBuilder setY (int y);
+
+    /**
+     * Setter for the sprite
+     * @param sprite a sprite
+     * @return the current object
+     */
+    CellBuilder setSprite (Sprite sprite);
 
     /**
      * A method that build a Cell with the coordinate (x,y)
