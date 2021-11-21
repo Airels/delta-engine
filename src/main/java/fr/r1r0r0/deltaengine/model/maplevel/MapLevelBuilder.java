@@ -6,6 +6,7 @@ import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.elements.cells.Cell;
 import fr.r1r0r0.deltaengine.model.elements.cells.CellBuilder;
 import fr.r1r0r0.deltaengine.model.elements.cells.default_cells.VoidCell;
+import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 
 /**
  * A Builder of MapLevel
@@ -31,6 +32,10 @@ public final class MapLevelBuilder implements Builder<MapLevel> {
         public CellBuilder setY (int y) {
             this.y = y;
             return this;
+        }
+        @Override
+        public CellBuilder setSprite (Sprite sprite) {
+            throw new RuntimeException("Proxy");
         }
         @Override
         public Cell build(int x, int y) {
