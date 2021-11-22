@@ -3,7 +3,9 @@ package fr.r1r0r0.deltaengine.model.engines;
 import fr.r1r0r0.deltaengine.model.events.Event;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * The Event Engine.
@@ -11,13 +13,13 @@ import java.util.List;
  */
 final class EventEngine implements Engine {
 
-    private final List<Event> events;
+    private final Collection<Event> events;
 
     /**
      * Default constructor
      */
     EventEngine() {
-        this.events = new ArrayList<>();
+        this.events = new ConcurrentLinkedDeque<>();
     }
 
     @Override
@@ -27,16 +29,14 @@ final class EventEngine implements Engine {
 
     @Override
     public void run() {
-        synchronized (this) {
-            events.forEach(Event::checkEvent);
-        }
+        events.forEach(Event::checkEvent);
     }
 
     /**
      * Adding an event to the engine
      * @param event event to add
      */
-    public synchronized void addEvent(Event event) {
+    public void addEvent(Event event) {
         events.add(event);
     }
 
@@ -44,14 +44,14 @@ final class EventEngine implements Engine {
      * Remove an event to the engine
      * @param event event to remove
      */
-    public synchronized void removeEvent(Event event) {
+    public void removeEvent(Event event) {
         events.remove(event);
     }
 
     /**
      * Clear all registered events from the engine
      */
-    public synchronized void clearEvents() {
+    public void clearEvents() {
         events.clear();
     }
 }
