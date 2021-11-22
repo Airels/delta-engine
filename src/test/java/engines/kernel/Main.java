@@ -79,19 +79,21 @@ public class Main {
         InputEvent pauseEvent = new InputEvent(deltaEngine::haltCurrentMap, deltaEngine::resumeCurrentMap);
         deltaEngine.setInput(Key.P, pauseEvent);
 
+        /*
         pacman.setCollisionEvent(red, new Event() {
             @Override
             public void checkEvent() {
                 System.out.println("VIDAL E TRO FOR");
             }
         });
+        */
         //pacman.setAI(new BasicAI(pacman));
 
         mapLevel.addEvent(new Timer(300));
         deltaEngine.setCurrentMap("test2");
         deltaEngine.addGlobalEvent(new Timer(1000));
 
-        Thread.sleep(3000);
+        //Thread.sleep(3000);
         mapLevel.addEntity(red);
 
         MapLevelBuilder b = new MapLevelBuilder("test3", 10, 30);
@@ -103,13 +105,21 @@ public class Main {
         deltaEngine.addMap(b.build());
         deltaEngine.setCurrentMap("test3");
 
+        //Thread.sleep(10000);
+
+        /*
         try {
             for (; ; Thread.sleep(2000)) {
                 System.out.println(pacman.getCoordinates() + " -- " + red.getCoordinates());
+                System.out.println("moveAvailable UP: " + deltaEngine.isAvailableDirection(red,Direction.UP));
+                System.out.println("moveAvailable DOWN: " + deltaEngine.isAvailableDirection(red,Direction.DOWN));
+                System.out.println("moveAvailable RIGHT: " + deltaEngine.isAvailableDirection(red,Direction.RIGHT));
+                System.out.println("moveAvailable LEFT: " + deltaEngine.isAvailableDirection(red,Direction.LEFT));
             }
         } catch (Exception e) {
 
         }
+        */
     }
 
     private static MapLevel createMapLevelDamier (String name, int width, int height) {

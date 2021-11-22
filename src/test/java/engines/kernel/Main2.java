@@ -5,6 +5,7 @@ import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.Direction;
 import fr.r1r0r0.deltaengine.model.elements.cells.Cell;
 import fr.r1r0r0.deltaengine.model.elements.cells.CrossableCell;
+import fr.r1r0r0.deltaengine.model.elements.cells.UncrossableCell;
 import fr.r1r0r0.deltaengine.model.elements.cells.default_cells.Wall;
 import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.engines.DeltaEngine;
@@ -39,14 +40,7 @@ public class Main2 {
         mapLevel.addEntity(pacman);
         */
 
-        Entity red = new Entity("red", new Coordinates<>(8., 8.), new Rectangle(0.5, 0.5, Color.RED), new Dimension(0.8, 0.8)) {
-            Sprite p1 = new Rectangle(0.5, 0.5, Color.GREEN);
-            Sprite p2 = new Rectangle(0.5, 0.5, Color.RED);
-            @Override
-            public Sprite getSprite () {
-                return (getCoordinates().getX() < 7) ? p1 : p2;
-            }
-        };
+        Entity red = new Entity("red", new Coordinates<>(8., 8.), new Rectangle(0.5, 0.5, Color.RED), new Dimension(0.8, 0.8));
         red.setSpeed(0);
         mapLevel.addEntity(red);
 
@@ -75,12 +69,49 @@ public class Main2 {
         InputEvent pauseEvent = new InputEvent(deltaEngine::haltCurrentMap, deltaEngine::resumeCurrentMap);
         deltaEngine.setInput(Key.P, pauseEvent);
 
+        Cell top = new UncrossableCell(1, 0, new Rectangle(Color.RED)){
+            Sprite s1 = new Rectangle(Color.GREEN);
+            Sprite s2 = new Rectangle(Color.RED);
+            @Override
+            public Sprite getSprite () {
+                return deltaEngine.isAvailableDirection(red,Direction.UP) ? s1 : s2;
+            }
+        };
+        Cell bot = new UncrossableCell(1, 2, new Rectangle(Color.BLACK)){
+            Sprite s1 = new Rectangle(Color.GREEN);
+            Sprite s2 = new Rectangle(Color.RED);
+            @Override
+            public Sprite getSprite () {
+                return deltaEngine.isAvailableDirection(red,Direction.DOWN) ? s1 : s2;
+            }
+        };
+        Cell left = new UncrossableCell(0, 1, new Rectangle(Color.BLUE)){
+            Sprite s1 = new Rectangle(Color.GREEN);
+            Sprite s2 = new Rectangle(Color.RED);
+            @Override
+            public Sprite getSprite () {
+                return deltaEngine.isAvailableDirection(red,Direction.LEFT) ? s1 : s2;
+            }
+        };
+        Cell right = new UncrossableCell(2, 1, new Rectangle(Color.YELLOW)){
+            Sprite s1 = new Rectangle(Color.GREEN);
+            Sprite s2 = new Rectangle(Color.RED);
+            @Override
+            public Sprite getSprite () {
+                return deltaEngine.isAvailableDirection(red,Direction.RIGHT) ? s1 : s2;
+            }
+        };
+        mapLevel.replaceCell(top);
+        mapLevel.replaceCell(bot);
+        mapLevel.replaceCell(left);
+        mapLevel.replaceCell(right);
+
         deltaEngine.setCurrentMap("mapTest");
 
         try {
 
             for (; ; Thread.sleep(1000)) {
-                //
+                System.out.println(red.getCoordinates() + " " + red.getDirection());
             }
 
         } catch (Exception e) {

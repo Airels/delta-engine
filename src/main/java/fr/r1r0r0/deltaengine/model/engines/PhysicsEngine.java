@@ -33,6 +33,7 @@ final class PhysicsEngine implements Engine {
     private MapLevel mapLevel;
     private long previousRunTime;
     private long maxRunDelta;
+    private double maxRunDeltaRatio;
 
     /**
      * Constructor
@@ -41,6 +42,7 @@ final class PhysicsEngine implements Engine {
         mapLevel = null;
         previousRunTime = System.currentTimeMillis();
         maxRunDelta = 0;
+        maxRunDeltaRatio = 0;
     }
 
     /**
@@ -132,8 +134,10 @@ final class PhysicsEngine implements Engine {
      * @return if the entity can move with the direction given
      */
     public boolean isAvailableDirection (Entity entity, Direction direction) {
-        return isValidNextPosition(entity,
-                calcNextPosition(entity.getCoordinates(),direction,entity.getSpeed(),maxRunDelta));
+        Coordinates<Double> nextPosition =
+                calcNextPosition(entity.getCoordinates(),direction,entity.getSpeed(),maxRunDeltaRatio);
+        //System.out.println(entity.getCoordinates() + " " + direction + " " + entity.getSpeed() + " " + maxRunDelta + " -> " + nextPosition);
+        return isValidNextPosition(entity,nextPosition);
     }
 
     /**
@@ -177,6 +181,7 @@ final class PhysicsEngine implements Engine {
      */
     public synchronized void setMaxRunDelta (int fps) {
         maxRunDelta = 1000 / fps;
+        maxRunDeltaRatio = (double) maxRunDelta / 1000;
     }
 
 }

@@ -11,13 +11,14 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * Graphic engine takes care of maintaining the view updated
  */
 final class GraphicsEngine implements Engine {
 
-    private ArrayList<Element> elements;
+    private ConcurrentLinkedDeque<Element> elements;
     private Map<Element, Sprite> elementSpriteMap;
     private double caseSize = 40;
     private double offsetX = 0.0, offsetY = 0.0;
@@ -44,7 +45,7 @@ final class GraphicsEngine implements Engine {
     @Override
     public void init() {
         elementSpriteMap = new HashMap<>();
-        elements = new ArrayList<>();
+        elements = new ConcurrentLinkedDeque<>();
         mapLevel = null;
 
         int initialWidth = 1, initialHeight = 1;
