@@ -94,6 +94,15 @@ public class Main {
         Thread.sleep(3000);
         mapLevel.addEntity(red);
 
+        MapLevelBuilder b = new MapLevelBuilder("test3", 10, 30);
+        b.setCell(new CrossableCell(0, 0, new Rectangle(Color.RED)));
+        b.setCell(new CrossableCell(9, 29, new Rectangle(Color.GREEN)));
+        b.setCell(new CrossableCell(0, 29, new Rectangle(Color.BLUE)));
+        b.setCell(new CrossableCell(9, 0, new Rectangle(Color.WHITE)));
+
+        deltaEngine.addMap(b.build());
+        deltaEngine.setCurrentMap("test3");
+
         try {
             for (; ; Thread.sleep(2000)) {
                 System.out.println(pacman.getCoordinates() + " -- " + red.getCoordinates());
