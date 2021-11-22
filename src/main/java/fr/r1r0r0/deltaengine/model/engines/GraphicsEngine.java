@@ -21,7 +21,7 @@ final class GraphicsEngine implements Engine {
     private ConcurrentLinkedDeque<Element> elements;
     private Map<Element, Sprite> elementSpriteMap;
     private double caseSize = 40;
-    private double offsetX = 0.0, offsetY = 0.0;
+    private int offsetX = 0, offsetY = 0;
     private MapLevel mapLevel;
     private Stage stage;
     private Pane root;
@@ -160,10 +160,10 @@ final class GraphicsEngine implements Engine {
         offsetY = 0;
 
         if (caseSizeHeight > caseSizeWidth){
-            offsetY = (stage.getHeight() - mapLevel.getHeight()*caseSize)/2 - heightMargin;
+            offsetY = (int) ((stage.getHeight() - mapLevel.getHeight()*caseSize)/2 - heightMargin);
         }
         else {
-            offsetX = (stage.getWidth()- mapLevel.getWidth()*caseSize)/2 - widthMargin;
+            offsetX = (int) ((stage.getWidth()- mapLevel.getWidth()*caseSize)/2 - widthMargin);
         }
 
         stage.setTitle(mapLevel.getName());
