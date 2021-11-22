@@ -104,7 +104,8 @@ final class GraphicsEngine implements Engine {
 
     /**
      * Update an element's graphical view
-     *
+     * if the sprite of the element is a new object,
+     * the old sprite is removed and the new one added.
      * @param e the element to be updated
      */
     private void updateElement(Element e) {
@@ -115,14 +116,11 @@ final class GraphicsEngine implements Engine {
 
         if (newSprite != oldSprite) {
             root.getChildren().remove(oldSprite.getNode());
-            root.getChildren().add(newSprite.getNode());
-            elementSpriteMap.put(e, newSprite);
+            addElement(e);
         }
 
         newSprite.setLayout(offsetX + e.getCoordinates().getX().doubleValue() * caseSize,
                 offsetY + e.getCoordinates().getY().doubleValue() * caseSize);
-
-
     }
 
     /**
