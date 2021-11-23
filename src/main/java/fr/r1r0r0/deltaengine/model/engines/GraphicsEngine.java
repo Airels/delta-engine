@@ -188,21 +188,26 @@ final class GraphicsEngine implements Engine {
      */
     public synchronized void removeElement(Element element) {
         elements.remove(element);
-        root.getChildren().remove(elementSpriteMap.remove(element).getNode());
+
+        Sprite s;
+        if ((s = elementSpriteMap.remove(element)) == null)
+            s = element.getSprite();
+
+        root.getChildren().remove(s.getNode());
     }
 
     /**
      * Remove all the current map's elements
      */
-    public synchronized void clearMap(){
-        for (Element e:this.mapLevel.getCells()){
+    public synchronized void clearMap() {
+        for (Element e : this.mapLevel.getCells()){
             removeElement(e);
         }
-        for (Element e:this.mapLevel.getEntities()){
+        for (Element e : this.mapLevel.getEntities()){
             removeElement(e);
         }
 
-        mapLevel = null;
+        this.mapLevel = null;
     }
 
     /**
