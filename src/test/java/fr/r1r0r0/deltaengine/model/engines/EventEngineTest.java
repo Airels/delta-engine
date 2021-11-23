@@ -1,12 +1,17 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
-import fr.r1r0r0.deltaengine.model.events.Event;
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.*;
+import fr.r1r0r0.deltaengine.model.events.Event;
+import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
+import fr.r1r0r0.deltaengine.model.maplevel.MapLevelBuilder;
 
 class EventEngineTest {
 
@@ -18,21 +23,21 @@ class EventEngineTest {
 
         eventEngine.run();
 
-        Assertions.assertEquals(0, counter.get());
+        assertEquals(0, counter.get());
 
-        eventEngine.addEvent(new Event() {
+        eventEngine.addGlobalEvent(new Event() {
             @Override
             public void checkEvent() {
                 counter.incrementAndGet();
             }
         });
 
-        Assertions.assertEquals(0, counter.get());
+        assertEquals(0, counter.get());
         eventEngine.run();
-        Assertions.assertEquals(1, counter.get());
+        assertEquals(1, counter.get());
 
         for (int i = 0; i < 3; i++) {
-            eventEngine.addEvent(new Event() {
+            eventEngine.addGlobalEvent(new Event() {
                 @Override
                 public void checkEvent() {
                     counter.incrementAndGet();
@@ -40,9 +45,9 @@ class EventEngineTest {
             });
         }
 
-        Assertions.assertEquals(1, counter.get());
+        assertEquals(1, counter.get());
         eventEngine.run();
-        Assertions.assertEquals(5, counter.get());
+        assertEquals(5, counter.get());
     }
 
     @Test
@@ -56,10 +61,10 @@ class EventEngineTest {
             }
         };
 
-        eventEngine.addEvent(e);
+        eventEngine.addGlobalEvent(e);
 
         for (int i = 0; i < 9; i++) {
-            eventEngine.addEvent(new Event() {
+            eventEngine.addGlobalEvent(new Event() {
                 @Override
                 public void checkEvent() {
                     counter.incrementAndGet();
@@ -68,12 +73,12 @@ class EventEngineTest {
         }
 
         eventEngine.run();
-        Assertions.assertEquals(10, counter.get());
+        assertEquals(10, counter.get());
 
-        eventEngine.removeEvent(e);
+        eventEngine.removeGlobalEvent(e);
         eventEngine.run();
 
-        Assertions.assertEquals(19, counter.get());
+        assertEquals(19, counter.get());
     }
 
     @Test
@@ -81,7 +86,7 @@ class EventEngineTest {
         AtomicInteger counter = new AtomicInteger();
 
         for (int i = 0; i < 10; i++) {
-            eventEngine.addEvent(new Event() {
+            eventEngine.addGlobalEvent(new Event() {
                 @Override
                 public void checkEvent() {
                     counter.incrementAndGet();
@@ -90,11 +95,51 @@ class EventEngineTest {
         }
 
         eventEngine.run();
-        Assertions.assertEquals(10, counter.get());
+        assertEquals(10, counter.get());
 
-        eventEngine.clearEvents();
+        eventEngine.clearGlobalEvents();
 
         eventEngine.run();
-        Assertions.assertEquals(10, counter.get());
+        assertEquals(10, counter.get());
+    }
+
+    @Test
+    void eventsFromMap() {
+        EventEngine eventEngine = new EventEngine();
+        eventEngine.init();
+
+        AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+        MapLevel map = new MapLevelBuilder("test", 0, 0).build();
+        map.addEvent(new Event() {
+            @Override
+            public void checkEvent() {
+                atomicBoolean.set(true);
+            }
+        });
+        eventEngine.setMap(map);
+        eventEngine.run();
+        assertTrue(atomicBoolean.get());
+
+        AtomicBoolean atomicBoolean1 = new AtomicBoolean(false);
+        map.addEvent(new Event() {
+            @Override
+            public void checkEvent() {
+                atomicBoolean1.set(true);
+            }
+        });
+        eventEngine.run();
+        assertTrue(atomicBoolean1.get());
+
+        AtomicBoolean atomicBoolean2 = new AtomicBoolean(false);
+        map.addEvent(new Event() {
+            @Override
+            public void checkEvent() {
+                atomicBoolean2.set(true);
+            }
+        });
+
+        eventEngine.clearMap();
+        eventEngine.run();
+        assertFalse(atomicBoolean2.get());
     }
 }

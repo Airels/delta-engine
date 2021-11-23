@@ -12,6 +12,7 @@ public abstract class Event {
 
     private final List<Trigger> triggers;
 
+
     /**
      * Default constructor
      */
@@ -21,6 +22,7 @@ public abstract class Event {
 
     /**
      * Add a trigger to the event
+     *
      * @param trigger trigger to add
      */
     public final void addTrigger(Trigger trigger) {
@@ -29,6 +31,7 @@ public abstract class Event {
 
     /**
      * Remove a trigger from the event
+     *
      * @param trigger trigger to remove
      * @return true if trigger has been removed successfully, false otherwise
      */
@@ -54,6 +57,7 @@ public abstract class Event {
     /**
      * Called by the engine, all code of the event. Everything can be implemented here. <br>
      * To activate all attached triggers, runTriggers() method from Event object must be called.
+     *
      * @see Event#runTriggers() to run all registered triggers
      */
     public abstract void checkEvent();
