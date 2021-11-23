@@ -109,7 +109,7 @@ final class GraphicsEngine implements Engine {
      * the old sprite is removed and the new one added.
      * @param e the element to be updated
      */
-    private synchronized void updateElement(Element e) {
+    private void updateElement(Element e) {
         if (!elements.contains(e)) throw new NoSuchElementException();
 
         Sprite oldSprite = elementSpriteMap.get(e);
@@ -152,7 +152,7 @@ final class GraphicsEngine implements Engine {
      * caseSize is calculated to fit exactly,
      * the offset are calculated to center the elements
      */
-    private synchronized void fitMapToStage() {
+    private void fitMapToStage() {
         double caseSizeWidth = stage.getWidth() / mapLevel.getWidth();
         double caseSizeHeight = stage.getHeight() / mapLevel.getHeight();
         caseSize = Math.min(caseSizeWidth, caseSizeHeight);
