@@ -100,8 +100,6 @@ final class GraphicsEngine implements Engine {
             updateElement(e);
         }
         started = false;
-
-        // System.out.println("root.getChildren().size() = " + root.getChildren().size()); TODO
     }
 
     /**
@@ -181,10 +179,6 @@ final class GraphicsEngine implements Engine {
                     caseSize * element.getDimension().getWidth(),
                     caseSize * element.getDimension().getHeight());
         updateElement(element);
-
-        switch (element.getName()) {
-            case "Blinky", "Pinky", "Inky", "Clyde" -> System.out.println("Element added: " + element.getName());
-        }
     }
 
     /**
