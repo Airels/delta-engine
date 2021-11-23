@@ -1,16 +1,17 @@
 package fr.r1r0r0.deltaengine.model.maplevel;
 
-import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelEntityNameStackingException;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentLinkedDeque;
+
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelCoordinatesOutOfBoundException;
+import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelEntityNameStackingException;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelException;
 import fr.r1r0r0.deltaengine.model.BufferedHashMap;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.elements.cells.Cell;
-import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.elements.cells.default_cells.VoidCell;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.events.Event;
-
-import java.util.*;
 
 /**
  * MapLevel that represent the area where entities move
@@ -26,7 +27,7 @@ public final class MapLevel {
     private final int height;
     private final BufferedHashMap<Coordinates<Integer>,Cell> cells;
     private final BufferedHashMap<String,Entity> entities;
-    private final Set<Event> events;
+    private final Collection<Event> events;
 
     /**
      * Constructor
@@ -39,7 +40,7 @@ public final class MapLevel {
         this.height = (cells.length != 0) ? cells[0].length : 0;
         this.cells = new BufferedHashMap<>();
         entities = new BufferedHashMap<>();
-        events = new LinkedHashSet<>();
+        events = new ConcurrentLinkedDeque<>();
         try {
             for (Cell[] cells1 : cells) {
                 for (Cell cell : cells1) {
@@ -148,8 +149,8 @@ public final class MapLevel {
     }
 
     /**
-     * Add an event
-     * @param event an event
+     * add an event
+     * @param event
      */
     public void addEvent (Event event) {
         events.add(event);
@@ -188,7 +189,7 @@ public final class MapLevel {
 
     /**
      * Return all the events in map
-     * @return a collection of event
+     * @return a map of event
      */
     public Collection<Event> getEvents () {
         return events;

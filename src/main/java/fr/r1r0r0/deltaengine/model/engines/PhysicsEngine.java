@@ -1,6 +1,7 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
+import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.Direction;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.elements.CollisionPositions;
@@ -25,7 +26,6 @@ final class PhysicsEngine implements Engine {
      * qui correspond a un minX maxX minY maxY
      */
 
-    private static final double MOVE_MARGIN_ERROR = 0.05;
     private static final CollisionPositions[] POSITIONS_CHECK = new CollisionPositions[]{
             CollisionPositions.LEFT_TOP, CollisionPositions.RIGHT_TOP,
             CollisionPositions.LEFT_BOT, CollisionPositions.RIGHT_BOT};
@@ -34,6 +34,7 @@ final class PhysicsEngine implements Engine {
     private long previousRunTime;
     private long maxRunDelta;
     private double maxRunDeltaRatio;
+    private double marginError;
 
     /**
      * Constructor
@@ -43,6 +44,7 @@ final class PhysicsEngine implements Engine {
         previousRunTime = System.currentTimeMillis();
         maxRunDelta = 0;
         maxRunDeltaRatio = 0;
+        marginError = 0;
     }
 
     /**
@@ -141,6 +143,35 @@ final class PhysicsEngine implements Engine {
     }
 
     /**
+     * TODO
+     * @param entity
+     * @param direction
+     * @return
+     */
+    public boolean canGoToNextCell (Entity entity, Direction direction) {
+        if ( ! fitOnCell(entity)) return false;
+        Coordinates<Double> position = entity.getCoordinates();
+        int x = position.getX().intValue();
+        int y = position.getY().intValue();
+        Coordinates<Integer> coordinates = direction.getCoordinates();
+        return mapLevel.getCell(x + coordinates.getX(),y + coordinates.getY()).isCrossableBy(entity);
+    }
+
+    /**
+     * TODO
+     * @param entity
+     * @return
+     */
+    private boolean fitOnCell (Entity entity) {
+        Coordinates<Double> position = entity.getCoordinates();
+        Dimension dimension = entity.getDimension();
+        Coordinates<Double> leftTop = CollisionPositions.LEFT_TOP.calcPosition(position,dimension,marginError);
+        Coordinates<Double> rightBot = CollisionPositions.RIGHT_BOT.calcPosition(position,dimension,marginError);
+        return leftTop.getX().intValue() == rightBot.getX().intValue()
+                && leftTop.getY().intValue() == rightBot.getY().intValue();
+    }
+
+    /**
      * Returns if the next position of the entity is in a valid position in the mapLevel
      * @param entity an entity
      * @param nextPosition the next position of the entity
@@ -149,7 +180,7 @@ final class PhysicsEngine implements Engine {
     private boolean isValidNextPosition (Entity entity, Coordinates<Double> nextPosition) {
         for (CollisionPositions collisionPosition : POSITIONS_CHECK) {
             Coordinates<Double> position =
-                    collisionPosition.calcPosition(nextPosition,entity.getDimension(),MOVE_MARGIN_ERROR);
+                    collisionPosition.calcPosition(nextPosition,entity.getDimension(),marginError);
             int x = (position.getX() >= 0) ? position.getX().intValue()
                     : (position.getX().intValue() - 1);
             int y = (position.getY() >= 0) ? position.getY().intValue()
@@ -182,6 +213,14 @@ final class PhysicsEngine implements Engine {
     public synchronized void setMaxRunDelta (int fps) {
         maxRunDelta = 1000 / fps;
         maxRunDeltaRatio = (double) maxRunDelta / 1000;
+    }
+
+    /**
+     * Setter for the attribute marginError
+     * @param marginError the margin error
+     */
+    public synchronized void setMarginError (double marginError) {
+        this.marginError = marginError;
     }
 
 }
