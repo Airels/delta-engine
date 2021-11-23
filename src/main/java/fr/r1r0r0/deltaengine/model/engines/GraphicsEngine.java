@@ -118,6 +118,7 @@ final class GraphicsEngine implements Engine {
         if (newSprite != oldSprite) {
             root.getChildren().remove(oldSprite.getNode());
             addElement(e);
+            return;
         }
 
         newSprite.setLayout(offsetX + e.getCoordinates().getX().doubleValue() * caseSize,
@@ -185,6 +186,18 @@ final class GraphicsEngine implements Engine {
                     caseSize * element.getDimension().getWidth(),
                     caseSize * element.getDimension().getHeight());
         updateElement(element);
+    }
+
+    /**
+     * Remove all the current map's elements
+     */
+    public void clearMap(){
+        for (Element e:this.mapLevel.getCells()){
+            removeElement(e);
+        }
+        for (Element e:this.mapLevel.getEntities()){
+            removeElement(e);
+        }
     }
 
     /**
