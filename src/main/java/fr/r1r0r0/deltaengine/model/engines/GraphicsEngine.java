@@ -43,7 +43,7 @@ final class GraphicsEngine implements Engine {
      * initialising the graphic engine components
      */
     @Override
-    public void init() {
+    public synchronized void init() {
         elementSpriteMap = new HashMap<>();
         elements = new ConcurrentLinkedDeque<>();
         mapLevel = null;
@@ -80,7 +80,7 @@ final class GraphicsEngine implements Engine {
      * Graphic engine loop
      */
     @Override
-    public void run() {
+    public synchronized void run() {
         if (started) throw new RuntimeException("Graphic Engine is already running");
         started = true;
 
@@ -109,7 +109,7 @@ final class GraphicsEngine implements Engine {
      * the old sprite is removed and the new one added.
      * @param e the element to be updated
      */
-    private void updateElement(Element e) {
+    private synchronized void updateElement(Element e) {
         if (!elements.contains(e)) throw new NoSuchElementException();
 
         Sprite oldSprite = elementSpriteMap.get(e);
@@ -129,7 +129,7 @@ final class GraphicsEngine implements Engine {
      * Set the map to be diplayed, replace the old map
      * @param mapLevel map to be shown
      */
-    public void setMap(MapLevel mapLevel) {
+    public synchronized void setMap(MapLevel mapLevel) {
         if (this.mapLevel != null){
             for (Element e:this.mapLevel.getCells()) removeElement(e);
             for (Element e:this.mapLevel.getEntities()) removeElement(e);
@@ -152,7 +152,7 @@ final class GraphicsEngine implements Engine {
      * caseSize is calculated to fit exactly,
      * the offset are calculated to center the elements
      */
-    private void fitMapToStage() {
+    private synchronized void fitMapToStage() {
         double caseSizeWidth = stage.getWidth() / mapLevel.getWidth();
         double caseSizeHeight = stage.getHeight() / mapLevel.getHeight();
         caseSize = Math.min(caseSizeWidth, caseSizeHeight);
@@ -175,7 +175,7 @@ final class GraphicsEngine implements Engine {
      * element is resized according to CASE_SIZE
      * @param element element to display
      */
-    public void addElement(Element element) {
+    public synchronized void addElement(Element element) {
         if (elements.contains(element)) {
             removeElement(element);
         }
@@ -191,7 +191,7 @@ final class GraphicsEngine implements Engine {
     /**
      * Remove all the current map's elements
      */
-    public void clearMap(){
+    public synchronized void clearMap(){
         for (Element e:this.mapLevel.getCells()){
             removeElement(e);
         }
@@ -205,7 +205,7 @@ final class GraphicsEngine implements Engine {
      * element is NOT resized
      * @param element element to display
      */
-    public void addHudElement(Element element){
+    public synchronized void addHudElement(Element element){
         if (elements.contains(element)) {
             removeElement(element);
         }
@@ -220,7 +220,7 @@ final class GraphicsEngine implements Engine {
      *
      * @param element an element from the graphic engine
      */
-    public void removeElement(Element element) {
+    public synchronized void removeElement(Element element) {
         elements.remove(element);
         elementSpriteMap.remove(element);
         root.getChildren().remove(element.getSprite().getNode());
@@ -229,7 +229,7 @@ final class GraphicsEngine implements Engine {
     /**
      * Empty the all element from the graphic engine and from the view
      */
-    public void clearElements() {
+    public synchronized void clearElements() {
         for (Element e:elements) removeElement(e);
         elements.clear();
         elementSpriteMap.clear();
@@ -240,13 +240,12 @@ final class GraphicsEngine implements Engine {
      * set the icon used for the engine's
      * @param image icon used
      */
-    public void setStageIcon(Image image){
+    public synchronized void setStageIcon(Image image){
         stage.getIcons().clear();
         stage.getIcons().add(image);
     }
 
-    public void setStage(Stage stage) {
+    public synchronized void setStage(Stage stage) {
         this.stage = stage;
-
     }
 }
