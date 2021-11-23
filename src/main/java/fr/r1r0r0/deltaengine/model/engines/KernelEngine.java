@@ -391,13 +391,12 @@ public final class KernelEngine {
         if (currentMapLevel != null)
             unloadMap();
 
-        Collection<Entity> mapEntities = mapLevel.getEntities();
 
         physicsEngine.setMap(mapLevel);
         eventEngine.setMap(mapLevel);
         setMapInTheGraphicsEngine(mapLevel);
 
-        for (Entity mapEntity : mapEntities) {
+        for (Entity mapEntity : mapLevel.getEntities()) {
             if (mapEntity.getAI() != null)
                 iaEngine.addAI(mapEntity.getAI());
         }
@@ -412,6 +411,11 @@ public final class KernelEngine {
         physicsEngine.clearMap();
         eventEngine.clearMap();
         clearMapFromTheGraphicsEngine();
+
+        for (Entity mapEntity : currentMapLevel.getEntities()) {
+            if (mapEntity.getAI() != null)
+                iaEngine.removeAI(mapEntity.getAI());
+        }
 
         currentMapLevel = null;
     }
