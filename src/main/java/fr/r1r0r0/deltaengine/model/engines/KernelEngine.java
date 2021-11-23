@@ -12,15 +12,14 @@ import fr.r1r0r0.deltaengine.exceptions.InputKeyStackingError;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelAlreadyExistException;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelDoesNotExistException;
 import fr.r1r0r0.deltaengine.model.Direction;
+import fr.r1r0r0.deltaengine.tools.JavaFXCommand;
 import fr.r1r0r0.deltaengine.model.elements.Element;
 import fr.r1r0r0.deltaengine.model.elements.HUDElement;
-import fr.r1r0r0.deltaengine.model.elements.cells.Cell;
 import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
 import fr.r1r0r0.deltaengine.model.events.InputEvent;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
-import javafx.application.Platform;
 import javafx.stage.Stage;
 
 /**
@@ -107,39 +106,24 @@ public final class KernelEngine {
             throw new RuntimeException("Engine is already running");
 
         started = true;
-        Object lock = new Object();
         long updateStart, updateDuration, waitTime;
         while (!Thread.interrupted()) {
             updateStart = System.currentTimeMillis();
             if (!currentMapHalted) {
                 for (Engines e : Engines.values()) {
                     if (e == Engines.GRAPHICS_ENGINE) {
-                        Platform.runLater(() -> {
-                            graphicsEngine.run();
-                            synchronized (lock) {
-                                lock.notifyAll();
-                            }
-                        });
+                        try {
+                            JavaFXCommand.runAndWait(graphicsEngine);
+                        } catch (InterruptedException ignored) {}
                     } else {
                         getEngine(e).run();
                     }
                 }
             } else {
                 inputEngine.run();
-                Platform.runLater(() -> {
-                    graphicsEngine.run();
-                    synchronized (lock) {
-                        lock.notifyAll();
-                    }
-                });
-            }
-
-            try {
-                synchronized (lock) {
-                    lock.wait();
-                }
-            } catch (InterruptedException e) {
-                break;
+                try {
+                    JavaFXCommand.runAndWait(graphicsEngine);
+                } catch (InterruptedException ignored) {}
             }
 
             updateDuration = System.currentTimeMillis() - updateStart;
@@ -168,7 +152,9 @@ public final class KernelEngine {
 
         for (Engines e : Engines.values()) {
             if (e == Engines.GRAPHICS_ENGINE) {
-                Platform.runLater(graphicsEngine);
+                try {
+                    JavaFXCommand.runAndWait(graphicsEngine);
+                } catch (InterruptedException ignored) {}
             } else {
                 getEngine(e).run();
             }
@@ -374,7 +360,6 @@ public final class KernelEngine {
     public synchronized void addHUDElement(HUDElement hudElement) {
         hudElements.add(hudElement);
         addHUDElementToGraphicsEngine(hudElement);
-        // addElementToGraphicsEngine(hudElement);
     }
 
     /**
@@ -402,7 +387,7 @@ public final class KernelEngine {
      *
      * @param mapLevel the mapLevel to load
      */
-    private void loadMap(MapLevel mapLevel) {
+    private synchronized void loadMap(MapLevel mapLevel) {
         if (currentMapLevel != null)
             unloadMap();
 
@@ -424,22 +409,10 @@ public final class KernelEngine {
     /**
      * Unload current map, loading associated elements, AI, and events
      */
-    private void unloadMap() {
-        Collection<Cell> mapCells = currentMapLevel.getCells();
-        Collection<Entity> mapEntities = currentMapLevel.getEntities();
-
+    private synchronized void unloadMap() {
         physicsEngine.clearMap();
         eventEngine.clearMap();
-
-        for (Cell c : mapCells) {
-            removeElementFromGraphicsEngine(c);
-        }
-
-        for (Entity entity : mapEntities) {
-            removeElementFromGraphicsEngine(entity);
-            if (entity.getAI() != null)
-                iaEngine.removeAI(entity.getAI());
-        }
+        clearMapFromTheGraphicsEngine();
 
         currentMapLevel = null;
     }
@@ -451,7 +424,9 @@ public final class KernelEngine {
      */
     public void setGameIcon(String img) throws FileNotFoundException {
         InputStream sin = new FileInputStream(img);
-        Platform.runLater(() -> graphicsEngine.setStageIcon(new javafx.scene.image.Image(sin)));
+        try {
+            JavaFXCommand.runAndWait(() -> graphicsEngine.setStageIcon(new javafx.scene.image.Image(sin)));
+        } catch (InterruptedException ignored) {}
     }
 
     /**
@@ -465,10 +440,10 @@ public final class KernelEngine {
     }
 
     /**
-     * TODO
-     * @param entity
-     * @param direction
-     * @return
+     * Check if an entity can go to the next cell according to given direction
+     * @param entity Entity to check
+     * @param direction Next direction
+     * @return boolean true if entity can go to next cell, false otherwise
      */
     public boolean canGoToNextCell (Entity entity, Direction direction) {
         return physicsEngine.canGoToNextCell(entity,direction);
@@ -479,7 +454,9 @@ public final class KernelEngine {
      * @param element Element to add
      */
     private void addElementToGraphicsEngine(Element element) {
-        Platform.runLater(() -> graphicsEngine.addElement(element));
+        try {
+            JavaFXCommand.runAndWait(() -> graphicsEngine.addElement(element));
+        } catch (InterruptedException ignored) {}
     }
 
     /**
@@ -487,7 +464,9 @@ public final class KernelEngine {
      * @param element Element to add
      */
     private void addHUDElementToGraphicsEngine(HUDElement element) {
-        Platform.runLater(() -> graphicsEngine.addHudElement(element));
+        try {
+            JavaFXCommand.runAndWait(() -> graphicsEngine.addHudElement(element));
+        } catch (InterruptedException ignored) {}
     }
 
     /**
@@ -495,14 +474,27 @@ public final class KernelEngine {
      * @param element Element to remove
      */
     private void removeElementFromGraphicsEngine(Element element) {
-        Platform.runLater(() -> graphicsEngine.removeElement(element));
+        try {
+            JavaFXCommand.runAndWait(() -> graphicsEngine.removeElement(element));
+        } catch (InterruptedException ignored) {}
     }
 
     /**
      * Allowing set up wanted map in the Graphics Engine, using Platform.runLater of JavaFX
-     * @param map
+     * @param map map to load
      */
     private void setMapInTheGraphicsEngine(MapLevel map) {
-        Platform.runLater(() -> graphicsEngine.setMap(map));
+        try {
+            JavaFXCommand.runAndWait(() -> graphicsEngine.setMap(map));
+        } catch (InterruptedException ignored) {}
+    }
+
+    /**
+     * Clear current Map rendered from the Graphic engine
+     */
+    private void clearMapFromTheGraphicsEngine() {
+        try {
+            JavaFXCommand.runAndWait(graphicsEngine::clearMap);
+        } catch (InterruptedException ignored) {}
     }
 }
