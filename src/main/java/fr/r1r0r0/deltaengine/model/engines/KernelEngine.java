@@ -369,7 +369,7 @@ public final class KernelEngine {
      */
     public synchronized void removeHUDElement(HUDElement hudElement) {
         hudElements.remove(hudElement);
-        removeElementFromGraphicsEngine(hudElement);
+        removeHUDElementFromGraphicsEngine(hudElement);
     }
 
     /**
@@ -377,7 +377,7 @@ public final class KernelEngine {
      */
     public synchronized void clearHUDElements() {
         for (HUDElement hudElement : hudElements)
-            removeElementFromGraphicsEngine(hudElement);
+            removeHUDElementFromGraphicsEngine(hudElement);
 
         hudElements.clear();
     }
@@ -396,7 +396,6 @@ public final class KernelEngine {
         physicsEngine.setMap(mapLevel);
         eventEngine.setMap(mapLevel);
         setMapInTheGraphicsEngine(mapLevel);
-
 
         for (Entity mapEntity : mapEntities) {
             if (mapEntity.getAI() != null)
@@ -450,16 +449,6 @@ public final class KernelEngine {
     }
 
     /**
-     * Adding an element to the graphics engine, using Platform.runLater of JavaFX
-     * @param element Element to add
-     */
-    private void addElementToGraphicsEngine(Element element) {
-        try {
-            JavaFXCommand.runAndWait(() -> graphicsEngine.addElement(element));
-        } catch (InterruptedException ignored) {}
-    }
-
-    /**
      * Adding an HUD element to the graphics engine, using Platform.runLater of JavaFX
      * @param element Element to add
      */
@@ -473,7 +462,7 @@ public final class KernelEngine {
      * Removing an element from the graphics engine, using Platform.runLater of JavaFX
      * @param element Element to remove
      */
-    private void removeElementFromGraphicsEngine(Element element) {
+    private void removeHUDElementFromGraphicsEngine(HUDElement element) {
         try {
             JavaFXCommand.runAndWait(() -> graphicsEngine.removeElement(element));
         } catch (InterruptedException ignored) {}

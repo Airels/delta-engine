@@ -101,6 +101,7 @@ final class GraphicsEngine implements Engine {
         }
         started = false;
 
+        // System.out.println("root.getChildren().size() = " + root.getChildren().size()); TODO
     }
 
     /**
@@ -109,7 +110,7 @@ final class GraphicsEngine implements Engine {
      * the old sprite is removed and the new one added.
      * @param e the element to be updated
      */
-    private void updateElement(Element e) {
+    private synchronized void updateElement(Element e) {
         if (!elements.contains(e)) throw new NoSuchElementException();
 
         Sprite oldSprite = elementSpriteMap.get(e);
@@ -117,8 +118,12 @@ final class GraphicsEngine implements Engine {
 
         if (newSprite != oldSprite) {
             root.getChildren().remove(oldSprite.getNode());
-            addElement(e);
-            return;
+            root.getChildren().add(newSprite.getNode());
+            elementSpriteMap.put(e, newSprite);
+
+            newSprite.resize(
+                    caseSize * e.getDimension().getWidth(),
+                    caseSize * e.getDimension().getHeight());
         }
 
         newSprite.setLayout(offsetX + e.getCoordinates().getX().doubleValue() * caseSize,
@@ -130,21 +135,11 @@ final class GraphicsEngine implements Engine {
      * @param mapLevel map to be shown
      */
     public synchronized void setMap(MapLevel mapLevel) {
-        if (this.mapLevel != null){
-            for (Element e:this.mapLevel.getCells()) removeElement(e);
-            for (Element e:this.mapLevel.getEntities()) removeElement(e);
-        }
+        if (this.mapLevel != null)
+            clearMap();
 
         this.mapLevel = mapLevel;
         fitMapToStage();
-
-        for (Cell c : mapLevel.getCells()) {
-            addElement(c);
-        }
-
-        for (Entity element : mapLevel.getEntities()) {
-            addElement(element);
-        }
     }
 
     /**
@@ -152,7 +147,7 @@ final class GraphicsEngine implements Engine {
      * caseSize is calculated to fit exactly,
      * the offset are calculated to center the elements
      */
-    private void fitMapToStage() {
+    private synchronized void fitMapToStage() {
         double caseSizeWidth = stage.getWidth() / mapLevel.getWidth();
         double caseSizeHeight = stage.getHeight() / mapLevel.getHeight();
         caseSize = Math.min(caseSizeWidth, caseSizeHeight);
@@ -186,6 +181,25 @@ final class GraphicsEngine implements Engine {
                     caseSize * element.getDimension().getWidth(),
                     caseSize * element.getDimension().getHeight());
         updateElement(element);
+
+        switch (element.getName()) {
+            case "Blinky", "Pinky", "Inky", "Clyde" -> System.out.println("Element added: " + element.getName());
+        }
+    }
+
+    /**
+     * remove an element from the graphic engine and from being displayed
+     *
+     * @param element an element from the graphic engine
+     */
+    public synchronized void removeElement(Element element) {
+        elements.remove(element);
+        elementSpriteMap.remove(element);
+        root.getChildren().remove(element.getSprite().getNode());
+
+        switch (element.getName()) {
+            case "Blinky", "Pinky", "Inky", "Clyde" -> System.out.println("Element removed: " + element.getName());
+        }
     }
 
     /**
@@ -198,6 +212,8 @@ final class GraphicsEngine implements Engine {
         for (Element e:this.mapLevel.getEntities()){
             removeElement(e);
         }
+
+        mapLevel = null;
     }
 
     /**
@@ -216,21 +232,9 @@ final class GraphicsEngine implements Engine {
     }
 
     /**
-     * remove an element from the graphic engine and from being displayed
-     *
-     * @param element an element from the graphic engine
-     */
-    public synchronized void removeElement(Element element) {
-        elements.remove(element);
-        elementSpriteMap.remove(element);
-        root.getChildren().remove(element.getSprite().getNode());
-    }
-
-    /**
      * Empty the all element from the graphic engine and from the view
      */
     public synchronized void clearElements() {
-        for (Element e:elements) removeElement(e);
         elements.clear();
         elementSpriteMap.clear();
         root.getChildren().clear();
