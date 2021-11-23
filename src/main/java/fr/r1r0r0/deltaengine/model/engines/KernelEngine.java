@@ -161,6 +161,23 @@ public final class KernelEngine {
     }
 
     /**
+     * Do a tick on the DeltaEngine
+     * (useful to render only 1 frame, when modifications are made, and you need to render them).
+     * Only works if current map is halted, if isn't, this method has no effect
+     */
+    public void tick() {
+        if (!currentMapHalted) return;
+
+        for (Engines e : Engines.values()) {
+            if (e == Engines.GRAPHICS_ENGINE) {
+                Platform.runLater(graphicsEngine);
+            } else {
+                getEngine(e).run();
+            }
+        }
+    }
+
+    /**
      * Allows knowing Engine frame rate goal currently. <br>
      * Default : 60. Kernel will try to process itself and all others engines 60 times in one second.
      *
