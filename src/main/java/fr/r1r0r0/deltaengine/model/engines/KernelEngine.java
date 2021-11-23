@@ -183,6 +183,14 @@ public final class KernelEngine {
     }
 
     /**
+     * TODO
+     * @param marginError
+     */
+    public void setMarginError (double marginError) {
+        physicsEngine.setMarginError(marginError);
+    }
+
+    /**
      * Enable or disable printing current FrameRate in standard output.
      *
      * @param enabled boolean true to enable it, false to disable it
@@ -454,6 +462,16 @@ public final class KernelEngine {
      */
     public boolean isAvailableDirection(Entity entity, Direction direction) {
         return physicsEngine.isAvailableDirection(entity, direction);
+    }
+
+    /**
+     * TODO
+     * @param entity
+     * @param direction
+     * @return
+     */
+    public boolean canGoToNextCell (Entity entity, Direction direction) {
+        return physicsEngine.canGoToNextCell(entity,direction);
     }
 
     /**
