@@ -1,20 +1,5 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
-import fr.r1r0r0.deltaengine.exceptions.InputKeyStackingError;
-import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelAlreadyExistException;
-import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelDoesNotExistException;
-import fr.r1r0r0.deltaengine.model.Direction;
-import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
-import fr.r1r0r0.deltaengine.model.elements.cells.Cell;
-import fr.r1r0r0.deltaengine.model.elements.Element;
-import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
-import fr.r1r0r0.deltaengine.model.elements.HUDElement;
-import fr.r1r0r0.deltaengine.model.engines.utils.Key;
-import fr.r1r0r0.deltaengine.model.events.Event;
-import fr.r1r0r0.deltaengine.model.events.InputEvent;
-import javafx.application.Platform;
-import javafx.stage.Stage;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -22,6 +7,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+
+import fr.r1r0r0.deltaengine.exceptions.InputKeyStackingError;
+import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelAlreadyExistException;
+import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelDoesNotExistException;
+import fr.r1r0r0.deltaengine.model.Direction;
+import fr.r1r0r0.deltaengine.model.elements.Element;
+import fr.r1r0r0.deltaengine.model.elements.HUDElement;
+import fr.r1r0r0.deltaengine.model.elements.cells.Cell;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
+import fr.r1r0r0.deltaengine.model.engines.utils.Key;
+import fr.r1r0r0.deltaengine.model.events.Event;
+import fr.r1r0r0.deltaengine.model.events.InputEvent;
+import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
+import javafx.application.Platform;
+import javafx.stage.Stage;
 
 /**
  * Core of the engine, oversees all engines and use them to render final game. <br>
@@ -38,7 +38,6 @@ public final class KernelEngine {
     private final SoundEngine soundEngine;
     private final NetworkEngine networkEngine;
     private final java.util.Map<String, MapLevel> maps;
-    private final List<Event> globalEvents;
     private final List<HUDElement> hudElements;
     private MapLevel currentMapLevel;
     private volatile boolean currentMapHalted;
@@ -73,7 +72,6 @@ public final class KernelEngine {
         networkEngine = (NetworkEngine) Engines.NETWORK_ENGINE.getInstance();
 
         maps = new HashMap<>();
-        globalEvents = new ArrayList<>();
         hudElements = new ArrayList<>();
 
         currentMapHalted = false;
@@ -197,6 +195,14 @@ public final class KernelEngine {
         this.frameRate = frameRate;
         this.optimalTime = 1000 / frameRate;
         this.physicsEngine.setMaxRunDelta(this.frameRate);
+    }
+
+    /**
+     * TODO
+     * @param marginError
+     */
+    public void setMarginError (double marginError) {
+        physicsEngine.setMarginError(marginError);
     }
 
     /**
@@ -341,8 +347,7 @@ public final class KernelEngine {
      * @param event the event to add
      */
     public synchronized void addGlobalEvent(Event event) {
-        globalEvents.add(event);
-        eventEngine.addEvent(event);
+        eventEngine.addGlobalEvent(event);
     }
 
     /**
@@ -351,18 +356,14 @@ public final class KernelEngine {
      * @param event the event to remove
      */
     public synchronized void removeGlobalEvent(Event event) {
-        globalEvents.remove(event);
-        eventEngine.removeEvent(event);
+        eventEngine.removeGlobalEvent(event);
     }
 
     /**
      * Clear all global events
      */
     public synchronized void clearGlobalEvents() {
-        for (Event e : globalEvents)
-            eventEngine.removeEvent(e);
-
-        globalEvents.clear();
+        eventEngine.clearGlobalEvents();
     }
 
     /**
@@ -406,20 +407,15 @@ public final class KernelEngine {
             unloadMap();
 
         Collection<Entity> mapEntities = mapLevel.getEntities();
-        Collection<Event> mapEvents = mapLevel.getEvents();
 
         physicsEngine.setMap(mapLevel);
+        eventEngine.setMap(mapLevel);
         setMapInTheGraphicsEngine(mapLevel);
 
 
         for (Entity mapEntity : mapEntities) {
-            // addElementToGraphicsEngine(mapEntity);
             if (mapEntity.getAI() != null)
                 iaEngine.addAI(mapEntity.getAI());
-        }
-
-        for (Event event : mapEvents) {
-            eventEngine.addEvent(event);
         }
 
         currentMapLevel = mapLevel;
@@ -431,10 +427,9 @@ public final class KernelEngine {
     private void unloadMap() {
         Collection<Cell> mapCells = currentMapLevel.getCells();
         Collection<Entity> mapEntities = currentMapLevel.getEntities();
-        Collection<Event> mapEvents = currentMapLevel.getEvents();
 
         physicsEngine.clearMap();
-
+        eventEngine.clearMap();
 
         for (Cell c : mapCells) {
             removeElementFromGraphicsEngine(c);
@@ -444,10 +439,6 @@ public final class KernelEngine {
             removeElementFromGraphicsEngine(entity);
             if (entity.getAI() != null)
                 iaEngine.removeAI(entity.getAI());
-        }
-
-        for (Event mapEvent : mapEvents) {
-            eventEngine.removeEvent(mapEvent);
         }
 
         currentMapLevel = null;
@@ -471,6 +462,16 @@ public final class KernelEngine {
      */
     public boolean isAvailableDirection(Entity entity, Direction direction) {
         return physicsEngine.isAvailableDirection(entity, direction);
+    }
+
+    /**
+     * TODO
+     * @param entity
+     * @param direction
+     * @return
+     */
+    public boolean canGoToNextCell (Entity entity, Direction direction) {
+        return physicsEngine.canGoToNextCell(entity,direction);
     }
 
     /**
