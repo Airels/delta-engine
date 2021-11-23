@@ -194,12 +194,7 @@ final class GraphicsEngine implements Engine {
      */
     public synchronized void removeElement(Element element) {
         elements.remove(element);
-        elementSpriteMap.remove(element);
-        root.getChildren().remove(element.getSprite().getNode());
-
-        switch (element.getName()) {
-            case "Blinky", "Pinky", "Inky", "Clyde" -> System.out.println("Element removed: " + element.getName());
-        }
+        root.getChildren().remove(elementSpriteMap.remove(element).getNode());
     }
 
     /**
