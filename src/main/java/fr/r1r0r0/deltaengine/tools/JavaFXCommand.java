@@ -7,7 +7,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * Tool class used to run JavaFX commands in JavaFX thread synchronously
  */
-public class JavaFXCommand {
+public final class JavaFXCommand {
 
     /**
      * Run an action in JavaFX thread, and wait to be completed.

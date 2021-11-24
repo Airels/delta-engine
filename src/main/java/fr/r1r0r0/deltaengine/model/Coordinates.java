@@ -4,19 +4,19 @@ import java.util.Objects;
 
 /**
  * Coordinates of a point, or object, coded by two doubles for 2D position.
- * @param <E> the type of Number used, example : Integer, Double..
+ * @param <T> the type of Number used, example : Integer, Double..
  */
-public final class Coordinates <E extends Number> {
+public final class Coordinates <T extends Number> {
 
-    private final E x;
-    private final E y;
+    private final T x;
+    private final T y;
 
     /**
      * Default constructor. Creates a Coordinates given x and y positions.
      * @param x horizontal position
      * @param y vertical position
      */
-    public Coordinates (E x, E y) {
+    public Coordinates (T x, T y) {
         this.x = x;
         this.y = y;
     }
@@ -25,7 +25,7 @@ public final class Coordinates <E extends Number> {
      * Get saved x position.
      * @return x double current x of an element
      */
-    public E getX () {
+    public T getX () {
         return x;
     }
 
@@ -33,7 +33,7 @@ public final class Coordinates <E extends Number> {
      * Get saved y position.
      * @return y double current y of an element
      */
-    public E getY () {
+    public T getY () {
         return y;
     }
 
@@ -53,7 +53,7 @@ public final class Coordinates <E extends Number> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Coordinates<E> that = (Coordinates<E>) o;
+        Coordinates<T> that = (Coordinates<T>) o;
         return x.equals(that.x) && y.equals(that.y);
     }
 
@@ -67,4 +67,11 @@ public final class Coordinates <E extends Number> {
         return "x=" + x + ", y=" + y;
     }
 
+    /**
+     * Returns a new instance of Coordinates<T> with exact same values
+     * @return new Coordinates
+     */
+    public Coordinates<T> copy() {
+        return new Coordinates<>(x, y);
+    }
 }

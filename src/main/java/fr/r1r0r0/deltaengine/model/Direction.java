@@ -29,6 +29,10 @@ public enum Direction {
         return coordinates;
     }
 
+    /**
+     * Returns the opposite of the direction
+     * @return Direction
+     */
     public Direction getOpposite() {
         return switch (this) {
             case UP -> DOWN;
@@ -39,4 +43,19 @@ public enum Direction {
         };
     }
 
+    /**
+     * Returns X value of the Direction
+     * @return Integer
+     */
+    public int getX() {
+        return coordinates.getX();
+    }
+
+    /**
+     * Returns Y value of the Direction
+     * @return Integer
+     */
+    public int getY() {
+        return coordinates.getY();
+    }
 }
