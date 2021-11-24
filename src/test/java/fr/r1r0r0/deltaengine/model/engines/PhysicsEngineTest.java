@@ -32,7 +32,6 @@ class PhysicsEngineTest {
         builder.setCell(cell);
         map = builder.build();
         physicsEngine.setMap(map);
-        physicsEngine.setMap(map);
         physicsEngine.setMaxRunDelta(60);
         physicsEngine.setMarginError(0.01);
         Coordinates<Double> pukCoords1 = new Coordinates<>(2.0,2.0);
