@@ -1,10 +1,12 @@
 package fr.r1r0r0.deltaengine.model;
 
+import fr.r1r0r0.deltaengine.model.elements.cells.CellBuilder;
+
 /**
  * Interface used to create builder of an object
  * @param <E> teh type of the object created
  * @see fr.r1r0r0.deltaengine.model.maplevel.MapLevelBuilder
- * @see fr.r1r0r0.deltaengine.model.elements.CellBuilder
+ * @see CellBuilder
  */
 public interface Builder <E> {
 

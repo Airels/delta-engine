@@ -2,9 +2,10 @@ package engines.kernel;
 
 import fr.r1r0r0.deltaengine.model.*;
 import fr.r1r0r0.deltaengine.model.Dimension;
-import fr.r1r0r0.deltaengine.model.elements.Cell;
-import fr.r1r0r0.deltaengine.model.elements.Entity;
-import fr.r1r0r0.deltaengine.model.elements.basic_cases.Wall;
+import fr.r1r0r0.deltaengine.model.elements.cells.Cell;
+import fr.r1r0r0.deltaengine.model.elements.cells.CrossableCell;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
+import fr.r1r0r0.deltaengine.model.elements.cells.default_cells.Wall;
 import fr.r1r0r0.deltaengine.model.engines.DeltaEngine;
 import fr.r1r0r0.deltaengine.model.engines.KernelEngine;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
@@ -38,7 +39,7 @@ public class Main {
         mapLevel.replaceCell(new Wall(7, 7));
 
         Wall w =new Wall(2,2);
-        mapLevel.replaceCell(new Cell(2,2,new Rectangle(Color.RED)));
+        mapLevel.replaceCell(new CrossableCell(2,2,new Rectangle(Color.RED)));
         deltaEngine.addMap(mapLevel);
 
         deltaEngine.setCurrentMap("test");
@@ -78,28 +79,47 @@ public class Main {
         InputEvent pauseEvent = new InputEvent(deltaEngine::haltCurrentMap, deltaEngine::resumeCurrentMap);
         deltaEngine.setInput(Key.P, pauseEvent);
 
+        /*
         pacman.setCollisionEvent(red, new Event() {
             @Override
             public void checkEvent() {
                 System.out.println("VIDAL E TRO FOR");
             }
         });
+        */
         //pacman.setAI(new BasicAI(pacman));
 
         mapLevel.addEvent(new Timer(300));
         deltaEngine.setCurrentMap("test2");
         deltaEngine.addGlobalEvent(new Timer(1000));
 
-        Thread.sleep(3000);
+        //Thread.sleep(3000);
         mapLevel.addEntity(red);
 
+        MapLevelBuilder b = new MapLevelBuilder("test3", 10, 30);
+        b.setCell(new CrossableCell(0, 0, new Rectangle(Color.RED)));
+        b.setCell(new CrossableCell(9, 29, new Rectangle(Color.GREEN)));
+        b.setCell(new CrossableCell(0, 29, new Rectangle(Color.BLUE)));
+        b.setCell(new CrossableCell(9, 0, new Rectangle(Color.WHITE)));
+
+        deltaEngine.addMap(b.build());
+        deltaEngine.setCurrentMap("test3");
+
+        //Thread.sleep(10000);
+
+        /*
         try {
             for (; ; Thread.sleep(2000)) {
                 System.out.println(pacman.getCoordinates() + " -- " + red.getCoordinates());
+                System.out.println("moveAvailable UP: " + deltaEngine.isAvailableDirection(red,Direction.UP));
+                System.out.println("moveAvailable DOWN: " + deltaEngine.isAvailableDirection(red,Direction.DOWN));
+                System.out.println("moveAvailable RIGHT: " + deltaEngine.isAvailableDirection(red,Direction.RIGHT));
+                System.out.println("moveAvailable LEFT: " + deltaEngine.isAvailableDirection(red,Direction.LEFT));
             }
         } catch (Exception e) {
 
         }
+        */
     }
 
     private static MapLevel createMapLevelDamier (String name, int width, int height) {
@@ -109,7 +129,7 @@ public class Main {
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
                     mapLevelBuilder.setCell(
-                            new Cell(i, j,new Rectangle(((i + j) & 1) == 0 ? Color.BLACK : Color.WHITE))
+                            new CrossableCell(i, j,new Rectangle(((i + j) & 1) == 0 ? Color.BLACK : Color.WHITE))
                     );
                 }
             }
@@ -129,7 +149,7 @@ public class Main {
                     Cell cell;
                     if (prisonXMin <= i && i <= prisonXMax
                             && prisonYMin <= j && j <= prisonYMax) {
-                        cell = new Cell(i, j, new Rectangle(Color.WHITE));
+                        cell = new CrossableCell(i, j, new Rectangle(Color.WHITE));
                     } else {
                         cell = new Wall(i, j);
                     }

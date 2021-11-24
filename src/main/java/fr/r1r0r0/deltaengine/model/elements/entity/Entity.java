@@ -1,9 +1,11 @@
-package fr.r1r0r0.deltaengine.model.elements;
+package fr.r1r0r0.deltaengine.model.elements.entity;
 
 import fr.r1r0r0.deltaengine.exceptions.AIAlreadyAttachedException;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.Direction;
+import fr.r1r0r0.deltaengine.model.elements.CollisionPositions;
+import fr.r1r0r0.deltaengine.model.elements.Element;
 import fr.r1r0r0.deltaengine.model.events.Event;
 import fr.r1r0r0.deltaengine.model.events.VoidEvent;
 import fr.r1r0r0.deltaengine.model.AI;
@@ -18,14 +20,7 @@ import java.util.*;
  */
 public class Entity implements Element<Double> {
 
-    private Sprite sprite;
-    private final String name;
-    private Coordinates<Double> coords;
-    private Direction direction;
-    private double speed;
-    private AI attachedAI;
-    private Dimension dimension;
-    private final Map<Entity, Event> collisionEvents;
+    private EntityAttributes entityAttributes;
 
     /**
      * Default constructor. Defines all attributes to an entity.
@@ -34,15 +29,8 @@ public class Entity implements Element<Double> {
      * @param sprite sprite of the entity
      */
     public Entity(String name, Coordinates<Double> coords, Sprite sprite, Dimension dimension) {
-        this.name = name;
-        this.coords = coords;
-        this.sprite = sprite;
-        direction = Direction.IDLE;
-        speed = 0;
-        attachedAI = null;
-        this.dimension = dimension;
-        this.collisionEvents = new HashMap<>();
         sprite.setZOrder(100);
+        entityAttributes = new EntityAttributes(name, coords, sprite, dimension, Direction.IDLE, 0);
     }
 
     /**
@@ -50,7 +38,7 @@ public class Entity implements Element<Double> {
      * @return direction of the entity
      */
     public Direction getDirection() {
-        return direction;
+        return entityAttributes.getDirection();
     }
 
     /**
@@ -58,7 +46,7 @@ public class Entity implements Element<Double> {
      * @param direction current direction
      */
     public void setDirection(Direction direction) {
-        this.direction = direction;
+        entityAttributes.setDirection(direction);
     }
 
     /**
@@ -67,7 +55,7 @@ public class Entity implements Element<Double> {
      * @return double speed entity
      */
     public double getSpeed() {
-        return speed;
+        return entityAttributes.getSpeed();
     }
 
     /**
@@ -76,63 +64,59 @@ public class Entity implements Element<Double> {
      * @param speed speed to set
      */
     public void setSpeed(double speed) {
-        this.speed = speed;
+        entityAttributes.setSpeed(speed);
     }
 
     /**
      * AI to attach to the entity. Can be called once. Once AI is attached, it is impossible to remove or change it.
-     * @param ia AI to attach to the entity
+     * @param ai AI to attach to the entity
      * @throws AIAlreadyAttachedException if an AI is already attached to the entity
      */
-    public final void setAI(AI ia) throws AIAlreadyAttachedException {
-        if (attachedAI != null)
-            throw new AIAlreadyAttachedException(this);
-
-        ia.setEntity(this);
-        this.attachedAI = ia;
+    public void setAI(AI ai) throws AIAlreadyAttachedException {
+        entityAttributes.setAttachedAI(this, ai);
     }
 
     /**
      * Get attached AI of the entity
      * @return attached AI
      */
-    public final AI getAI() {
-        return attachedAI;
+    public AI getAI() {
+        return entityAttributes.getAttachedAI();
     }
 
     @Override
     public Dimension getDimension() {
-        return dimension;
+        return entityAttributes.getDimension();
     }
 
     @Override
     public void setDimension (Dimension dimension) {
-        this.dimension = dimension;
+        entityAttributes.setDimension(dimension);
     }
 
     @Override
     public Sprite getSprite() {
-        return sprite;
+        return entityAttributes.getSprite();
     }
 
     @Override
     public void setSprite(Sprite sprite) {
-        this.sprite = sprite;
+        entityAttributes.setSprite(sprite);
     }
 
     @Override
     public Coordinates<Double> getCoordinates() {
-        return coords;
+        return entityAttributes.getCoordinates();
     }
 
     @Override
     public void setCoordinates(Coordinates<Double> coordinates) {
-        this.coords = coordinates;
+        entityAttributes.setCoordinates(coordinates);
     }
 
     @Override
     public String getName() {
-        return name;
+        return entityAttributes.getName();
     }
 
     /**
@@ -141,7 +125,7 @@ public class Entity implements Element<Double> {
      * @param event event to play when a collision is detected
      */
     public void setCollisionEvent(Entity entity, Event event) {
-        collisionEvents.put(entity, event);
+        entityAttributes.getCollisionsEvents().put(entity, event);
     }
 
     /**
@@ -149,23 +133,23 @@ public class Entity implements Element<Double> {
      * @param entity bound entity to clear events
      */
     public void clearCollisionEvent(Entity entity) {
-        collisionEvents.remove(entity);
+        entityAttributes.getCollisionsEvents().remove(entity);
     }
 
     /**
      * Clear all collision events.
      */
     public void clearAllCollisionEvents() {
-        collisionEvents.clear();
+        entityAttributes.getCollisionsEvents().clear();
     }
 
     /**
      * Return the event matching to the entity given
      * @param entity an entity
-     * @return the event matching to the entity given, the VodiEvent is return if there is no matching event
+     * @return the event matching to the entity given, the VoidEvent is return if there is no matching event
      */
     public Event getCollisionEvent (Entity entity) {
-        Event event = collisionEvents.get(entity);
+        Event event = entityAttributes.getCollisionsEvents().get(entity);
         return (event == null) ? VoidEvent.getInstance() : event;
     }
 
@@ -179,7 +163,7 @@ public class Entity implements Element<Double> {
     private Collection<Coordinates<Double>> getCollisionPoints () {
         Collection<Coordinates<Double>> collisionPoints = new ArrayList<>(CollisionPositions.values().length);
         for (CollisionPositions collisionPosition : CollisionPositions.values()) {
-            collisionPoints.add(collisionPosition.calcPosition(coords,dimension));
+            collisionPoints.add(collisionPosition.calcPosition(entityAttributes.getCoordinates(),entityAttributes.getDimension()));
         }
         return collisionPoints;
     }
@@ -191,11 +175,19 @@ public class Entity implements Element<Double> {
      * @param other an entity
      * @return if there is a collision
      */
-    public final boolean testCollide (Entity other) {
+    public boolean testCollide (Entity other) {
         for (Coordinates<Double> collisionPoint : getCollisionPoints()) {
-            if (CollisionPositions.isInHitBox(other.coords,other.dimension,collisionPoint)) return true;
+            if (CollisionPositions.isInHitBox(other.entityAttributes.getCoordinates(),other.entityAttributes.getDimension(),collisionPoint)) return true;
         }
+
         return false;
     }
 
+    /**
+     * Get all attributes packaged in an object, allowing to getting, setting them or attach listeners when they are updated
+     * @return EntityAttribute all entity attributes
+     */
+    public EntityAttributes getAttributes() {
+        return entityAttributes;
+    }
 }

@@ -53,7 +53,7 @@ public enum CollisionPositions {
      * @param margin a margin
      * @return the position calculate in a rectangle with a margin.
      */
-    public  Coordinates<Double> calcPosition (Coordinates<Double> topLeft, Dimension dimension, double margin) {
+    public Coordinates<Double> calcPosition (Coordinates<Double> topLeft, Dimension dimension, double margin) {
         if (margin < 0) throw new IllegalArgumentException("Margin must be greater than 0 : " + margin);
         if (0.5 < margin) throw new IllegalArgumentException("Margin must be lower than 0.5 : " + margin);
         return new Coordinates<>(

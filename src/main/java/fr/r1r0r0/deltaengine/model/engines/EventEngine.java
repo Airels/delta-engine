@@ -1,9 +1,10 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
-import fr.r1r0r0.deltaengine.model.events.Event;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
-import java.util.ArrayList;
-import java.util.List;
+import fr.r1r0r0.deltaengine.model.events.Event;
+import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 
 /**
  * The Event Engine.
@@ -11,13 +12,14 @@ import java.util.List;
  */
 final class EventEngine implements Engine {
 
-    private final List<Event> events;
+    private final Collection<Event> globalEvents;
+    private MapLevel currentMap;
 
     /**
      * Default constructor
      */
     EventEngine() {
-        this.events = new ArrayList<>();
+        this.globalEvents = new ConcurrentLinkedDeque<>();
     }
 
     @Override
@@ -27,31 +29,47 @@ final class EventEngine implements Engine {
 
     @Override
     public void run() {
-        synchronized (this) {
-            events.forEach(Event::checkEvent);
-        }
+        globalEvents.forEach(Event::checkEvent);
+
+        if (currentMap != null)
+            currentMap.getEvents().forEach(Event::checkEvent);
     }
 
     /**
-     * Adding an event to the engine
+     * Adding a global event to the engine
      * @param event event to add
      */
-    public synchronized void addEvent(Event event) {
-        events.add(event);
+    public void addGlobalEvent(Event event) {
+        globalEvents.add(event);
     }
 
     /**
-     * Remove an event to the engine
+     * Remove a global event to the engine
      * @param event event to remove
      */
-    public synchronized void removeEvent(Event event) {
-        events.remove(event);
+    public void removeGlobalEvent(Event event) {
+        globalEvents.remove(event);
     }
 
     /**
-     * Clear all registered events from the engine
+     * Clear all registered global events from the engine
      */
-    public synchronized void clearEvents() {
-        events.clear();
+    public void clearGlobalEvents() {
+        globalEvents.clear();
+    }
+
+    /**
+     * Set current map to activate all map events
+     * @param map Map to set
+     */
+    public void setMap(MapLevel map){
+        this.currentMap = map;
+    }
+
+    /**
+     * Reset current map, to stop map events treatment
+     */
+    public void clearMap() {
+        this.currentMap = null;
     }
 }

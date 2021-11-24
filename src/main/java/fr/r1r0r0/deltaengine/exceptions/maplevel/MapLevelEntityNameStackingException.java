@@ -1,6 +1,6 @@
 package fr.r1r0r0.deltaengine.exceptions.maplevel;
 
-import fr.r1r0r0.deltaengine.model.elements.Entity;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 
 /**

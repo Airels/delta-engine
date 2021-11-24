@@ -1,24 +1,26 @@
-package fr.r1r0r0.deltaengine.model.elements;
+package fr.r1r0r0.deltaengine.model.elements.cells;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Dimension;
+import fr.r1r0r0.deltaengine.model.elements.Element;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
-import javafx.geometry.Dimension2D;
 
 /**
  * A Cell in a grid. Atomic element of a MapLevel, used to render background textures.
  */
-public class Cell implements Element<Integer> {
+public abstract class Cell implements Element<Integer> {
 
     private final static Dimension dimension = new Dimension(1, 1);
     private Coordinates<Integer> coords;
     private Sprite sprite;
     private String name;
 
-
     /**
      * Default constructor. Set a case sprite and coordinates in the map.
-     * @param x the coordinates of the map. Coordinates values are integers. If doubles, it will be truncated.
+     *
+     * @param x      the abscissa coordinate of the cell in the map. Coordinates values are integers.
+     * @param y      the ordinate coordinate of the cell in the map. Coordinates values are integers.
      * @param sprite the sprite to apply on the case
      */
     public Cell(int x, int y, Sprite sprite) {
@@ -65,11 +67,10 @@ public class Cell implements Element<Integer> {
     }
 
     /**
-     * If a Cell is crossable. Uncrossable case is not crossable, so this methods will return false. True for normal cases.
-     * This method is mainly used by PhysicsEngine.
-     * @return true if it's a simple case, false otherwise
+     * Checks if given entity can cross this cell. If entity cannot cross cell, then it will be blocked.
+     *
+     * @param entity entity to check if he can cross
+     * @return boolean true if given entity can cross the cell, false otherwise.
      */
-    boolean isCrossable() {
-        return true;
-    }
+    public abstract boolean isCrossableBy(Entity entity);
 }

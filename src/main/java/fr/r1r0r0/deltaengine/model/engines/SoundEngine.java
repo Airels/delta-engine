@@ -6,6 +6,7 @@ import fr.r1r0r0.deltaengine.model.Sound;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,8 +44,12 @@ public final class SoundEngine implements Engine {
         if (sounds.containsKey(sound.getName()))
             throw new SoundAlreadyExistException(sound);
 
-        Media media = new Media(sound.getFile().toURI().toString());
-        sounds.put(sound.getName(), new MediaPlayer(media));
+        try {
+            Media media = new Media(sound.getFile().toURI().toURL().toExternalForm());
+            sounds.put(sound.getName(), new MediaPlayer(media));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

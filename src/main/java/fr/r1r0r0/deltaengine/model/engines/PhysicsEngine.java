@@ -5,8 +5,7 @@ import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.Direction;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.elements.CollisionPositions;
-import fr.r1r0r0.deltaengine.model.elements.CrossableVisitor;
-import fr.r1r0r0.deltaengine.model.elements.Entity;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.events.Event;
 
 import java.util.Collection;
@@ -27,7 +26,6 @@ final class PhysicsEngine implements Engine {
      * qui correspond a un minX maxX minY maxY
      */
 
-    private static final double MOVE_MARGIN_ERROR = 0.01;
     private static final CollisionPositions[] POSITIONS_CHECK = new CollisionPositions[]{
             CollisionPositions.LEFT_TOP, CollisionPositions.RIGHT_TOP,
             CollisionPositions.LEFT_BOT, CollisionPositions.RIGHT_BOT};
@@ -35,6 +33,8 @@ final class PhysicsEngine implements Engine {
     private MapLevel mapLevel;
     private long previousRunTime;
     private long maxRunDelta;
+    private double maxRunDeltaRatio;
+    private double marginError;
 
     /**
      * Constructor
@@ -43,6 +43,8 @@ final class PhysicsEngine implements Engine {
         mapLevel = null;
         previousRunTime = System.currentTimeMillis();
         maxRunDelta = 0;
+        maxRunDeltaRatio = 0;
+        marginError = 0;
     }
 
     /**
@@ -98,7 +100,7 @@ final class PhysicsEngine implements Engine {
         for (Entity entity : entities) {
             if (entity.getDirection() == Direction.IDLE) continue;
             Coordinates<Double> nextCoordinate = calcNextPosition(entity,timeRatio);
-            if (isValidPosition(nextCoordinate,entity.getDimension())) entity.setCoordinates(nextCoordinate);
+            if (isValidNextPosition(entity,nextCoordinate)) entity.setCoordinates(nextCoordinate);
             else entity.setDirection(Direction.IDLE);
         }
     }
@@ -128,36 +130,62 @@ final class PhysicsEngine implements Engine {
     }
 
     /**
-     * Return if it is possible to apply this direction to an object
-     * describe by a position, a dimension, and a speed
-     * @param topLeft a position topLeft of the object
-     * @param dimension the dimension of the object
-     * @param direction the direction of the object
-     * @param speed the speed of the object
-     * @return if it is possible to apply this direction to an object
-     *  describe by a position, a dimension, and a speed
+     * Return if the entity can move with the direction given in argument
+     * @param entity an entity
+     * @param direction a direction
+     * @return if the entity can move with the direction given
      */
-    public boolean IsMovementAvailable (Coordinates<Double> topLeft, Dimension dimension,
-                                        Direction direction, double speed) {
-        return isValidPosition(calcNextPosition(topLeft,direction,speed,maxRunDelta),dimension);
+    public boolean isAvailableDirection (Entity entity, Direction direction) {
+        Coordinates<Double> nextPosition =
+                calcNextPosition(entity.getCoordinates(),direction,entity.getSpeed(),maxRunDeltaRatio);
+        //System.out.println(entity.getCoordinates() + " " + direction + " " + entity.getSpeed() + " " + maxRunDelta + " -> " + nextPosition);
+        return isValidNextPosition(entity,nextPosition);
     }
 
     /**
-     * Returns if the rectangle given, construct with a top-left point and a dimension,
-     * is in a valid position in the mapLevel
-     * @param initialTopLeft the coordinate of the top-left point of the rectangle
-     * @param dimension the dimension of the rectangle
+     * TODO
+     * @param entity
+     * @param direction
+     * @return
+     */
+    public boolean canGoToNextCell (Entity entity, Direction direction) {
+        if ( ! fitOnCell(entity)) return false;
+        Coordinates<Double> position = entity.getCoordinates();
+        int x = position.getX().intValue();
+        int y = position.getY().intValue();
+        Coordinates<Integer> coordinates = direction.getCoordinates();
+        return mapLevel.getCell(x + coordinates.getX(),y + coordinates.getY()).isCrossableBy(entity);
+    }
+
+    /**
+     * TODO
+     * @param entity
+     * @return
+     */
+    private boolean fitOnCell (Entity entity) {
+        Coordinates<Double> position = entity.getCoordinates();
+        Dimension dimension = entity.getDimension();
+        Coordinates<Double> leftTop = CollisionPositions.LEFT_TOP.calcPosition(position,dimension,marginError);
+        Coordinates<Double> rightBot = CollisionPositions.RIGHT_BOT.calcPosition(position,dimension,marginError);
+        return leftTop.getX().intValue() == rightBot.getX().intValue()
+                && leftTop.getY().intValue() == rightBot.getY().intValue();
+    }
+
+    /**
+     * Returns if the next position of the entity is in a valid position in the mapLevel
+     * @param entity an entity
+     * @param nextPosition the next position of the entity
      * @return if the position of the rectangle is valid in the mapLevel
      */
-    private boolean isValidPosition (Coordinates<Double> initialTopLeft, Dimension dimension) {
+    private boolean isValidNextPosition (Entity entity, Coordinates<Double> nextPosition) {
         for (CollisionPositions collisionPosition : POSITIONS_CHECK) {
             Coordinates<Double> position =
-                    collisionPosition.calcPosition(initialTopLeft,dimension,MOVE_MARGIN_ERROR);
+                    collisionPosition.calcPosition(nextPosition,entity.getDimension(),marginError);
             int x = (position.getX() >= 0) ? position.getX().intValue()
                     : (position.getX().intValue() - 1);
             int y = (position.getY() >= 0) ? position.getY().intValue()
                     : (position.getY().intValue() - 1);
-            if ( ! CrossableVisitor.isCaseCrossable(mapLevel.getCell(x,y))) return false;
+            if ( ! mapLevel.getCell(x,y).isCrossableBy(entity)) return false;
         }
         return true;
     }
@@ -184,6 +212,15 @@ final class PhysicsEngine implements Engine {
      */
     public synchronized void setMaxRunDelta (int fps) {
         maxRunDelta = 1000 / fps;
+        maxRunDeltaRatio = (double) maxRunDelta / 1000;
+    }
+
+    /**
+     * Setter for the attribute marginError
+     * @param marginError the margin error
+     */
+    public synchronized void setMarginError (double marginError) {
+        this.marginError = marginError;
     }
 
 }

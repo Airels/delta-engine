@@ -29,4 +29,14 @@ public enum Direction {
         return coordinates;
     }
 
+    public Direction getOpposite() {
+        return switch (this) {
+            case UP -> DOWN;
+            case DOWN -> UP;
+            case LEFT -> RIGHT;
+            case RIGHT -> LEFT;
+            default -> IDLE;
+        };
+    }
+
 }

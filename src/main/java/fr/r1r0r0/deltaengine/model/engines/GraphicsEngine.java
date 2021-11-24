@@ -1,6 +1,8 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
 import fr.r1r0r0.deltaengine.model.elements.*;
+import fr.r1r0r0.deltaengine.model.elements.cells.Cell;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
 import javafx.scene.Scene;
@@ -8,19 +10,18 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
-import java.io.FileInputStream;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * Graphic engine takes care of maintaining the view updated
  */
 final class GraphicsEngine implements Engine {
 
-    private ArrayList<Element> elements;
+    private ConcurrentLinkedDeque<Element> elements;
     private Map<Element, Sprite> elementSpriteMap;
     private double caseSize = 40;
-    private double offsetX = 0.0, offsetY = 0.0;
+    private int offsetX = 0, offsetY = 0;
     private MapLevel mapLevel;
     private Stage stage;
     private Pane root;
@@ -42,9 +43,9 @@ final class GraphicsEngine implements Engine {
      * initialising the graphic engine components
      */
     @Override
-    public void init() {
+    public synchronized void init() {
         elementSpriteMap = new HashMap<>();
-        elements = new ArrayList<>();
+        elements = new ConcurrentLinkedDeque<>();
         mapLevel = null;
 
         int initialWidth = 1, initialHeight = 1;
@@ -79,7 +80,7 @@ final class GraphicsEngine implements Engine {
      * Graphic engine loop
      */
     @Override
-    public void run() {
+    public synchronized void run() {
         if (started) throw new RuntimeException("Graphic Engine is already running");
         started = true;
 
@@ -99,15 +100,15 @@ final class GraphicsEngine implements Engine {
             updateElement(e);
         }
         started = false;
-
     }
 
     /**
      * Update an element's graphical view
-     *
+     * if the sprite of the element is a new object,
+     * the old sprite is removed and the new one added.
      * @param e the element to be updated
      */
-    private void updateElement(Element e) {
+    private synchronized void updateElement(Element e) {
         if (!elements.contains(e)) throw new NoSuchElementException();
 
         Sprite oldSprite = elementSpriteMap.get(e);
@@ -117,34 +118,26 @@ final class GraphicsEngine implements Engine {
             root.getChildren().remove(oldSprite.getNode());
             root.getChildren().add(newSprite.getNode());
             elementSpriteMap.put(e, newSprite);
+
+            newSprite.resize(
+                    caseSize * e.getDimension().getWidth(),
+                    caseSize * e.getDimension().getHeight());
         }
 
         newSprite.setLayout(offsetX + e.getCoordinates().getX().doubleValue() * caseSize,
                 offsetY + e.getCoordinates().getY().doubleValue() * caseSize);
-
-
     }
 
     /**
      * Set the map to be diplayed, replace the old map
      * @param mapLevel map to be shown
      */
-    public void setMap(MapLevel mapLevel) {
-        if (this.mapLevel != null){
-            for (Element e:this.mapLevel.getCells()) removeElement(e);
-            for (Element e:this.mapLevel.getEntities()) removeElement(e);
-        }
+    public synchronized void setMap(MapLevel mapLevel) {
+        if (this.mapLevel != null)
+            clearMap();
 
         this.mapLevel = mapLevel;
         fitMapToStage();
-
-        for (Cell c : mapLevel.getCells()) {
-            addElement(c);
-        }
-
-        for (Entity element : mapLevel.getEntities()) {
-            addElement(element);
-        }
     }
 
     /**
@@ -152,17 +145,21 @@ final class GraphicsEngine implements Engine {
      * caseSize is calculated to fit exactly,
      * the offset are calculated to center the elements
      */
-    private void fitMapToStage() {
+    private synchronized void fitMapToStage() {
         double caseSizeWidth = stage.getWidth() / mapLevel.getWidth();
         double caseSizeHeight = stage.getHeight() / mapLevel.getHeight();
         caseSize = Math.min(caseSizeWidth, caseSizeHeight);
 
-        if (caseSizeHeight>caseSizeWidth){
-            offsetY = (stage.getHeight() - mapLevel.getHeight()*caseSize)/2 - heightMargin;
+        offsetX = 0;
+        offsetY = 0;
+
+        if (caseSizeHeight > caseSizeWidth){
+            offsetY = (int) ((stage.getHeight() - mapLevel.getHeight()*caseSize)/2 - heightMargin);
         }
         else {
-            offsetX = (stage.getWidth()- mapLevel.getWidth()*caseSize)/2 - widthMargin;
+            offsetX = (int) ((stage.getWidth()- mapLevel.getWidth()*caseSize)/2 - widthMargin);
         }
+
         stage.setTitle(mapLevel.getName());
     }
 
@@ -171,7 +168,7 @@ final class GraphicsEngine implements Engine {
      * element is resized according to CASE_SIZE
      * @param element element to display
      */
-    public void addElement(Element element) {
+    public synchronized void addElement(Element element) {
         if (elements.contains(element)) {
             removeElement(element);
         }
@@ -185,11 +182,40 @@ final class GraphicsEngine implements Engine {
     }
 
     /**
+     * remove an element from the graphic engine and from being displayed
+     *
+     * @param element an element from the graphic engine
+     */
+    public synchronized void removeElement(Element element) {
+        elements.remove(element);
+
+        Sprite s;
+        if ((s = elementSpriteMap.remove(element)) == null)
+            s = element.getSprite();
+
+        root.getChildren().remove(s.getNode());
+    }
+
+    /**
+     * Remove all the current map's elements
+     */
+    public synchronized void clearMap() {
+        for (Element e : this.mapLevel.getCells()){
+            removeElement(e);
+        }
+        for (Element e : this.mapLevel.getEntities()){
+            removeElement(e);
+        }
+
+        this.mapLevel = null;
+    }
+
+    /**
      * add an element to display
      * element is NOT resized
      * @param element element to display
      */
-    public void addHudElement(Element element){
+    public synchronized void addHudElement(Element element){
         if (elements.contains(element)) {
             removeElement(element);
         }
@@ -200,21 +226,9 @@ final class GraphicsEngine implements Engine {
     }
 
     /**
-     * remove an element from the graphic engine and from being displayed
-     *
-     * @param element an element from the graphic engine
-     */
-    public void removeElement(Element element) {
-        elements.remove(element);
-        elementSpriteMap.remove(element);
-        root.getChildren().remove(element.getSprite().getNode());
-    }
-
-    /**
      * Empty the all element from the graphic engine and from the view
      */
-    public void clearElements() {
-        for (Element e:elements) removeElement(e);
+    public synchronized void clearElements() {
         elements.clear();
         elementSpriteMap.clear();
         root.getChildren().clear();
@@ -224,13 +238,12 @@ final class GraphicsEngine implements Engine {
      * set the icon used for the engine's
      * @param image icon used
      */
-    public void setStageIcon(Image image){
+    public synchronized void setStageIcon(Image image){
         stage.getIcons().clear();
         stage.getIcons().add(image);
     }
 
-    public void setStage(Stage stage) {
+    public synchronized void setStage(Stage stage) {
         this.stage = stage;
-
     }
 }
