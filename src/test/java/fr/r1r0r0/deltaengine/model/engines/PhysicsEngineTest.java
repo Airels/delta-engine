@@ -45,52 +45,59 @@ class PhysicsEngineTest {
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.DOWN));
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.UP));
 
-        Coordinates<Double> pukCoords2 = new Coordinates<>(2.1,2.0);
-        entity.setCoordinates(pukCoords2);
+        Coordinates<Double> notInCell = new Coordinates<>(2.1,2.0);
+        entity.setCoordinates(notInCell);
         assertFalse(physicsEngine.canGoToNextCell(entity, Direction.DOWN));
         assertFalse(physicsEngine.canGoToNextCell(entity, Direction.UP));
         assertFalse(physicsEngine.canGoToNextCell(entity, Direction.LEFT));
         assertFalse(physicsEngine.canGoToNextCell(entity, Direction.RIGHT));
 
-        Coordinates<Double> pukCoords3 = new Coordinates<>(0.0,0.0);
-        entity.setCoordinates(pukCoords3);
+        Coordinates<Double> topleft = new Coordinates<>(0.0,0.0);
+        entity.setCoordinates(topleft);
 
-        // We consider that going out of the map isn't considered as an issue
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.DOWN));
-        // assertFalse(physicsEngine.canGoToNextCell(entity, Direction.UP));
-        // assertFalse(physicsEngine.canGoToNextCell(entity, Direction.LEFT));
+        assertFalse(physicsEngine.canGoToNextCell(entity, Direction.UP));
+        assertFalse(physicsEngine.canGoToNextCell(entity, Direction.LEFT));
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.RIGHT));
 
-        Coordinates<Double> pukCoords4 = new Coordinates<>(7.0,8.0);
-        entity.setCoordinates(pukCoords4);
+        Coordinates<Double> bottomRight = new Coordinates<>(9.0,9.0);
+        entity.setCoordinates(bottomRight);
+
+        assertTrue(physicsEngine.canGoToNextCell(entity, Direction.UP));
+        assertFalse(physicsEngine.canGoToNextCell(entity, Direction.DOWN));
+        assertFalse(physicsEngine.canGoToNextCell(entity, Direction.RIGHT));
+        assertTrue(physicsEngine.canGoToNextCell(entity, Direction.LEFT));
+
+        Coordinates<Double> leftFromUncrossable = new Coordinates<>(7.0,8.0);
+        entity.setCoordinates(leftFromUncrossable);
 
         assertFalse(physicsEngine.canGoToNextCell(entity,Direction.RIGHT));
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.LEFT));
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.DOWN));
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.UP));
 
-        Coordinates<Double> pukCoords5 = new Coordinates<>(9.0,8.0);
-        entity.setCoordinates(pukCoords5);
+        Coordinates<Double> rightFromUncrossable = new Coordinates<>(9.0,8.0);
+        entity.setCoordinates(rightFromUncrossable);
 
         assertFalse(physicsEngine.canGoToNextCell(entity,Direction.LEFT));
-        assertTrue(physicsEngine.canGoToNextCell(entity, Direction.RIGHT));
+        assertFalse(physicsEngine.canGoToNextCell(entity, Direction.RIGHT)); //limit of map
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.DOWN));
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.UP));
 
-        Coordinates<Double> pukCoords6 = new Coordinates<>(8.0,7.0);
-        entity.setCoordinates(pukCoords6);
+        Coordinates<Double> aboveUncrossable = new Coordinates<>(8.0,7.0);
+        entity.setCoordinates(aboveUncrossable);
 
         assertFalse(physicsEngine.canGoToNextCell(entity,Direction.DOWN));
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.RIGHT));
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.LEFT));
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.UP));
 
-        Coordinates<Double> pukCoords7 = new Coordinates<>(8.0,9.0);
-        entity.setCoordinates(pukCoords7);
+        Coordinates<Double> underUncrossable = new Coordinates<>(8.0,9.0);
+        entity.setCoordinates(underUncrossable);
 
         assertFalse(physicsEngine.canGoToNextCell(entity,Direction.UP));
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.RIGHT));
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.LEFT));
-        assertTrue(physicsEngine.canGoToNextCell(entity, Direction.DOWN));
+        assertFalse(physicsEngine.canGoToNextCell(entity, Direction.DOWN)); // out of map
     }
 }
