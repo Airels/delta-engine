@@ -184,10 +184,10 @@ public final class KernelEngine {
     }
 
     /**
-     * TODO
-     * @param marginError
+     * Allows to set a margin error for the physics engine
+     * @param marginError the margin error
      */
-    public void setMarginError (double marginError) {
+    public void setMarginError(double marginError) {
         physicsEngine.setMarginError(marginError);
     }
 
