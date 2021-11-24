@@ -105,7 +105,7 @@ public final class MapLevel {
      * Return the cell in the map with coordinate (x,y)
      * @param x the x value
      * @param y the y value
-     * @return the cell in the map with coordinate (x,y)
+     * @return the cell in the map with coordinate (x,y), returns OutOfBoundsCell if wanted cell is out of bounds
      */
     public Cell getCell (int x, int y) {
         Cell cell = cells.get(new Coordinates<>(x,y));
