@@ -47,7 +47,7 @@ public enum CollisionPositions {
 
     /**
      * Return the position calculate in a rectangle with a margin.
-     * The margin is used to move calc a point in a rectangle with a lesser size, but with the same center
+     *  The margin is used to calc a point in a rectangle with a lesser size, but with the same center.
      * @param topLeft the top-left point
      * @param dimension the dimension of the rectangle
      * @param margin a margin
@@ -55,7 +55,7 @@ public enum CollisionPositions {
      */
     public Coordinates<Double> calcPosition (Coordinates<Double> topLeft, Dimension dimension, double margin) {
         if (margin < 0) throw new IllegalArgumentException("Margin must be greater than 0 : " + margin);
-        if (1 < margin) throw new IllegalArgumentException("Margin must be lower than 1 : " + margin);
+        if (0.5 < margin) throw new IllegalArgumentException("Margin must be lower than 0.5 : " + margin);
         return new Coordinates<>(
                 topLeft.getX() + (ratioDimensionX + margin*ratioMarginX)*dimension.getWidth(),
                 topLeft.getY() + (ratioDimensionY + margin*ratioMarginY)*dimension.getHeight()

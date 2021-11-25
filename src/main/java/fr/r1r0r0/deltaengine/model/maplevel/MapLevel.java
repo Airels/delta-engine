@@ -9,7 +9,7 @@ import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelException;
 import fr.r1r0r0.deltaengine.model.BufferedHashMap;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.elements.cells.Cell;
-import fr.r1r0r0.deltaengine.model.elements.cells.default_cells.VoidCell;
+import fr.r1r0r0.deltaengine.model.elements.cells.default_cells.OutOfBoundCell;
 import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.events.Event;
 
@@ -105,11 +105,11 @@ public final class MapLevel {
      * Return the cell in the map with coordinate (x,y)
      * @param x the x value
      * @param y the y value
-     * @return the cell in the map with coordinate (x,y)
+     * @return the cell in the map with coordinate (x,y), returns OutOfBoundsCell if wanted cell is out of bounds
      */
     public Cell getCell (int x, int y) {
         Cell cell = cells.get(new Coordinates<>(x,y));
-        return (cell == null) ? new VoidCell(x,y) : cell;
+        return (cell == null) ? new OutOfBoundCell(x,y) : cell;
     }
 
     /**
