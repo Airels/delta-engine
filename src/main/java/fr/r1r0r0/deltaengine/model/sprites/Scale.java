@@ -1,4 +1,4 @@
-package fr.r1r0r0.deltaengine.model;
+package fr.r1r0r0.deltaengine.model.sprites;
 
 public final class Scale {
     /**

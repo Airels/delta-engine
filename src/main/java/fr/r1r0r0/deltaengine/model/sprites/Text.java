@@ -1,6 +1,8 @@
 package fr.r1r0r0.deltaengine.model.sprites;
 
+import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.view.colors.Color;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 
 /**
@@ -31,13 +33,17 @@ public final class Text implements Sprite {
     }
 
     /**
-     * set the size of the text to be displayed
+     * set the font's size of the text to be displayed
      * @param size the new size of the text
      */
-    public void setSize(int size) {
+    public void setFontSize(int size) {
         String style = String.format("-fx-font: %s \"%s\";", size, font);
         this.size = size;
         jfxText.setStyle(style);
+    }
+
+    public void setSize(int size){
+        setFontSize(size);
     }
 
     /**
@@ -64,8 +70,4 @@ public final class Text implements Sprite {
         return jfxText;
     }
 
-    @Override
-    public void resize(double width, double height) {
-        // TODO
-    }
 }

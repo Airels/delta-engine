@@ -28,11 +28,6 @@ public final class InvisibleSprite implements Sprite {
         return node;
     }
 
-    @Override
-    public void resize(double width, double height) {
-
-    }
-
     /**
      * Get an instance Invisible Sprite
      * @return an instance Invisible Sprite
