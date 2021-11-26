@@ -14,14 +14,20 @@ public final class Text implements Sprite {
     private String font;
     private Color color;
     private javafx.scene.text.Text jfxText;
+    private double sizeScalar;
 
     /**
      * Instantiate Text Sprite, used to display text
      * @param text to be displayed
      */
     public Text(String text) {
+        this(text,1);
+    }
+
+    public Text(String text, double sizeScalar) {
         jfxText = new javafx.scene.text.Text();
         jfxText.setText(text);
+        this.sizeScalar = sizeScalar;
     }
 
     /**
@@ -68,6 +74,16 @@ public final class Text implements Sprite {
     @Override
     public Node getNode() {
         return jfxText;
+    }
+
+    @Override
+    public void setSizeScalar(double scalar) {
+        this.sizeScalar = scalar;
+    }
+
+    @Override
+    public double getSizeScalar() {
+        return sizeScalar;
     }
 
 }

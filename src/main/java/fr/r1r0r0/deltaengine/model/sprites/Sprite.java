@@ -199,6 +199,9 @@ public interface Sprite {
         return false;
     }
 
+    void setSizeScalar(double scalar);
+    double getSizeScalar();
+
     /**
      * The depth of the component
      * @return the depth of the sprite

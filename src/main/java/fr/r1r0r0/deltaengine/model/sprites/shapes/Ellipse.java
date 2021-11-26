@@ -8,6 +8,7 @@ import fr.r1r0r0.deltaengine.view.colors.Color;
 public class Ellipse extends Shape{
 
     private final javafx.scene.shape.Ellipse ellipse;
+    private double sizeScalar;
 
     /**
      * Instantiate Ellipse Sprite
@@ -17,6 +18,12 @@ public class Ellipse extends Shape{
      */
     public Ellipse(double radiusX, double radiusY, Color color){
         ellipse = new javafx.scene.shape.Ellipse(radiusX, radiusY);
+        setColor(color);
+    }
+
+    public Ellipse(double radiusX, double radiusY,double sizeScalar, Color color){
+        ellipse = new javafx.scene.shape.Ellipse(radiusX, radiusY);
+        this.sizeScalar = sizeScalar;
         setColor(color);
     }
 
@@ -83,5 +90,15 @@ public class Ellipse extends Shape{
     public void setLayout(double x, double y) {
         this.getNode().setLayoutX(x + getRadiusX());
         this.getNode().setLayoutY(y + getRadiusY());
+    }
+
+    @Override
+    public void setSizeScalar(double scalar) {
+        this.sizeScalar = scalar;
+    }
+
+    @Override
+    public double getSizeScalar() {
+        return sizeScalar;
     }
 }

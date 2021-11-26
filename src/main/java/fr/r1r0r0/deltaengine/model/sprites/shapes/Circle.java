@@ -7,14 +7,21 @@ import fr.r1r0r0.deltaengine.view.colors.Color;
  */
 public class Circle extends Shape {
     private Ellipse ellipse;
+    private double sizeScalar;
 
     /**
      * Instantiate an Image Sprite with a color and a radius
      * @param radius of the circle
+     * @param sizeScalar optional sizeScalar
      * @param color of the circle
      */
-    public Circle(double radius, Color color) {
+    public Circle(double radius, double sizeScalar, Color color) {
         this.ellipse = new Ellipse(radius,radius,color);
+        this.sizeScalar = sizeScalar;
+    }
+
+    public Circle(double radius, Color color) {
+        this(radius,1,color);
     }
 
     /**
@@ -49,6 +56,16 @@ public class Circle extends Shape {
     public void setLayout(double x, double y) {
         this.getNode().setLayoutX(x + getRadius());
         this.getNode().setLayoutY(y + getRadius());
+    }
+
+    @Override
+    public void setSizeScalar(double scalar) {
+        this.sizeScalar = scalar;
+    }
+
+    @Override
+    public double getSizeScalar() {
+        return sizeScalar;
     }
 
 }

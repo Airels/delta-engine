@@ -14,6 +14,7 @@ public final class Image implements Sprite {
 
     private String path;
     private ImageView imageView;
+    private double sizeScalar;
 
     /**
      * Instantiate an Image Sprite with an image
@@ -21,8 +22,13 @@ public final class Image implements Sprite {
      * @throws FileNotFoundException
      */
     public Image(String path) throws FileNotFoundException {
+        this(path,1);
+    }
+
+    public Image(String path,double sizeScalar) throws FileNotFoundException {
         this.path = path;
         imageView = new ImageView(new javafx.scene.image.Image(new FileInputStream(path)));
+        this.sizeScalar = sizeScalar;
     }
 
     @Override
@@ -34,6 +40,16 @@ public final class Image implements Sprite {
     public void resize(double width, double height) {
         imageView.setFitWidth(width);
         imageView.setFitHeight(height);
+    }
+
+    @Override
+    public void setSizeScalar(double scalar) {
+        this.sizeScalar = scalar;
+    }
+
+    @Override
+    public double getSizeScalar() {
+        return sizeScalar;
     }
 
     /**

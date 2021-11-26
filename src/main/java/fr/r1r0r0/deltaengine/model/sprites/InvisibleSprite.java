@@ -28,6 +28,16 @@ public final class InvisibleSprite implements Sprite {
         return node;
     }
 
+    @Override
+    public void setSizeScalar(double scalar) {
+
+    }
+
+    @Override
+    public double getSizeScalar() {
+        return 0;
+    }
+
     /**
      * Get an instance Invisible Sprite
      * @return an instance Invisible Sprite
