@@ -12,6 +12,9 @@ import javafx.scene.layout.Region;
  * it can be displayed through it's node
  */
 public interface Sprite {
+
+    Sprite INVISIBLE_SPRITE = InvisibleSprite.getInstance();
+
     /**
      * The jfx Node object
      * @deprecated avoid using this elsewhere than in Engine

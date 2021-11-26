@@ -46,7 +46,8 @@ public final class Coordinates <T extends Number> {
      */
     public Coordinates<Double> getNextCoordinates (Direction direction, double delta) {
         Coordinates<Integer> other = direction.getCoordinates();
-        return new Coordinates<>(x.doubleValue() + other.x * delta,y.doubleValue() + other.y * delta);
+        return new Coordinates<>(x.doubleValue() + other.x.doubleValue() * delta,
+                y.doubleValue() + other.y.doubleValue() * delta);
     }
 
     @Override

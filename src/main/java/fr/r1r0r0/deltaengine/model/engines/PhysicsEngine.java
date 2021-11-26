@@ -150,11 +150,11 @@ final class PhysicsEngine implements Engine {
      */
     public boolean canGoToNextCell (Entity entity, Direction direction) {
         if ( ! fitOnCell(entity)) return false;
-        Coordinates<Double> position = entity.getCoordinates();
+        Coordinates<Double> position =
+                CollisionPositions.LEFT_TOP.calcPosition(entity.getCoordinates(),entity.getDimension(),marginError);
         int x = position.getX().intValue();
         int y = position.getY().intValue();
-        Coordinates<Integer> coordinates = direction.getCoordinates();
-        return mapLevel.getCell(x + coordinates.getX(),y + coordinates.getY()).isCrossableBy(entity);
+        return mapLevel.getCell(x + direction.getX(),y + direction.getY()).isCrossableBy(entity);
     }
 
     /**
