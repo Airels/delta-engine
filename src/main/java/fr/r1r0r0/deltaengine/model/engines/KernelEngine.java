@@ -20,6 +20,7 @@ import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
 import fr.r1r0r0.deltaengine.model.events.InputEvent;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 /**
@@ -112,18 +113,15 @@ public final class KernelEngine {
             if (!currentMapHalted) {
                 for (Engines e : Engines.values()) {
                     if (e == Engines.GRAPHICS_ENGINE) {
-                        try {
-                            JavaFXCommand.runAndWait(graphicsEngine);
-                        } catch (InterruptedException ignored) {}
+                        Platform.runLater(graphicsEngine);
                     } else {
                         getEngine(e).run();
                     }
+
                 }
             } else {
                 inputEngine.run();
-                try {
-                    JavaFXCommand.runAndWait(graphicsEngine);
-                } catch (InterruptedException ignored) {}
+                Platform.runLater(graphicsEngine);
             }
 
             updateDuration = System.currentTimeMillis() - updateStart;
