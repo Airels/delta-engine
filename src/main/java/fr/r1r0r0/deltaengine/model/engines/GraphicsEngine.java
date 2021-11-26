@@ -138,6 +138,32 @@ final class GraphicsEngine implements Engine {
 
         this.mapLevel = mapLevel;
         fitMapToStage();
+
+        Collection<Cell> addedCells = mapLevel.getBufferedCells().getAndResetAddedElements();
+        Collection<Cell> removedCells = mapLevel.getBufferedCells().getAndResetRemovedElements();
+        Collection<Entity> addedEntities = mapLevel.getBufferedEntities().getAndResetAddedElements();
+        Collection<Entity> removedEntities = mapLevel.getBufferedEntities().getAndResetRemovedElements();
+
+        if (addedCells.size() > 0) {
+            for (Cell c : addedCells)
+                addElement(c);
+        } else {
+            for (Cell c : mapLevel.getCells())
+                addElement(c);
+        }
+
+        if (addedEntities.size() > 0) {
+            for (Entity e : addedEntities)
+                addElement(e);
+        } else {
+            for (Entity e : mapLevel.getEntities())
+                addElement(e);
+        }
+
+        for (Cell c : removedCells)
+            removeElement(c);
+        for (Entity e : removedEntities)
+            removeElement(e);
     }
 
     /**
