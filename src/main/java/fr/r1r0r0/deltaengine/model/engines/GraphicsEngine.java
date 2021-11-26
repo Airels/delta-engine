@@ -175,7 +175,9 @@ final class GraphicsEngine implements Engine {
         elementSpriteMap.put(element, element.getSprite());
         elements.add(element);
         root.getChildren().add(element.getSprite().getNode());
-        element.getSprite().resizeKeepScale(caseSize,caseSize);
+        element.getSprite().resize(
+                    caseSize * element.getDimension().getWidth(),
+                    caseSize * element.getDimension().getHeight());
         updateElement(element);
     }
 
