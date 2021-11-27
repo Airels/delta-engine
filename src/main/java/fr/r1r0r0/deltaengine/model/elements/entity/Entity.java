@@ -27,11 +27,36 @@ public class Entity implements Element<Double> {
      * @param name name of the entity
      * @param coords coordinates of the entity
      * @param sprite sprite of the entity
+     * @param dimension TODO
+     * @param hitBox TODO
+     */
+    public Entity(String name, Coordinates<Double> coords, Sprite sprite, Dimension dimension, Dimension hitBox) {
+        sprite.setZOrder(100);
+        entityAttributes = new EntityAttributes(name, coords, sprite, dimension, hitBox, Direction.IDLE, 0);
+    }
+
+    /**
+     * TODO
+     * @param name
+     * @param coords
+     * @param sprite
+     * @param dimension
      */
     public Entity(String name, Coordinates<Double> coords, Sprite sprite, Dimension dimension) {
-        sprite.setZOrder(100);
-        entityAttributes = new EntityAttributes(name, coords, sprite, dimension, Direction.IDLE, 0);
+        this(name,coords,sprite,dimension,dimension.copy());
     }
+
+    /**
+     * TODO
+     * @return
+     */
+    public Dimension getHitBox() {return entityAttributes.getHitBox();}
+
+    /**
+     * TODO
+     * @param hitBox
+     */
+    public void setHitBox(Dimension hitBox) {entityAttributes.setHitBox(hitBox);}
 
     /**
      * Current direction of the entity
@@ -162,8 +187,10 @@ public class Entity implements Element<Double> {
      */
     private Collection<Coordinates<Double>> getCollisionPoints () {
         Collection<Coordinates<Double>> collisionPoints = new ArrayList<>(CollisionPositions.values().length);
-        for (CollisionPositions collisionPosition : CollisionPositions.values()) {
-            collisionPoints.add(collisionPosition.calcPosition(entityAttributes.getCoordinates(),entityAttributes.getDimension()));
+        Coordinates<Double> coordinates = CollisionPositions.calcTopLetHitBox(this);
+        Dimension hitBox = getHitBox();
+        for (CollisionPositions collisionPosition : CollisionPositions.BASIC_COLLISION_POSITION) {
+            collisionPoints.add(collisionPosition.calcPosition(coordinates,hitBox));
         }
         return collisionPoints;
     }
@@ -176,8 +203,10 @@ public class Entity implements Element<Double> {
      * @return if there is a collision
      */
     public boolean testCollide (Entity other) {
+        Coordinates<Double> otherCoordinates = CollisionPositions.calcTopLetHitBox(other);
+        Dimension otherHitBox = other.getHitBox();
         for (Coordinates<Double> collisionPoint : getCollisionPoints()) {
-            if (CollisionPositions.isInHitBox(other.entityAttributes.getCoordinates(),other.entityAttributes.getDimension(),collisionPoint)) return true;
+            if (CollisionPositions.isInHitBox(otherCoordinates,otherHitBox,collisionPoint)) return true;
         }
 
         return false;

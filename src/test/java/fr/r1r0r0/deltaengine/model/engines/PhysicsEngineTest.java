@@ -33,7 +33,7 @@ class PhysicsEngineTest {
         map = builder.build();
         physicsEngine.setMap(map);
         physicsEngine.setMaxRunDelta(60);
-        physicsEngine.setMarginError(0.01);
+        //TODO physicsEngine.setMarginError(0.01);
         Coordinates<Double> pukCoords1 = new Coordinates<>(2.0,2.0);
 
         Dimension pukDim = new Dimension(1,1);

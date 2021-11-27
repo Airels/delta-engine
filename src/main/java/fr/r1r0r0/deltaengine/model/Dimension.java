@@ -51,5 +51,10 @@ public final class Dimension {
     public double getHeight () {
         return height;
     }
+
+    public Dimension copy () {
+        return new Dimension(width,height);
+    }
+
 }
 

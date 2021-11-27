@@ -41,13 +41,12 @@ public final class Coordinates <T extends Number> {
      * Calc and returns the next coordinates matching to the current coordinate,
      * a direction, and a delta of movement
      * @param direction the direction where the movement will be applied
-     * @param delta the delta of movement
+     * @param multiplier the multiplier apply to the movement
      * @return the next coordinate
      */
-    public Coordinates<Double> getNextCoordinates (Direction direction, double delta) {
-        Coordinates<Integer> other = direction.getCoordinates();
-        return new Coordinates<>(x.doubleValue() + other.x.doubleValue() * delta,
-                y.doubleValue() + other.y.doubleValue() * delta);
+    public Coordinates<Double> getNextCoordinates (Direction direction, double multiplier) {
+        return new Coordinates<>(x.doubleValue() + direction.getX() * multiplier,
+                y.doubleValue() + direction.getY() * multiplier);
     }
 
     @Override

@@ -182,11 +182,11 @@ public final class KernelEngine {
     }
 
     /**
-     * Allows to set a margin error for the physics engine
-     * @param marginError the margin error
+     * TODO
+     * @param movementDecomposition
      */
-    public void setMarginError(double marginError) {
-        physicsEngine.setMarginError(marginError);
+    public void setMovementDecomposition(int movementDecomposition) {
+        this.physicsEngine.setMovementDecomposition(movementDecomposition);
     }
 
     /**

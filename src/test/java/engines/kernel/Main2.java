@@ -16,6 +16,7 @@ import fr.r1r0r0.deltaengine.model.events.Trigger;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevelBuilder;
 import fr.r1r0r0.deltaengine.model.sprites.Sprite;
+import fr.r1r0r0.deltaengine.model.sprites.shapes.Circle;
 import fr.r1r0r0.deltaengine.model.sprites.shapes.Rectangle;
 import fr.r1r0r0.deltaengine.view.colors.Color;
 
@@ -26,6 +27,7 @@ public class Main2 {
         KernelEngine deltaEngine = DeltaEngine.launch();
         deltaEngine.setFrameRate(60);
         deltaEngine.printFrameRate(true);
+        deltaEngine.setMovementDecomposition(10);
 
 
         MapLevel mapLevel;
@@ -34,15 +36,25 @@ public class Main2 {
         mapLevel.replaceCell(new Wall(7, 7));
         deltaEngine.addMap(mapLevel);
 
-        /*
-        Entity pacman = new Entity("pacman", new Coordinates<>(5., 5.), new Circle(1, Color.YELLOW), new Dimension(1, 1));
-        pacman.setSpeed(0);
-        mapLevel.addEntity(pacman);
-        */
 
-        Entity red = new Entity("red", new Coordinates<>(8., 8.), new Rectangle(0.5, 0.5, Color.RED), new Dimension(0.8, 0.8));
+        Entity red = new Entity("red", new Coordinates<>(8., 8.), new Rectangle(0.5, 0.5, Color.RED),
+                new Dimension(0.8, 0.8));
         red.setSpeed(0);
         mapLevel.addEntity(red);
+
+
+        Entity pacman = new Entity("pacman", new Coordinates<>(6., 6.), new Circle(1, Color.YELLOW),
+                new Dimension(1, 1)){
+            Sprite sprite1 = new Circle(1, Color.GREEN);
+            Sprite sprite2 = new Circle(1, Color.RED);
+            @Override
+            public Sprite getSprite () {
+                return (testCollide(red) || red.testCollide(this) ) ? sprite1 : sprite2;
+            }
+        };
+        pacman.setSpeed(0);
+        mapLevel.addEntity(pacman);
+
 
         /*
         InputEvent moveUpEvent = new InputEvent(new ChangeMove(pacman, Direction.UP), new ChangeMove(pacman, Direction.IDLE));
@@ -111,7 +123,7 @@ public class Main2 {
         try {
 
             for (; ; Thread.sleep(1000)) {
-                System.out.println(red.getCoordinates() + " " + red.getDirection());
+                System.out.println("\n" + red.testCollide(pacman) + pacman.testCollide(red));
             }
 
         } catch (Exception e) {

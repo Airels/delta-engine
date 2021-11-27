@@ -34,7 +34,7 @@ final class PhysicsEngine implements Engine {
     private long previousRunTime;
     private long maxRunDelta;
     private double maxRunDeltaRatio;
-    private double marginError;
+    private int movementDecomposition;
 
     /**
      * Constructor
@@ -44,7 +44,7 @@ final class PhysicsEngine implements Engine {
         previousRunTime = System.currentTimeMillis();
         maxRunDelta = 0;
         maxRunDeltaRatio = 0;
-        marginError = 0;
+        movementDecomposition = 1;
     }
 
     /**
@@ -61,11 +61,11 @@ final class PhysicsEngine implements Engine {
     @Override
     public synchronized void run() {
         long currentRunTime = System.currentTimeMillis();
-        double timeRatio = (double) Math.min(currentRunTime - previousRunTime, maxRunDelta) / 1000;
+        long deltaTime = Math.min(currentRunTime - previousRunTime, maxRunDelta);
         previousRunTime = currentRunTime;
         if (mapLevel != null) {
             Collection<Entity> entities = mapLevel.getEntities();
-            updateCoordinates(entities,timeRatio);
+            updateCoordinates(entities,deltaTime);
             checkCollisions(entities).forEach(Event::checkEvent);
         }
     }
@@ -94,25 +94,27 @@ final class PhysicsEngine implements Engine {
      * Update the coordinates of each entity in a collection of entity
      * If the coordinates can not be update, because of an illegal movement, the direction of the entity is set to IDLE
      * @param entities a collection of entity
-     * @param timeRatio a ratio of time used to calc the movement
+     * @param deltaTime the delta of time used to calc the movement
      */
-    private void updateCoordinates (Collection<Entity> entities, double timeRatio) {
+    private void updateCoordinates (Collection<Entity> entities, long deltaTime) {
+        double timeRatio = ((double) deltaTime / 1000) / movementDecomposition;
+        Coordinates<Double> previousCoordinate;
+        Coordinates<Double> nextCoordinate;
+        Direction direction;
+        double speed;
         for (Entity entity : entities) {
-            if (entity.getDirection() == Direction.IDLE) continue;
-            Coordinates<Double> nextCoordinate = calcNextPosition(entity,timeRatio);
-            if (isValidNextPosition(entity,nextCoordinate)) entity.setCoordinates(nextCoordinate);
-            else entity.setDirection(Direction.IDLE);
+            direction = entity.getDirection();
+            if (direction == Direction.IDLE) continue;
+            previousCoordinate = entity.getCoordinates();
+            speed = entity.getSpeed();
+            for (int i = 0 ; i < movementDecomposition ; i++) {
+                nextCoordinate = calcNextPosition(previousCoordinate,direction,speed,timeRatio);
+                if ( ! isValidNextPosition(entity,nextCoordinate)) break;
+                previousCoordinate = nextCoordinate;
+            }
+            if (previousCoordinate.equals(entity.getCoordinates())) entity.setDirection(Direction.IDLE);
+            else entity.setCoordinates(previousCoordinate);
         }
-    }
-
-    /**
-     * Return the next position of the entity
-     * @param entity an entity
-     * @param deltaTime a delta of time
-     * @return the next position of the entity
-     */
-    private Coordinates<Double> calcNextPosition (Entity entity, double deltaTime) {
-        return calcNextPosition(entity.getCoordinates(),entity.getDirection(),entity.getSpeed(),deltaTime);
     }
 
     /**
@@ -121,12 +123,12 @@ final class PhysicsEngine implements Engine {
      * @param topLeft a position topLeft of the object
      * @param direction the direction of the object
      * @param speed the speed of the object
-     * @param deltaTime a delta of time
+     * @param timeRatio a ratio of time
      * @return the next position of the object describe
      */
     private Coordinates<Double> calcNextPosition (Coordinates<Double> topLeft, Direction direction,
-                                                  double speed, double deltaTime) {
-        return topLeft.getNextCoordinates(direction,speed * deltaTime);
+                                                  double speed, double timeRatio) {
+        return topLeft.getNextCoordinates(direction,speed * timeRatio);
     }
 
     /**
@@ -138,7 +140,6 @@ final class PhysicsEngine implements Engine {
     public boolean isAvailableDirection (Entity entity, Direction direction) {
         Coordinates<Double> nextPosition =
                 calcNextPosition(entity.getCoordinates(),direction,entity.getSpeed(),maxRunDeltaRatio);
-        //System.out.println(entity.getCoordinates() + " " + direction + " " + entity.getSpeed() + " " + maxRunDelta + " -> " + nextPosition);
         return isValidNextPosition(entity,nextPosition);
     }
 
@@ -150,11 +151,9 @@ final class PhysicsEngine implements Engine {
      */
     public boolean canGoToNextCell (Entity entity, Direction direction) {
         if ( ! fitOnCell(entity)) return false;
-        Coordinates<Double> position =
-                CollisionPositions.LEFT_TOP.calcPosition(entity.getCoordinates(),entity.getDimension(),marginError);
-        int x = position.getX().intValue();
-        int y = position.getY().intValue();
-        return mapLevel.getCell(x + direction.getX(),y + direction.getY()).isCrossableBy(entity);
+        Coordinates<Double> position = entity.getCoordinates();
+        return mapLevel.getCell(position.getX().intValue() + direction.getX(),
+                position.getY().intValue() + direction.getY()).isCrossableBy(entity);
     }
 
     /**
@@ -163,10 +162,8 @@ final class PhysicsEngine implements Engine {
      * @return
      */
     private boolean fitOnCell (Entity entity) {
-        Coordinates<Double> position = entity.getCoordinates();
-        Dimension dimension = entity.getDimension();
-        Coordinates<Double> leftTop = CollisionPositions.LEFT_TOP.calcPosition(position,dimension,marginError);
-        Coordinates<Double> rightBot = CollisionPositions.RIGHT_BOT.calcPosition(position,dimension,marginError);
+        Coordinates<Double> leftTop = entity.getCoordinates();
+        Coordinates<Double> rightBot = CollisionPositions.RIGHT_BOT.calcPosition(leftTop,entity.getDimension());
         return leftTop.getX().intValue() == rightBot.getX().intValue()
                 && leftTop.getY().intValue() == rightBot.getY().intValue();
     }
@@ -178,9 +175,9 @@ final class PhysicsEngine implements Engine {
      * @return if the position of the rectangle is valid in the mapLevel
      */
     private boolean isValidNextPosition (Entity entity, Coordinates<Double> nextPosition) {
+        Dimension dimension = entity.getDimension();
         for (CollisionPositions collisionPosition : POSITIONS_CHECK) {
-            Coordinates<Double> position =
-                    collisionPosition.calcPosition(nextPosition,entity.getDimension(),marginError);
+            Coordinates<Double> position = collisionPosition.calcPosition(nextPosition,dimension);
             int x = (position.getX() >= 0) ? position.getX().intValue()
                     : (position.getX().intValue() - 1);
             int y = (position.getY() >= 0) ? position.getY().intValue()
@@ -216,11 +213,13 @@ final class PhysicsEngine implements Engine {
     }
 
     /**
-     * Setter for the attribute marginError
-     * @param marginError the margin error
+     * TODO
+     * @param movementDecomposition
      */
-    public synchronized void setMarginError (double marginError) {
-        this.marginError = marginError;
+    public synchronized void setMovementDecomposition (int movementDecomposition) {
+        if (movementDecomposition < 1) throw new IllegalArgumentException(
+                "MovementDecomposition must be greater than 1 : " + movementDecomposition);
+        this.movementDecomposition = movementDecomposition;
     }
 
 }

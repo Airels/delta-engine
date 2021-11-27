@@ -2,37 +2,37 @@ package fr.r1r0r0.deltaengine.model.elements;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Dimension;
+import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 
 /**
  * A set of point that are used to calculate collision points and hit-box of entity
  */
 public enum CollisionPositions {
 
-    LEFT_TOP(0,0,1,1),
-    RIGHT_TOP(1,0,-1,1),
-    LEFT_BOT(0,1,1,-1),
-    RIGHT_BOT(1,1,-1,-1),
-    CENTER_CENTER(0.5,0.5,0,0),
-    CENTER_TOP(0.5,0,0,1),
-    CENTER_BOT(0.5,1,0,-1),
-    LEFT_CENTER(0,0.5,1,0),
-    RIGHT_CENTER(1,0.5,-1,0);
+    LEFT_TOP(0,0),
+    RIGHT_TOP(1,0),
+    LEFT_BOT(0,1),
+    RIGHT_BOT(1,1),
+    CENTER_CENTER(0.5,0.5),
+    CENTER_TOP(0.5,0),
+    CENTER_BOT(0.5,1),
+    LEFT_CENTER(0,0.5),
+    RIGHT_CENTER(1,0.5);
 
-    private final double ratioDimensionX;
-    private final double ratioDimensionY;
-    private final double ratioMarginX;
-    private final double ratioMarginY;
+    public static final CollisionPositions[] BASIC_COLLISION_POSITION = new CollisionPositions[]{
+            LEFT_TOP,RIGHT_TOP,LEFT_BOT,RIGHT_BOT};
+
+    private final double ratioX;
+    private final double ratioY;
 
     /**
      * Constructor
-     * @param ratioDimensionX a ratio of dimension X
-     * @param ratioDimensionY a ratio of dimension Y
+     * @param ratioX a ratio of dimension X
+     * @param ratioY a ratio of dimension Y
      */
-    CollisionPositions (double ratioDimensionX, double ratioDimensionY, double ratioMarginX, double ratioMarginY) {
-        this.ratioDimensionX = ratioDimensionX;
-        this.ratioDimensionY = ratioDimensionY;
-        this.ratioMarginX = ratioMarginX;
-        this.ratioMarginY = ratioMarginY;
+    CollisionPositions (double ratioX, double ratioY) {
+        this.ratioX = ratioX;
+        this.ratioY = ratioY;
     }
 
     /**
@@ -42,24 +42,54 @@ public enum CollisionPositions {
      * @return the position calculate in a rectangle
      */
     public Coordinates<Double> calcPosition (Coordinates<Double> topLeft, Dimension dimension) {
-        return calcPosition(topLeft,dimension,0);
+        return new Coordinates<>(
+                topLeft.getX() + ratioX * dimension.getWidth(),
+                topLeft.getY() + ratioY * dimension.getHeight()
+        );
     }
 
     /**
-     * Return the position calculate in a rectangle with a margin.
-     *  The margin is used to calc a point in a rectangle with a lesser size, but with the same center.
-     * @param topLeft the top-left point
-     * @param dimension the dimension of the rectangle
-     * @param margin a margin
-     * @return the position calculate in a rectangle with a margin.
+     * TODO
+     * @param entity
+     * @return
      */
-    public Coordinates<Double> calcPosition (Coordinates<Double> topLeft, Dimension dimension, double margin) {
-        if (margin < 0) throw new IllegalArgumentException("Margin must be greater than 0 : " + margin);
-        if (0.5 < margin) throw new IllegalArgumentException("Margin must be lower than 0.5 : " + margin);
-        return new Coordinates<>(
-                topLeft.getX() + (ratioDimensionX + margin*ratioMarginX)*dimension.getWidth(),
-                topLeft.getY() + (ratioDimensionY + margin*ratioMarginY)*dimension.getHeight()
-        );
+    public static Coordinates<Double> calcTopLetHitBox (Entity entity) {
+        return calcTopLetHitBox(entity.getCoordinates(),entity.getDimension(),entity.getHitBox());
+    }
+
+    /**
+     * TODO
+     * @param topLeftDimension
+     * @param dimension
+     * @param hitBox
+     * @return
+     */
+    private static Coordinates<Double> calcTopLetHitBox (Coordinates<Double> topLeftDimension,
+                                                        Dimension dimension, Dimension hitBox) {
+        double deltaDimensionX = (dimension.getWidth() - hitBox.getWidth()) / 2;
+        double deltaDimensionY = (dimension.getHeight() - hitBox.getHeight()) / 2;
+        return new Coordinates<>(topLeftDimension.getX() + RIGHT_BOT.ratioX * deltaDimensionX,
+                topLeftDimension.getY() + RIGHT_BOT.ratioY * deltaDimensionY);
+    }
+
+    /**
+     * TODO
+     * @param entity
+     * @return
+     */
+    public static Coordinates<Double> calcCenterPosition (Entity entity) {
+        return calcCenterPosition(entity.getCoordinates(),entity.getDimension());
+    }
+
+    /**
+     * TODO
+     * @param topLeft
+     * @param dimension
+     * @return
+     */
+    private static Coordinates<Double> calcCenterPosition (Coordinates<Double> topLeft, Dimension dimension) {
+        Coordinates<Double> rightBot = RIGHT_BOT.calcPosition(topLeft,dimension);
+        return new Coordinates<>((topLeft.getX() + rightBot.getX()) / 2,(topLeft.getY() + rightBot.getY()) / 2);
     }
 
     /**

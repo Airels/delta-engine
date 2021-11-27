@@ -24,6 +24,7 @@ public final class EntityAttributes {
     private Coordinates<Double> coordinates;
     private Sprite sprite;
     private Dimension dimension;
+    private Dimension hitBox;
     private Direction direction;
     private double speed;
     private AI attachedAI;
@@ -32,6 +33,7 @@ public final class EntityAttributes {
     private final Collection<AttributeListener<Coordinates<Double>>> coordinatesListeners;
     private final Collection<AttributeListener<Sprite>> spriteListeners;
     private final Collection<AttributeListener<Dimension>> dimensionListeners;
+    private final Collection<AttributeListener<Dimension>> hitBoxListeners;
     private final Collection<AttributeListener<Direction>> directionListeners;
     private final Collection<AttributeListener<Double>> speedListeners;
 
@@ -43,14 +45,17 @@ public final class EntityAttributes {
      * @param coordinates initial coordinates of entity
      * @param sprite      initial sprite of entity
      * @param dimension   dimension of entity
+     * @param hitBox TODO
      * @param direction   initial direction of entity
      * @param speed       initial speed of entity
      */
-    EntityAttributes(String name, Coordinates<Double> coordinates, Sprite sprite, Dimension dimension, Direction direction, double speed) {
+    EntityAttributes(String name, Coordinates<Double> coordinates, Sprite sprite, Dimension dimension,
+                     Dimension hitBox, Direction direction, double speed) {
         this.name = name;
         this.coordinates = coordinates;
         this.sprite = sprite;
         this.dimension = dimension;
+        this.hitBox = hitBox;
         this.direction = direction;
         this.speed = speed;
         this.collisionsEvents = new HashMap<>();
@@ -58,6 +63,7 @@ public final class EntityAttributes {
         coordinatesListeners = new LinkedList<>();
         spriteListeners = new LinkedList<>();
         dimensionListeners = new LinkedList<>();
+        hitBoxListeners = new LinkedList<>();
         directionListeners = new LinkedList<>();
         speedListeners = new LinkedList<>();
     }
@@ -132,6 +138,23 @@ public final class EntityAttributes {
         this.dimension = dimension;
 
         dimensionListeners.forEach(e -> e.attributeUpdated(oldDimension, dimension));
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    public Dimension getHitBox(){return hitBox;}
+
+    /**
+     * TODO
+     * @param dimension
+     */
+    public void setHitBox(Dimension dimension) {
+        Dimension oldHitBox = this.hitBox;
+        this.hitBox = hitBox;
+
+        hitBoxListeners.forEach(e -> e.attributeUpdated(oldHitBox, hitBox));
     }
 
     /**
