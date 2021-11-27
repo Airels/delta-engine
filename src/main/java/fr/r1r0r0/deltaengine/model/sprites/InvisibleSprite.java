@@ -8,11 +8,6 @@ import javafx.scene.shape.Rectangle;
  */
 public final class InvisibleSprite implements Sprite {
 
-    /**
-     * used to get an instance Invisible Sprite
-     */
-    public final static InvisibleSprite INSTANCE = new InvisibleSprite();
-
     private final Node node;
 
     /**
@@ -38,6 +33,6 @@ public final class InvisibleSprite implements Sprite {
      * @return an instance Invisible Sprite
      */
     public static InvisibleSprite getInstance() {
-        return INSTANCE;
+        return new InvisibleSprite();
     }
 }
