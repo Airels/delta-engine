@@ -141,22 +141,28 @@ public final class KernelEngine {
     }
 
     /**
-     * Do a tick on the DeltaEngine
+     * Do a manual tick on the DeltaEngine
      * (useful to render only 1 frame, when modifications are made, and you need to render them).
      * Only works if current map is halted, if isn't, this method has no effect
      */
     public void tick() {
+        for (Engines e : Engines.values()) {
+            tick(e);
+        }
+    }
+
+    /**
+     * Do a manual tick on a specific Engine of the DeltaEngine
+     * (useful to compute only 1 frame, when modifications are made, and you need to render them).
+     * Only works if current map is halted, if isn't, this method has no effect
+     */
+    public void tick(Engines engine) {
         if (!currentMapHalted) return;
 
-        for (Engines e : Engines.values()) {
-            if (e == Engines.GRAPHICS_ENGINE) {
-                try {
-                    JavaFXCommand.runAndWait(graphicsEngine);
-                } catch (InterruptedException ignored) {}
-            } else {
-                getEngine(e).run();
-            }
-        }
+        if (engine == Engines.GRAPHICS_ENGINE)
+            Platform.runLater(graphicsEngine);
+        else
+            getEngine(engine).run();
     }
 
     /**
