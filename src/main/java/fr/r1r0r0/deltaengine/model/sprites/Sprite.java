@@ -19,6 +19,7 @@ public interface Sprite {
      * @deprecated avoid using this elsewhere than in Engine
      * @return the Sprite object
      */
+    @Deprecated
     Node getNode();
 
     /**
