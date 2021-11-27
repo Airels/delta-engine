@@ -102,12 +102,21 @@ final class PhysicsEngine implements Engine {
         Coordinates<Double> nextCoordinate;
         Direction direction;
         double speed;
+        Dimension dimension;
+        Coordinates<Integer> blockTarget;
         for (Entity entity : entities) {
             direction = entity.getDirection();
             if (direction == Direction.IDLE) continue;
             previousCoordinate = entity.getCoordinates();
             speed = entity.getSpeed();
+            dimension = entity.getDimension();
+            blockTarget = entity.getBlockTarget();
             for (int i = 0 ; i < movementDecomposition ; i++) {
+                if (blockTarget != null && isOnTarget(previousCoordinate,dimension,blockTarget)) {
+                    entity.resetBlockTarget();
+                    entity.setDirection(Direction.IDLE);
+                    break;
+                }
                 nextCoordinate = calcNextPosition(previousCoordinate,direction,speed,timeRatio);
                 if ( ! isValidNextPosition(entity,nextCoordinate)) break;
                 previousCoordinate = nextCoordinate;
@@ -115,6 +124,13 @@ final class PhysicsEngine implements Engine {
             if (previousCoordinate.equals(entity.getCoordinates())) entity.setDirection(Direction.IDLE);
             else entity.setCoordinates(previousCoordinate);
         }
+    }
+
+    private boolean isOnTarget (Coordinates<Double> topLeft, Dimension dimension, Coordinates<Integer> target) {
+        Coordinates<Integer> topLeftInteger = Coordinates.doubleToInteger(topLeft);
+        Coordinates<Integer> botLeftInteger = Coordinates.doubleToInteger(
+                CollisionPositions.RIGHT_BOT.calcPosition(topLeft,dimension));
+        return topLeftInteger.equals(target) && botLeftInteger.equals(target);
     }
 
     /**
@@ -177,12 +193,9 @@ final class PhysicsEngine implements Engine {
     private boolean isValidNextPosition (Entity entity, Coordinates<Double> nextPosition) {
         Dimension dimension = entity.getDimension();
         for (CollisionPositions collisionPosition : POSITIONS_CHECK) {
-            Coordinates<Double> position = collisionPosition.calcPosition(nextPosition,dimension);
-            int x = (position.getX() >= 0) ? position.getX().intValue()
-                    : (position.getX().intValue() - 1);
-            int y = (position.getY() >= 0) ? position.getY().intValue()
-                    : (position.getY().intValue() - 1);
-            if ( ! mapLevel.getCell(x,y).isCrossableBy(entity)) return false;
+            Coordinates<Integer> position = Coordinates.doubleToInteger(
+                    collisionPosition.calcPosition(nextPosition,dimension));
+            if ( ! mapLevel.getCell(position.getX(),position.getY()).isCrossableBy(entity)) return false;
         }
         return true;
     }

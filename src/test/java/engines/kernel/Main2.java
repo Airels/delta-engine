@@ -27,7 +27,7 @@ public class Main2 {
         KernelEngine deltaEngine = DeltaEngine.launch();
         deltaEngine.setFrameRate(60);
         deltaEngine.printFrameRate(true);
-        deltaEngine.setMovementDecomposition(10);
+        deltaEngine.setMovementDecomposition(100);
 
 
         MapLevel mapLevel;
@@ -39,7 +39,7 @@ public class Main2 {
 
         Entity red = new Entity("red", new Coordinates<>(8., 8.), new Rectangle(0.5, 0.5, Color.RED),
                 new Dimension(0.8, 0.8));
-        red.setSpeed(0);
+        red.setSpeed(10);
         mapLevel.addEntity(red);
 
 
@@ -67,14 +67,18 @@ public class Main2 {
         deltaEngine.setInput(Key.D, moveRightEvent);
         */
 
-        InputEvent moveUpEventRed = new InputEvent(new ChangeMove(red, Direction.UP), new ChangeMove(red, Direction.IDLE));
-        InputEvent moveDownEventRed = new InputEvent(new ChangeMove(red, Direction.DOWN), new ChangeMove(red, Direction.IDLE));
-        InputEvent moveLeftEventRed = new InputEvent(new ChangeMove(red, Direction.LEFT), new ChangeMove(red, Direction.IDLE));
-        InputEvent moveRightEventRed = new InputEvent(new ChangeMove(red, Direction.RIGHT), new ChangeMove(red, Direction.IDLE));
+        // new ChangeMove(red, Direction.IDLE)
+        InputEvent moveUpEventRed = new InputEvent(new ChangeMove(red, Direction.UP), null);
+        InputEvent moveDownEventRed = new InputEvent(new ChangeMove(red, Direction.DOWN), null);
+        InputEvent moveLeftEventRed = new InputEvent(new ChangeMove(red, Direction.LEFT), null);
+        InputEvent moveRightEventRed = new InputEvent(new ChangeMove(red, Direction.RIGHT),null);
         deltaEngine.setInput(Key.ARROW_UP, moveUpEventRed);
         deltaEngine.setInput(Key.ARROW_LEFT, moveLeftEventRed);
         deltaEngine.setInput(Key.ARROW_DOWN, moveDownEventRed);
         deltaEngine.setInput(Key.ARROW_RIGHT, moveRightEventRed);
+
+        InputEvent inputEventBot = new InputEvent(() -> red.setBlockTarget(new Coordinates<>(7,8)),null);
+        deltaEngine.setInput(Key.S,inputEventBot);
 
         InputEvent exitEvent = new InputEvent(() -> System.exit(0), null);
         deltaEngine.setInput(Key.ESCAPE, exitEvent);
@@ -184,7 +188,6 @@ public class Main2 {
 
         @Override
         public void trigger() {
-            e.setSpeed(1);
             e.setDirection(direction);
         }
     }

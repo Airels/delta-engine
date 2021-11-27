@@ -49,6 +49,14 @@ public final class Coordinates <T extends Number> {
                 y.doubleValue() + direction.getY() * multiplier);
     }
 
+    public static Coordinates<Integer> doubleToInteger (Coordinates<Double> coordinates) {
+        int xInt = (coordinates.getX() >= 0) ? coordinates.getX().intValue()
+                : (coordinates.getX().intValue() - 1);
+        int yInt = (coordinates.getY() >= 0) ? coordinates.getY().intValue()
+                : (coordinates.getY().intValue() - 1);
+        return new Coordinates<>(xInt,yInt);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

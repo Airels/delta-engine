@@ -73,26 +73,6 @@ public enum CollisionPositions {
     }
 
     /**
-     * TODO
-     * @param entity
-     * @return
-     */
-    public static Coordinates<Double> calcCenterPosition (Entity entity) {
-        return calcCenterPosition(entity.getCoordinates(),entity.getDimension());
-    }
-
-    /**
-     * TODO
-     * @param topLeft
-     * @param dimension
-     * @return
-     */
-    private static Coordinates<Double> calcCenterPosition (Coordinates<Double> topLeft, Dimension dimension) {
-        Coordinates<Double> rightBot = RIGHT_BOT.calcPosition(topLeft,dimension);
-        return new Coordinates<>((topLeft.getX() + rightBot.getX()) / 2,(topLeft.getY() + rightBot.getY()) / 2);
-    }
-
-    /**
      * Return if the collisionPoint given is contain in the hit-box described by the topLeft point and the dimension.
      * The hit-box is a rectangle, with a left-top point and width/height are determined by dimension.
      * The points is contain in the rectangle if the condition are satisfied :

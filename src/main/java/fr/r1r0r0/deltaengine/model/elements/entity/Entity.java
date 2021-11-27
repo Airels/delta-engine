@@ -219,4 +219,16 @@ public class Entity implements Element<Double> {
     public EntityAttributes getAttributes() {
         return entityAttributes;
     }
+
+    private Coordinates<Integer> blockTarget;
+    public void setBlockTarget (Coordinates<Integer> blockTarget) {
+        this.blockTarget = blockTarget;
+    }
+    public Coordinates<Integer> getBlockTarget () {
+        return blockTarget;
+    }
+    public void resetBlockTarget () {
+        blockTarget = null;
+    }
+
 }
