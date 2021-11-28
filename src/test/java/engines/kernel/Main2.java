@@ -27,7 +27,7 @@ public class Main2 {
         KernelEngine deltaEngine = DeltaEngine.launch();
         deltaEngine.setFrameRate(60);
         deltaEngine.printFrameRate(true);
-        deltaEngine.setMovementDecomposition(100);
+        // deltaEngine.setMovementDecomposition(100);
 
 
         MapLevel mapLevel;

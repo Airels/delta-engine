@@ -66,12 +66,12 @@ final class PhysicsEngine implements Engine {
         previousRunTime = currentRunTime;
         if (mapLevel != null) {
             Collection<Entity> entities = mapLevel.getEntities();
-            HashSet<Event> events = new HashSet<>();
+
             for (int i = 0 ; i < movementDecomposition ; i++) {
                 updateCoordinates(entities,timeRatio);
-                checkCollisions(entities,events);
             }
-            events.forEach(Event::checkEvent);
+
+            checkCollisions(entities).forEach(Event::checkEvent);
         }
     }
 
@@ -80,9 +80,10 @@ final class PhysicsEngine implements Engine {
      * If there is a collision between 2 entity A and B, the list of event that will be return will contain
      * the event from A to B and the event from B to A.
      * @param entities a collection of entity
-     * @param events a set of event
      */
-    private void checkCollisions (Collection<Entity> entities, Set<Event> events) {
+    private Set<Event> checkCollisions (Collection<Entity> entities) {
+        HashSet<Event> events = new HashSet<>();
+
         for (Entity source : entities) {
             for (Entity target : entities) {
                 if (source.testCollide(target)) {
@@ -91,6 +92,8 @@ final class PhysicsEngine implements Engine {
                 }
             }
         }
+
+        return events;
     }
 
     /**

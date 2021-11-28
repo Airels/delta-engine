@@ -30,7 +30,6 @@ import javafx.stage.Stage;
 public final class KernelEngine {
 
     public final static int DEFAULT_FRAME_RATE = 60;
-    public final static int PHYSICS_MOVEMENT_DECOMPOSITION_MULTIPLICATOR = 10;
 
     private final InputEngine inputEngine;
     private final AIEngine iaEngine;
@@ -91,6 +90,7 @@ public final class KernelEngine {
     void init(Stage stage) {
         if (initialized) return;
 
+        physicsEngine.setMovementDecomposition(100);
         inputEngine.setStage(stage);
         graphicsEngine.setStage(stage);
 
@@ -121,7 +121,6 @@ public final class KernelEngine {
                     } else {
                         getEngine(e).run();
                     }
-
                 }
             } else {
                 inputEngine.run();
@@ -191,7 +190,6 @@ public final class KernelEngine {
         this.frameRate = frameRate;
         this.optimalTime = 1000 / frameRate;
         this.physicsEngine.setMaxRunDelta(this.frameRate);
-        this.physicsEngine.setMovementDecomposition(this.frameRate * PHYSICS_MOVEMENT_DECOMPOSITION_MULTIPLICATOR);
     }
 
     /**
