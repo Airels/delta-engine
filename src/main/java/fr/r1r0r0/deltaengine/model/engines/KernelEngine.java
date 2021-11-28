@@ -30,6 +30,8 @@ import javafx.stage.Stage;
 public final class KernelEngine {
 
     public final static int DEFAULT_FRAME_RATE = 60;
+    public final static int PHYSICS_MOVEMENT_DECOMPOSITION_MULTIPLICATOR = 10;
+
     private final InputEngine inputEngine;
     private final AIEngine iaEngine;
     private final PhysicsEngine physicsEngine;
@@ -113,7 +115,9 @@ public final class KernelEngine {
             if (!currentMapHalted) {
                 for (Engines e : Engines.values()) {
                     if (e == Engines.GRAPHICS_ENGINE) {
-                        Platform.runLater(graphicsEngine);
+                        try {
+                            JavaFXCommand.runAndWait(graphicsEngine);
+                        } catch (InterruptedException ignored) {}
                     } else {
                         getEngine(e).run();
                     }
@@ -121,7 +125,9 @@ public final class KernelEngine {
                 }
             } else {
                 inputEngine.run();
-                Platform.runLater(graphicsEngine);
+                try {
+                    JavaFXCommand.runAndWait(graphicsEngine);
+                } catch (InterruptedException ignored) {}
             }
 
             updateDuration = System.currentTimeMillis() - updateStart;
@@ -141,22 +147,28 @@ public final class KernelEngine {
     }
 
     /**
-     * Do a tick on the DeltaEngine
+     * Do a manual tick on the DeltaEngine
      * (useful to render only 1 frame, when modifications are made, and you need to render them).
      * Only works if current map is halted, if isn't, this method has no effect
      */
     public void tick() {
+        for (Engines e : Engines.values()) {
+            tick(e);
+        }
+    }
+
+    /**
+     * Do a manual tick on a specific Engine of the DeltaEngine
+     * (useful to compute only 1 frame, when modifications are made, and you need to render them).
+     * Only works if current map is halted, if isn't, this method has no effect
+     */
+    public void tick(Engines engine) {
         if (!currentMapHalted) return;
 
-        for (Engines e : Engines.values()) {
-            if (e == Engines.GRAPHICS_ENGINE) {
-                try {
-                    JavaFXCommand.runAndWait(graphicsEngine);
-                } catch (InterruptedException ignored) {}
-            } else {
-                getEngine(e).run();
-            }
-        }
+        if (engine == Engines.GRAPHICS_ENGINE)
+            Platform.runLater(graphicsEngine);
+        else
+            getEngine(engine).run();
     }
 
     /**
@@ -179,14 +191,7 @@ public final class KernelEngine {
         this.frameRate = frameRate;
         this.optimalTime = 1000 / frameRate;
         this.physicsEngine.setMaxRunDelta(this.frameRate);
-    }
-
-    /**
-     * TODO
-     * @param movementDecomposition
-     */
-    public void setMovementDecomposition(int movementDecomposition) {
-        this.physicsEngine.setMovementDecomposition(movementDecomposition);
+        this.physicsEngine.setMovementDecomposition(this.frameRate * PHYSICS_MOVEMENT_DECOMPOSITION_MULTIPLICATOR);
     }
 
     /**

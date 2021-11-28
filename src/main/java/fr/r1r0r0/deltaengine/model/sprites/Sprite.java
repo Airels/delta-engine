@@ -12,13 +12,12 @@ import javafx.scene.Node;
  */
 public interface Sprite {
 
-    Sprite INVISIBLE_SPRITE = InvisibleSprite.getInstance();
-
     /**
      * The Sprite object
      * @deprecated avoid using this elsewhere than in Engine
      * @return the Sprite object
      */
+    @Deprecated
     Node getNode();
 
     /**
