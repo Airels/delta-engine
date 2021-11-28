@@ -107,8 +107,6 @@ class PhysicsEngineTest {
         Dimension pukDim = new Dimension(0.99,0.99); //
         Entity entity = new Entity("Puk", pukCoords1,InvisibleSprite.getInstance(),pukDim);
 
-        assertTrue(physicsEngine.fitOnCell(entity));
-
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.LEFT));
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.RIGHT));
         assertTrue(physicsEngine.canGoToNextCell(entity, Direction.DOWN));
