@@ -208,7 +208,6 @@ public class Entity implements Element<Double> {
         for (Coordinates<Double> collisionPoint : getCollisionPoints()) {
             if (CollisionPositions.isInHitBox(otherCoordinates,otherHitBox,collisionPoint)) return true;
         }
-
         return false;
     }
 

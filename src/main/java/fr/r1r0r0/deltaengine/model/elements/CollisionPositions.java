@@ -93,4 +93,34 @@ public enum CollisionPositions {
                 && collisionPoint.getY() <= (topLeft.getY() + dimension.getHeight());
     }
 
+    /**
+     * TODO
+     * @param entity1
+     * @param entity2
+     * @return
+     */
+    public static boolean simplyCollide (Entity entity1, Entity entity2) {
+        Coordinates<Double> topLeft1 = CollisionPositions.calcTopLetHitBox(entity1);
+        Coordinates<Double> topLeft2 = CollisionPositions.calcTopLetHitBox(entity2);
+        Coordinates<Double> botRight1 = CollisionPositions.RIGHT_BOT.calcPosition(topLeft1,entity1.getHitBox());
+        Coordinates<Double> botRight2 = CollisionPositions.RIGHT_BOT.calcPosition(topLeft2,entity2.getHitBox());
+        double minX1 = topLeft1.getX();
+        double maxX1 = botRight1.getX();
+        double minY1 = topLeft1.getY();
+        double maxY1 = botRight1.getY();
+        double minX2 = topLeft2.getX();
+        double maxX2 = botRight2.getX();
+        double minY2 = topLeft2.getY();
+        double maxY2 = botRight2.getY();
+        boolean testX = (minX1 <= minX2 && minX2 <= maxX1)
+                || (minX1 <= maxX2 && maxX2 <= maxX1)
+                || (minX2 <= minX1 && minX1 <= maxX2)
+                || (minX2 <= maxX1 && maxX1 <= maxX2);
+        boolean testY = (minY1 <= minY2 && minY2 <= maxY1)
+                || (minY1 <= maxY2 && maxY2 <= maxY1)
+                || (minY2 <= minY1 && minY1 <= maxY2)
+                || (minY2 <= maxY1 && maxY1 <= maxY2);
+        return testX && testY;
+    }
+
 }

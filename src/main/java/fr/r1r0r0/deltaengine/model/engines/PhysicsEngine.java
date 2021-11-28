@@ -3,11 +3,13 @@ package fr.r1r0r0.deltaengine.model.engines;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.Direction;
+import fr.r1r0r0.deltaengine.model.events.VoidEvent;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.elements.CollisionPositions;
 import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.events.Event;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -66,12 +68,11 @@ final class PhysicsEngine implements Engine {
         previousRunTime = currentRunTime;
         if (mapLevel != null) {
             Collection<Entity> entities = mapLevel.getEntities();
-
             for (int i = 0 ; i < movementDecomposition ; i++) {
                 updateCoordinates(entities,timeRatio);
             }
-
-            checkCollisions(entities).forEach(Event::checkEvent);
+            ArrayList<Entity> entitiesArrayList = new ArrayList<>(entities);
+            checkCollisions(entitiesArrayList).forEach(Event::checkEvent);
         }
     }
 
@@ -81,18 +82,33 @@ final class PhysicsEngine implements Engine {
      * the event from A to B and the event from B to A.
      * @param entities a collection of entity
      */
-    private Set<Event> checkCollisions (Collection<Entity> entities) {
+    private Set<Event> checkCollisions (ArrayList<Entity> entities) {
         HashSet<Event> events = new HashSet<>();
-
-        for (Entity source : entities) {
-            for (Entity target : entities) {
-                if (source.testCollide(target)) {
-                    events.add(source.getCollisionEvent(target));
-                    events.add(target.getCollisionEvent(source));
+        Entity source;
+        Entity target;
+        Event sourceEvent;
+        Event targetEvent;
+        int size = entities.size();
+        for (int i = 0 ; i < size ; i++) {
+            source = entities.get(i);
+            for (int j = i+1 ; j < size ; j++) {
+                target = entities.get(j);
+                sourceEvent = source.getCollisionEvent(target);
+                targetEvent = target.getCollisionEvent(source);
+                if ( (sourceEvent != VoidEvent.INSTANCE || targetEvent != VoidEvent.INSTANCE)
+                        && (source.testCollide(target) || target.testCollide(source)) ) {
+                    events.add(sourceEvent);
+                    events.add(targetEvent);
                 }
+                /*
+                if ( (sourceEvent != VoidEvent.INSTANCE || targetEvent != VoidEvent.INSTANCE)
+                        && CollisionPositions.simplyCollide(source,target)) {
+                    events.add(sourceEvent);
+                    events.add(targetEvent);
+                }
+                */
             }
         }
-
         return events;
     }
 
