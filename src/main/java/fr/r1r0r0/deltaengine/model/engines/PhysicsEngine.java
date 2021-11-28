@@ -61,12 +61,17 @@ final class PhysicsEngine implements Engine {
     @Override
     public synchronized void run() {
         long currentRunTime = System.currentTimeMillis();
-        long deltaTime = Math.min(currentRunTime - previousRunTime, maxRunDelta);
+        double timeRatio = ((double) Math.min(currentRunTime - previousRunTime, maxRunDelta) / 1000)
+                / movementDecomposition;
         previousRunTime = currentRunTime;
         if (mapLevel != null) {
             Collection<Entity> entities = mapLevel.getEntities();
-            updateCoordinates(entities,deltaTime);
-            checkCollisions(entities).forEach(Event::checkEvent);
+            HashSet<Event> events = new HashSet<>();
+            for (int i = 0 ; i < movementDecomposition ; i++) {
+                updateCoordinates(entities,timeRatio);
+                checkCollisions(entities,events);
+            }
+            events.forEach(Event::checkEvent);
         }
     }
 
@@ -75,62 +80,62 @@ final class PhysicsEngine implements Engine {
      * If there is a collision between 2 entity A and B, the list of event that will be return will contain
      * the event from A to B and the event from B to A.
      * @param entities a collection of entity
-     * @return a set of event (without duplicate element)
+     * @param events a set of event
      */
-    private Set<Event> checkCollisions (Collection<Entity> entities) {
-        Set<Event> collisionEvents = new HashSet<>(entities.size());
+    private void checkCollisions (Collection<Entity> entities, Set<Event> events) {
         for (Entity source : entities) {
             for (Entity target : entities) {
                 if (source.testCollide(target)) {
-                    collisionEvents.add(source.getCollisionEvent(target));
-                    collisionEvents.add(target.getCollisionEvent(source));
+                    events.add(source.getCollisionEvent(target));
+                    events.add(target.getCollisionEvent(source));
                 }
             }
         }
-        return collisionEvents;
     }
 
     /**
      * Update the coordinates of each entity in a collection of entity
      * If the coordinates can not be update, because of an illegal movement, the direction of the entity is set to IDLE
      * @param entities a collection of entity
-     * @param deltaTime the delta of time used to calc the movement
+     * @param timeRatio a ratio of time used to calc the movement
      */
-    private void updateCoordinates (Collection<Entity> entities, long deltaTime) {
-        double timeRatio = ((double) deltaTime / 1000) / movementDecomposition;
-        Coordinates<Double> previousCoordinate;
+    private void updateCoordinates (Collection<Entity> entities, double timeRatio) {
+        Coordinates<Double> coordinates;
         Coordinates<Double> nextCoordinate;
         Direction direction;
-        double speed;
-        Dimension dimension;
-        Coordinates<Integer> blockTarget;
         for (Entity entity : entities) {
             direction = entity.getDirection();
             if (direction == Direction.IDLE) continue;
-            previousCoordinate = entity.getCoordinates();
-            speed = entity.getSpeed();
-            dimension = entity.getDimension();
-            blockTarget = entity.getBlockTarget();
-            for (int i = 0 ; i < movementDecomposition ; i++) {
-                if (blockTarget != null && isOnTarget(previousCoordinate,dimension,blockTarget)) {
-                    entity.resetBlockTarget();
-                    entity.setDirection(Direction.IDLE);
-                    break;
-                }
-                nextCoordinate = calcNextPosition(previousCoordinate,direction,speed,timeRatio);
-                if ( ! isValidNextPosition(entity,nextCoordinate)) break;
-                previousCoordinate = nextCoordinate;
+            coordinates = entity.getCoordinates();
+            if (isOnTarget(coordinates,entity.getDimension(),entity.getBlockTarget())) {
+                entity.resetBlockTarget();
+                entity.setDirection(Direction.IDLE);
+                continue;
             }
-            if (previousCoordinate.equals(entity.getCoordinates())) entity.setDirection(Direction.IDLE);
-            else entity.setCoordinates(previousCoordinate);
+            nextCoordinate = calcNextPosition(coordinates,direction,entity.getSpeed(),timeRatio);
+            if (isValidNextPosition(entity,nextCoordinate)) entity.setCoordinates(nextCoordinate);
+            else entity.setDirection(Direction.IDLE);
         }
     }
 
     private boolean isOnTarget (Coordinates<Double> topLeft, Dimension dimension, Coordinates<Integer> target) {
+        if (target == null) return false;
         Coordinates<Integer> topLeftInteger = Coordinates.doubleToInteger(topLeft);
         Coordinates<Integer> botLeftInteger = Coordinates.doubleToInteger(
                 CollisionPositions.RIGHT_BOT.calcPosition(topLeft,dimension));
         return topLeftInteger.equals(target) && botLeftInteger.equals(target);
+    }
+
+    /**
+     * Return if the entity can move with the direction given in argument
+     * @param entity an entity
+     * @param direction a direction
+     * @return if the entity can move with the direction given
+     */
+    public boolean isAvailableDirection (Entity entity, Direction direction) {
+        Coordinates<Double> nextPosition =
+                calcNextPosition(entity.getCoordinates(),direction,entity.getSpeed(),maxRunDeltaRatio);
+        return isValidNextPosition(entity,nextPosition);
     }
 
     /**
@@ -145,18 +150,6 @@ final class PhysicsEngine implements Engine {
     private Coordinates<Double> calcNextPosition (Coordinates<Double> topLeft, Direction direction,
                                                   double speed, double timeRatio) {
         return topLeft.getNextCoordinates(direction,speed * timeRatio);
-    }
-
-    /**
-     * Return if the entity can move with the direction given in argument
-     * @param entity an entity
-     * @param direction a direction
-     * @return if the entity can move with the direction given
-     */
-    public boolean isAvailableDirection (Entity entity, Direction direction) {
-        Coordinates<Double> nextPosition =
-                calcNextPosition(entity.getCoordinates(),direction,entity.getSpeed(),maxRunDeltaRatio);
-        return isValidNextPosition(entity,nextPosition);
     }
 
     /**

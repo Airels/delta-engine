@@ -431,16 +431,6 @@ public final class KernelEngine {
     }
 
     /**
-     * Return if the entity can move with the direction given in argument
-     * @param entity an entity
-     * @param direction a direction
-     * @return if the entity can move with the direction given
-     */
-    public boolean isAvailableDirection(Entity entity, Direction direction) {
-        return physicsEngine.isAvailableDirection(entity, direction);
-    }
-
-    /**
      * Check if an entity can go to the next cell according to given direction
      * @param entity Entity to check
      * @param direction Next direction
@@ -448,6 +438,16 @@ public final class KernelEngine {
      */
     public boolean canGoToNextCell (Entity entity, Direction direction) {
         return physicsEngine.canGoToNextCell(entity,direction);
+    }
+
+    /**
+     * Check if the entity can move with the direction given in argument
+     * @param entity Entity to check
+     * @param direction Next direction
+     * @return boolean true if entity can go to the direction, false otherwise
+     */
+    public boolean isAvailableDirection (Entity entity, Direction direction) {
+        return physicsEngine.isAvailableDirection(entity,direction);
     }
 
     /**
