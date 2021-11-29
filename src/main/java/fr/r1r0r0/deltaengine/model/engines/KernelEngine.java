@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelAlreadyExistException;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelDoesNotExistException;
 import fr.r1r0r0.deltaengine.model.Direction;
 import fr.r1r0r0.deltaengine.tools.JavaFXCommand;
-import fr.r1r0r0.deltaengine.model.elements.Element;
 import fr.r1r0r0.deltaengine.model.elements.HUDElement;
 import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
@@ -90,7 +88,7 @@ public final class KernelEngine {
     void init(Stage stage) {
         if (initialized) return;
 
-        physicsEngine.setMovementDecomposition(100);
+        physicsEngine.setPhysicalRate(100);
         inputEngine.setStage(stage);
         graphicsEngine.setStage(stage);
 
@@ -190,6 +188,10 @@ public final class KernelEngine {
         this.frameRate = frameRate;
         this.optimalTime = 1000 / frameRate;
         this.physicsEngine.setMaxRunDelta(this.frameRate);
+    }
+
+    public void setPhysicalRate(int physicalRate) {
+        this.physicsEngine.setPhysicalRate(physicalRate);
     }
 
     /**

@@ -26,6 +26,7 @@ public class Main2 {
     public static void main(String[] args) throws Exception {
         KernelEngine deltaEngine = DeltaEngine.launch();
         deltaEngine.setFrameRate(60);
+        deltaEngine.setPhysicalRate(100);
         deltaEngine.printFrameRate(true);
         // deltaEngine.setMovementDecomposition(100);
 

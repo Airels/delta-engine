@@ -36,7 +36,7 @@ final class PhysicsEngine implements Engine {
     private long previousRunTime;
     private long maxRunDelta;
     private double maxRunDeltaRatio;
-    private int movementDecomposition;
+    private int physicalRate;
 
     /**
      * Constructor
@@ -46,7 +46,7 @@ final class PhysicsEngine implements Engine {
         previousRunTime = System.currentTimeMillis();
         maxRunDelta = 0;
         maxRunDeltaRatio = 0;
-        movementDecomposition = 1;
+        physicalRate = 1;
     }
 
     /**
@@ -64,11 +64,11 @@ final class PhysicsEngine implements Engine {
     public synchronized void run() {
         long currentRunTime = System.currentTimeMillis();
         double timeRatio = ((double) Math.min(currentRunTime - previousRunTime, maxRunDelta) / 1000)
-                / movementDecomposition;
+                / physicalRate;
         previousRunTime = currentRunTime;
         if (mapLevel != null) {
             Collection<Entity> entities = mapLevel.getEntities();
-            for (int i = 0 ; i < movementDecomposition ; i++) {
+            for (int i = 0; i < physicalRate; i++) {
                 updateCoordinates(entities,timeRatio);
             }
             ArrayList<Entity> entitiesArrayList = new ArrayList<>(entities);
@@ -239,12 +239,12 @@ final class PhysicsEngine implements Engine {
 
     /**
      * TODO
-     * @param movementDecomposition
+     * @param physicalRate
      */
-    public synchronized void setMovementDecomposition (int movementDecomposition) {
-        if (movementDecomposition < 1) throw new IllegalArgumentException(
-                "MovementDecomposition must be greater than 1 : " + movementDecomposition);
-        this.movementDecomposition = movementDecomposition;
+    public synchronized void setPhysicalRate(int physicalRate) {
+        if (physicalRate < 1) throw new IllegalArgumentException(
+                "PhysicalRate must be greater than 1 : " + physicalRate);
+        this.physicalRate = physicalRate;
     }
 
 }
