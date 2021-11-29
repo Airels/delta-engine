@@ -44,12 +44,8 @@ public final class SoundEngine implements Engine {
         if (sounds.containsKey(sound.getName()))
             throw new SoundAlreadyExistException(sound);
 
-        try {
-            Media media = new Media(sound.getFile().toURI().toURL().toExternalForm());
-            sounds.put(sound.getName(), new MediaPlayer(media));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        Media media = new Media(getClass().getResource(sound.getPath()).toString());
+        sounds.put(sound.getName(), new MediaPlayer(media));
     }
 
     /**
