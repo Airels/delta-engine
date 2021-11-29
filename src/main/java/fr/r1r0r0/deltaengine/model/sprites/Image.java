@@ -22,7 +22,7 @@ public final class Image implements Sprite {
      */
     public Image(String path) throws FileNotFoundException {
         this.path = path;
-        imageView = new ImageView(new javafx.scene.image.Image(new FileInputStream(path)));
+        imageView = new ImageView(new javafx.scene.image.Image(getClass().getResourceAsStream(path)));
     }
 
     @Override
