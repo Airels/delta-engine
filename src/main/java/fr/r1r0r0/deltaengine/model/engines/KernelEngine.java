@@ -190,6 +190,11 @@ public final class KernelEngine {
         this.physicsEngine.setMaxRunDelta(this.frameRate);
     }
 
+    /**
+     * Allowing to set a new rate for the physics.
+     * More the value higher, more the precision is
+     * @param physicalRate new rate to define
+     */
     public void setPhysicalRate(int physicalRate) {
         this.physicsEngine.setPhysicalRate(physicalRate);
     }

@@ -1,5 +1,7 @@
 package fr.r1r0r0.deltaengine.tools.dialog;
 
+import fr.r1r0r0.deltaengine.tools.JavaFXCommand;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -22,8 +24,8 @@ import java.util.Optional;
  */
 public class Dialog {
 
-    private final Alert alert;
-    private final boolean exceptionAlert;
+    private Alert alert;
+    private boolean exceptionAlert;
 
     /**
      * Constructor of this class, who allows to init desired dialog
@@ -34,12 +36,18 @@ public class Dialog {
      * @param text            text of the dialog
      */
     public Dialog(DialogType dialogType, String applicationName, String title, String text) {
-        alert = new Alert(dialogType.getJfxType());
-        alert.setTitle(applicationName + " - " + dialogType.name().toLowerCase());
-        alert.setHeaderText(title);
-        alert.setContentText(text);
+        try {
+            JavaFXCommand.runAndWait(() -> {
+                alert = new Alert(dialogType.getJfxType());
+                alert.setTitle(applicationName + " - " + dialogType.name().toLowerCase());
+                alert.setHeaderText(title);
+                alert.setContentText(text);
 
-        exceptionAlert = false;
+                exceptionAlert = false;
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -51,36 +59,42 @@ public class Dialog {
      * @param e               exception to show
      */
     public Dialog(String applicationName, String title, Exception e) {
-        alert = new Alert(DialogType.ERROR.getJfxType());
-        alert.setTitle(applicationName + " - Critical error");
-        alert.setHeaderText(title);
-        alert.setContentText(e.getMessage());
+        try {
+            JavaFXCommand.runAndWait(() -> {
+                alert = new Alert(DialogType.ERROR.getJfxType());
+                alert.setTitle(applicationName + " - Critical error");
+                alert.setHeaderText(title);
+                alert.setContentText(e.getMessage());
 
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-        String exceptionText = sw.toString();
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String exceptionText = sw.toString();
 
-        Label label = new Label("Exception stacktrace :");
+                Label label = new Label("Exception stacktrace :");
 
-        TextArea exceptionTextArea = new TextArea(exceptionText);
-        exceptionTextArea.setEditable(false);
-        exceptionTextArea.setWrapText(true);
-        exceptionTextArea.setMaxWidth(Double.MAX_VALUE);
-        exceptionTextArea.setMaxHeight(Double.MAX_VALUE);
-        GridPane.setVgrow(exceptionTextArea, Priority.ALWAYS);
-        GridPane.setHgrow(exceptionTextArea, Priority.ALWAYS);
+                TextArea exceptionTextArea = new TextArea(exceptionText);
+                exceptionTextArea.setEditable(false);
+                exceptionTextArea.setWrapText(true);
+                exceptionTextArea.setMaxWidth(Double.MAX_VALUE);
+                exceptionTextArea.setMaxHeight(Double.MAX_VALUE);
+                GridPane.setVgrow(exceptionTextArea, Priority.ALWAYS);
+                GridPane.setHgrow(exceptionTextArea, Priority.ALWAYS);
 
-        GridPane expContent = new GridPane();
-        expContent.setMaxWidth(Double.MAX_VALUE);
-        expContent.add(label, 0, 0);
-        expContent.add(exceptionTextArea, 0, 1);
+                GridPane expContent = new GridPane();
+                expContent.setMaxWidth(Double.MAX_VALUE);
+                expContent.add(label, 0, 0);
+                expContent.add(exceptionTextArea, 0, 1);
 
-        alert.getDialogPane().setExpandableContent(expContent);
+                alert.getDialogPane().setExpandableContent(expContent);
 
-        e.printStackTrace();
+                e.printStackTrace();
 
-        exceptionAlert = true;
+                exceptionAlert = true;
+            });
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -90,52 +104,53 @@ public class Dialog {
      * @param message         message to show
      */
     public Dialog(String applicationName, String message) {
-        alert = new Alert(Alert.AlertType.NONE);
-        alert.setTitle(applicationName);
-        alert.setContentText(message);
+        try {
+            JavaFXCommand.runAndWait(() -> {
+                alert = new Alert(Alert.AlertType.NONE);
+                alert.setTitle(applicationName);
+                alert.setContentText(message);
 
-        alert.getDialogPane().getButtonTypes().clear();
-        alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
-        alert.initStyle(StageStyle.UNDECORATED);
+                alert.getDialogPane().getButtonTypes().clear();
+                alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
+                alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+                alert.initStyle(StageStyle.UNDECORATED);
 
-        exceptionAlert = false;
-    }
-
-    /**
-     * Used to get buttons linked to dialog
-     *
-     * @return observable list of buttons of dialog
-     */
-    public ObservableList<ButtonType> getButtons() {
-        return alert.getButtonTypes();
+                exceptionAlert = false;
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * To show dialog
      */
     public void show() {
-        playSound();
-        alert.show();
+        Platform.runLater(() -> {
+            playSound();
+            alert.show();
 
-        if (exceptionAlert)
-            alert.setOnCloseRequest(event -> System.exit(1));
+            if (exceptionAlert)
+                alert.setOnCloseRequest(event -> System.exit(1));
+        });
     }
 
     /**
-     * To show dialog
-     *
-     * @return result of dialog
+     * To show dialog and wait its closure by the user
      */
-    public Optional<ButtonType> showAndWait() {
-        playSound();
+    public void showAndWait() {
+        try {
+            JavaFXCommand.runAndWait(() -> {
+                playSound();
 
-        if (exceptionAlert) {
-            alert.showAndWait();
-            System.exit(1);
-            return Optional.empty();
-        } else
-            return alert.showAndWait();
+                if (exceptionAlert) {
+                    alert.showAndWait();
+                    System.exit(1);
+                }
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -156,7 +171,11 @@ public class Dialog {
      * To close dialog
      */
     public void close() {
-        alert.close();
+        try {
+            JavaFXCommand.runAndWait(alert::close);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
 
