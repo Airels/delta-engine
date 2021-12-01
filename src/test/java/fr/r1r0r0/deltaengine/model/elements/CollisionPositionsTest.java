@@ -1,10 +1,14 @@
 package fr.r1r0r0.deltaengine.model.elements;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Dimension;
-import org.junit.jupiter.api.Test;
 
 class CollisionPositionsTest {
 
@@ -40,36 +44,35 @@ class CollisionPositionsTest {
                 CollisionPositions.LEFT_BOT, CollisionPositions.RIGHT_BOT};
         double margin = 0.2;
 
-        /*
-        TODO
+
         Coordinates<Double> position =
-                POSITIONS_CHECK[0].calcPosition(collPoint3, wallDim, margin);
+                POSITIONS_CHECK[0].calcPosition(collPoint3, wallDim);
         assertEquals(position.getX(),position.getY());
         assertTrue(CollisionPositions.isInHitBox(entity,entityDim1,position));
 
-        position = POSITIONS_CHECK[1].calcPosition(collPoint3, wallDim, margin);
+        position = POSITIONS_CHECK[1].calcPosition(collPoint3, wallDim);
         assertNotEquals(position.getX(),position.getY());
         assertFalse(CollisionPositions.isInHitBox(entity,entityDim1,position));
 
 
         // test with same entity but reduced by margin
         Coordinates<Double> position2 =
-                POSITIONS_CHECK[0].calcPosition(entity, entityDim1, margin);
+                POSITIONS_CHECK[0].calcPosition(entity, entityDim1);
         assertEquals(position2.getX(),position2.getY());
         assertTrue(CollisionPositions.isInHitBox(entity,entityDim1,position2));
 
-        position2 = POSITIONS_CHECK[1].calcPosition(entity, entityDim1, margin);
+        position2 = POSITIONS_CHECK[1].calcPosition(entity, entityDim1);
         assertNotEquals(position2.getX(),position2.getY());
         assertTrue(CollisionPositions.isInHitBox(entity,entityDim1,position2));
 
-        position2 = POSITIONS_CHECK[2].calcPosition(entity, entityDim1, margin);
+        position2 = POSITIONS_CHECK[2].calcPosition(entity, entityDim1);
         assertNotEquals(position2.getX(),position2.getY());
         assertTrue(CollisionPositions.isInHitBox(entity,entityDim1,position2));
 
-        position2 = POSITIONS_CHECK[3].calcPosition(entity, entityDim1, margin);
+        position2 = POSITIONS_CHECK[3].calcPosition(entity, entityDim1);
         assertEquals(position2.getX(),position2.getY());
         assertTrue(CollisionPositions.isInHitBox(entity,entityDim1,position2));
-        */
+
 
     }
 

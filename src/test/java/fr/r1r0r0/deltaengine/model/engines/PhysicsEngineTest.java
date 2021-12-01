@@ -1,20 +1,19 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelBuilderCellCoordinatesStackingException;
 import fr.r1r0r0.deltaengine.model.Coordinates;
 import fr.r1r0r0.deltaengine.model.Dimension;
 import fr.r1r0r0.deltaengine.model.Direction;
-import fr.r1r0r0.deltaengine.model.elements.cells.Cell;
 import fr.r1r0r0.deltaengine.model.elements.cells.UncrossableCell;
 import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevelBuilder;
 import fr.r1r0r0.deltaengine.model.sprites.InvisibleSprite;
-import org.junit.jupiter.api.Test;
-
-import java.util.Collection;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PhysicsEngineTest {
 
@@ -101,7 +100,7 @@ class PhysicsEngineTest {
         map = builder.build();
         physicsEngine.setMap(map);
         physicsEngine.setMaxRunDelta(60);
-        //TODO physicsEngine.setMarginError(0.01);
+
         Coordinates<Double> pukCoords1 = new Coordinates<>(2.0,2.0);
 
         Dimension pukDim = new Dimension(0.99,0.99); //

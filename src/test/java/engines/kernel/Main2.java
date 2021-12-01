@@ -40,7 +40,7 @@ public class Main2 {
 
         Entity red = new Entity("red", new Coordinates<>(8., 8.), new Rectangle(0.5, 0.5, Color.RED),
                 new Dimension(0.8, 0.8));
-        red.setSpeed(10);
+        red.setSpeed(1);
         mapLevel.addEntity(red);
 
 
