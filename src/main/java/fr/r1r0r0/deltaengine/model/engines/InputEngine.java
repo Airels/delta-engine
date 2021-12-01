@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * The Input Engine.
- * JavaFX Key Binding Driver, allows to bind any keyboard keys to a specific event
+ * Graphic API Key Binding Driver, allows to bind any keyboard keys to a specific event
  *
  * @see Key to see all supported keys
  */

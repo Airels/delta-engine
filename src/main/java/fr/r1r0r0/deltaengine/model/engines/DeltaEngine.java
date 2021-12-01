@@ -5,6 +5,9 @@ import fr.r1r0r0.deltaengine.exceptions.NotInitializedException;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * Launcher of the Engine, allows to initialize the Engine, and returns the KernelEngine when needed
+ */
 public final class DeltaEngine extends Application {
 
     private static KernelEngine kernelEngine;
@@ -78,6 +81,10 @@ public final class DeltaEngine extends Application {
         return kernelEngine;
     }
 
+    /**
+     * Used to print critical engine errors
+     * @param e the exception
+     */
     static void showKernelCriticalError(Exception e) {
         System.err.println("KERNEL CRITICAL ERROR :");
         e.printStackTrace();
@@ -85,6 +92,10 @@ public final class DeltaEngine extends Application {
         System.exit(1);
     }
 
+    /**
+     * Used to print engine errors
+     * @param e the exception
+     */
     static void showEngineError(Exception e) {
         System.err.println("DELTAENGINE ERROR :");
         e.printStackTrace();

@@ -3,6 +3,9 @@ package fr.r1r0r0.deltaengine.model.engines.utils;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+/**
+ * All keys of a keyboard handled by the engine
+ */
 public enum Key {
     A(KeyCode.A), Z(KeyCode.Z), E(KeyCode.E), R(KeyCode.R), T(KeyCode.T), Y(KeyCode.Y), U(KeyCode.U), I(KeyCode.I), O(KeyCode.O), P(KeyCode.P), Q(KeyCode.Q), S(KeyCode.S), D(KeyCode.D), F(KeyCode.F), G(KeyCode.G), H(KeyCode.H), J(KeyCode.J), K(KeyCode.K), L(KeyCode.L), M(KeyCode.M), W(KeyCode.W), X(KeyCode.X), C(KeyCode.C), V(KeyCode.V), B(KeyCode.B), N(KeyCode.N),
     ARROW_UP(KeyCode.UP), ARROW_LEFT(KeyCode.LEFT), ARROW_DOWN(KeyCode.DOWN), ARROW_RIGHT(KeyCode.RIGHT),
@@ -17,6 +20,10 @@ public enum Key {
         jfxKey = key;
     }
 
+    /**
+     * Converts Engine Key to Graphic API Key
+     * @return
+     */
     public KeyCode getJFXInput() {
         return jfxKey;
     }

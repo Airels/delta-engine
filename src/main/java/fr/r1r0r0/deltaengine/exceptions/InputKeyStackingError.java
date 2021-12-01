@@ -4,6 +4,9 @@ import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
 import fr.r1r0r0.deltaengine.model.events.InputEvent;
 
+/**
+ * Exception thrown when trying to add a new event into a specified key, but the key already have an event attached
+ */
 public class InputKeyStackingError extends Exception {
 
     public InputKeyStackingError (String msg) {
