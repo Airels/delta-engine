@@ -1,25 +1,22 @@
 package fr.r1r0r0.deltaengine.model.engines;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import fr.r1r0r0.deltaengine.exceptions.InputKeyStackingError;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelAlreadyExistException;
 import fr.r1r0r0.deltaengine.exceptions.maplevel.MapLevelDoesNotExistException;
 import fr.r1r0r0.deltaengine.model.Direction;
-import fr.r1r0r0.deltaengine.tools.JavaFXCommand;
 import fr.r1r0r0.deltaengine.model.elements.HUDElement;
 import fr.r1r0r0.deltaengine.model.elements.entity.Entity;
 import fr.r1r0r0.deltaengine.model.engines.utils.Key;
 import fr.r1r0r0.deltaengine.model.events.Event;
 import fr.r1r0r0.deltaengine.model.events.InputEvent;
 import fr.r1r0r0.deltaengine.model.maplevel.MapLevel;
-import javafx.application.Platform;
+import fr.r1r0r0.deltaengine.tools.JavaFXCommand;
 import javafx.stage.Stage;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Core of the engine, oversees all engines and use them to render final game. <br>
@@ -38,12 +35,12 @@ public final class KernelEngine {
     private final NetworkEngine networkEngine;
     private final java.util.Map<String, MapLevel> maps;
     private final List<HUDElement> hudElements;
+    private final Thread frameRatePrinter;
     private MapLevel currentMapLevel;
     private volatile boolean currentMapHalted;
     private volatile boolean initialized, started;
     private int frameRate, optimalTime;
     private volatile int currentFrameRate;
-    private final Thread frameRatePrinter;
 
     /**
      * Default constructor. Creates all sub-engines but not initializing them.
@@ -83,6 +80,7 @@ public final class KernelEngine {
 
     /**
      * Initializes Kernel Engine and its components. If kernel was initialized before, then init will be skipped.
+     *
      * @param stage Given stage by JavaFX
      */
     void init(Stage stage) {
@@ -115,7 +113,8 @@ public final class KernelEngine {
                     if (e == Engines.GRAPHICS_ENGINE) {
                         try {
                             JavaFXCommand.runAndWait(graphicsEngine);
-                        } catch (InterruptedException ignored) {}
+                        } catch (InterruptedException ignored) {
+                        }
                     } else {
                         getEngine(e).run();
                     }
@@ -124,7 +123,8 @@ public final class KernelEngine {
                 inputEngine.run();
                 try {
                     JavaFXCommand.runAndWait(graphicsEngine);
-                } catch (InterruptedException ignored) {}
+                } catch (InterruptedException ignored) {
+                }
             }
 
             updateDuration = System.currentTimeMillis() - updateStart;
@@ -167,7 +167,8 @@ public final class KernelEngine {
                 JavaFXCommand.runAndWait(graphicsEngine);
             else
                 getEngine(engine).run();
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
     }
 
     /**
@@ -195,6 +196,7 @@ public final class KernelEngine {
     /**
      * Allowing to set a new rate for the physics.
      * More the value higher, more the precision is
+     *
      * @param physicalRate new rate to define
      */
     public void setPhysicalRate(int physicalRate) {
@@ -250,9 +252,9 @@ public final class KernelEngine {
     public synchronized void addMap(MapLevel mapLevel) throws MapLevelAlreadyExistException {
         String name = mapLevel.getName();
         if (maps.containsKey(name))
-            throw new MapLevelAlreadyExistException(maps.get(name),mapLevel);
+            throw new MapLevelAlreadyExistException(maps.get(name), mapLevel);
 
-        maps.put(name,mapLevel);
+        maps.put(name, mapLevel);
     }
 
     /**
@@ -432,64 +434,73 @@ public final class KernelEngine {
 
     /**
      * Set up icon of the Engine in the OS Environment.
+     *
      * @param img logo image path to set
-     * @throws FileNotFoundException if specified file doesn't exist
      */
-    public void setGameIcon(String img) throws FileNotFoundException {
-        InputStream sin = new FileInputStream(img);
+    public void setGameIcon(String img) {
+        InputStream sin = getClass().getResourceAsStream(img);
         try {
             JavaFXCommand.runAndWait(() -> graphicsEngine.setStageIcon(new javafx.scene.image.Image(sin)));
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
     }
 
     /**
      * Check if an entity can go to the next cell according to given direction
-     * @param entity Entity to check
+     *
+     * @param entity    Entity to check
      * @param direction Next direction
      * @return boolean true if entity can go to next cell, false otherwise
      */
-    public boolean canGoToNextCell (Entity entity, Direction direction) {
-        return physicsEngine.canGoToNextCell(entity,direction);
+    public boolean canGoToNextCell(Entity entity, Direction direction) {
+        return physicsEngine.canGoToNextCell(entity, direction);
     }
 
     /**
      * Check if the entity can move with the direction given in argument
-     * @param entity Entity to check
+     *
+     * @param entity    Entity to check
      * @param direction Next direction
      * @return boolean true if entity can go to the direction, false otherwise
      */
-    public boolean isAvailableDirection (Entity entity, Direction direction) {
-        return physicsEngine.isAvailableDirection(entity,direction);
+    public boolean isAvailableDirection(Entity entity, Direction direction) {
+        return physicsEngine.isAvailableDirection(entity, direction);
     }
 
     /**
      * Adding an HUD element to the graphics engine, using Platform.runLater of JavaFX
+     *
      * @param element Element to add
      */
     private void addHUDElementToGraphicsEngine(HUDElement element) {
         try {
             JavaFXCommand.runAndWait(() -> graphicsEngine.addHudElement(element));
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
     }
 
     /**
      * Removing an element from the graphics engine, using Platform.runLater of JavaFX
+     *
      * @param element Element to remove
      */
     private void removeHUDElementFromGraphicsEngine(HUDElement element) {
         try {
             JavaFXCommand.runAndWait(() -> graphicsEngine.removeElement(element));
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
     }
 
     /**
      * Allowing set up wanted map in the Graphics Engine, using Platform.runLater of JavaFX
+     *
      * @param map map to load
      */
     private void setMapInTheGraphicsEngine(MapLevel map) {
         try {
             JavaFXCommand.runAndWait(() -> graphicsEngine.setMap(map));
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
     }
 
     /**
@@ -498,6 +509,7 @@ public final class KernelEngine {
     private void clearMapFromTheGraphicsEngine() {
         try {
             JavaFXCommand.runAndWait(graphicsEngine::clearMap);
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
     }
 }
