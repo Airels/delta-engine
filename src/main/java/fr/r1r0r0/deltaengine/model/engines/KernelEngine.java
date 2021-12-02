@@ -160,12 +160,14 @@ public final class KernelEngine {
      * Only works if current map is halted, if isn't, this method has no effect
      */
     public void tick(Engines engine) {
-        if (!currentMapHalted) return;
+        try {
+            if (!currentMapHalted) return;
 
-        if (engine == Engines.GRAPHICS_ENGINE)
-            Platform.runLater(graphicsEngine);
-        else
-            getEngine(engine).run();
+            if (engine == Engines.GRAPHICS_ENGINE)
+                JavaFXCommand.runAndWait(graphicsEngine);
+            else
+                getEngine(engine).run();
+        } catch (InterruptedException ignored) {}
     }
 
     /**
