@@ -31,3 +31,19 @@ task mainTest(type: JavaExec) {
     classpath sourceSets.test.runtimeClasspath
     main = 'engines.kernel.Main'
 }
+
+task mainTest2(type: JavaExec) {
+    group = 'Application'
+    description = 'Simple Main run test'
+
+    classpath sourceSets.test.runtimeClasspath
+    main = 'engines.kernel.Main2'
+}
+
+task checkerBoard(type: JavaExec) {
+    group = 'Application'
+    description = 'Simple Main run test'
+
+    classpath sourceSets.test.runtimeClasspath
+    main = 'engines.kernel.CheckerBoard'
+}
