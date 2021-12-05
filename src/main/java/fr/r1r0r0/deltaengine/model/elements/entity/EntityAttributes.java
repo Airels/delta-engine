@@ -45,7 +45,7 @@ public final class EntityAttributes {
      * @param coordinates initial coordinates of entity
      * @param sprite      initial sprite of entity
      * @param dimension   dimension of entity
-     * @param hitBox TODO
+     * @param hitBox a hit-box
      * @param direction   initial direction of entity
      * @param speed       initial speed of entity
      */
@@ -141,14 +141,14 @@ public final class EntityAttributes {
     }
 
     /**
-     * TODO
-     * @return
+     * Return the attribute hit-box
+     * @return the attribute hit-box
      */
     public Dimension getHitBox(){return hitBox;}
 
     /**
-     * TODO
-     * @param dimension
+     * Setter for the attribute hitBox
+     * @param dimension a dimension
      */
     public void setHitBox(Dimension dimension) {
         Dimension oldHitBox = this.hitBox;

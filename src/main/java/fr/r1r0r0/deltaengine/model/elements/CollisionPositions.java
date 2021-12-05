@@ -49,20 +49,22 @@ public enum CollisionPositions {
     }
 
     /**
-     * TODO
-     * @param entity
-     * @return
+     * Calc and return the top left point of the hit-box of the entity
+     * @param entity an entity
+     * @return the top left point of the hit-box of the entity
      */
     public static Coordinates<Double> calcTopLetHitBox (Entity entity) {
         return calcTopLetHitBox(entity.getCoordinates(),entity.getDimension(),entity.getHitBox());
     }
 
     /**
-     * TODO
-     * @param topLeftDimension
-     * @param dimension
-     * @param hitBox
-     * @return
+     * Calc and return the top left point of the hit-box matching to an entity with describe by :
+     * a top left position of the dimension, a dimension size and a hit-box size
+     * @param topLeftDimension a top left position of the dimension
+     * @param dimension a dimension
+     * @param hitBox a hit-box
+     * @return the top left point of the hit-box matching to an entity with describe by :
+     * a top left position of the dimension, a dimension size and a hit-box size
      */
     private static Coordinates<Double> calcTopLetHitBox (Coordinates<Double> topLeftDimension,
                                                         Dimension dimension, Dimension hitBox) {
@@ -94,10 +96,11 @@ public enum CollisionPositions {
     }
 
     /**
-     * TODO
-     * @param entity1
-     * @param entity2
-     * @return
+     * Return if there is a collision between the 2 entity
+     * The type of calculation used to do that is simplest than the usual way to do that
+     * @param entity1 an entity
+     * @param entity2 an entity
+     * @return if there is a collision between the 2 entity, with a simple kind of calculation
      */
     public static boolean simplyCollide (Entity entity1, Entity entity2) {
         Coordinates<Double> topLeft1 = CollisionPositions.calcTopLetHitBox(entity1);

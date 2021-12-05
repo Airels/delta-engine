@@ -18,7 +18,6 @@ public final class MapLevelBuilder implements Builder<MapLevel> {
 
     /**
      * A CellBuilder of VoidCell
-     * TODO: sera surement deplacer autre part car peu etre utile a beaucoup d endroit
      */
     private static final CellBuilder VOID_CELL_BUILDER = new CellBuilder() {
         private int x;

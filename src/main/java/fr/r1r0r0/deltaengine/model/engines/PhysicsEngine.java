@@ -172,10 +172,10 @@ final class PhysicsEngine implements Engine {
     }
 
     /**
-     * TODO
-     * @param entity
-     * @param direction
-     * @return
+     * Return if the entity is able to move with the direction given
+     * @param entity an entity
+     * @param direction a direction
+     * @return if the entity is able to move with the direction given
      */
     public boolean canGoToNextCell (Entity entity, Direction direction) {
         if ( ! fitOnCell(entity)) return false;
@@ -185,9 +185,9 @@ final class PhysicsEngine implements Engine {
     }
 
     /**
-     * TODO
-     * @param entity
-     * @return
+     * Return if the entity fit on a cell
+     * @param entity an entity
+     * @return if the entity fit on a cell
      */
     private boolean fitOnCell (Entity entity) {
         Coordinates<Double> leftTop = entity.getCoordinates();
@@ -238,8 +238,8 @@ final class PhysicsEngine implements Engine {
     }
 
     /**
-     * TODO
-     * @param physicalRate
+     * Setter for the attribute physicalRate
+     * @param physicalRate a physicalRate
      */
     public synchronized void setPhysicalRate(int physicalRate) {
         if (physicalRate < 1) throw new IllegalArgumentException(

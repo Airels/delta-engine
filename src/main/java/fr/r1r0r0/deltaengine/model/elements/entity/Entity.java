@@ -27,8 +27,8 @@ public class Entity implements Element<Double> {
      * @param name name of the entity
      * @param coords coordinates of the entity
      * @param sprite sprite of the entity
-     * @param dimension TODO
-     * @param hitBox TODO
+     * @param dimension a dimension
+     * @param hitBox a dimension
      */
     public Entity(String name, Coordinates<Double> coords, Sprite sprite, Dimension dimension, Dimension hitBox) {
         sprite.setZOrder(100);
@@ -36,25 +36,25 @@ public class Entity implements Element<Double> {
     }
 
     /**
-     * TODO
-     * @param name
-     * @param coords
-     * @param sprite
-     * @param dimension
+     * Constructor
+     * @param name a name
+     * @param coords a coordinates
+     * @param sprite a sprite
+     * @param dimension a dimension
      */
     public Entity(String name, Coordinates<Double> coords, Sprite sprite, Dimension dimension) {
         this(name,coords,sprite,dimension,dimension.copy());
     }
 
     /**
-     * TODO
-     * @return
+     * Getter fot the attribute hitBox
+     * @return the attribute hitBox
      */
     public Dimension getHitBox() {return entityAttributes.getHitBox();}
 
     /**
-     * TODO
-     * @param hitBox
+     * Setter for the attribute hitBox
+     * @param hitBox a dimension for the hitBox
      */
     public void setHitBox(Dimension hitBox) {entityAttributes.setHitBox(hitBox);}
 
