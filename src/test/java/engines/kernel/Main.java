@@ -20,11 +20,6 @@ import fr.r1r0r0.deltaengine.view.colors.Color;
 
 import java.awt.*;
 
-/**
- * TODO: l affichage du moteur graphique est bug, regarder dans le damier la position
- * du carre par rapport a celle du cercle, notament lorsque leur cocordonne sont identique
- */
-
 public class Main {
 
     public static void main(String[] args) throws Exception {
@@ -123,7 +118,6 @@ public class Main {
     }
 
     private static MapLevel createMapLevelDamier (String name, int width, int height) {
-        //TODO: faire une erreur generique pour les MapLevel, qui se subdivise en toutes les erreurs actuels
         MapLevelBuilder mapLevelBuilder = new MapLevelBuilder(name,width,height);
         try {
             for (int i = 0; i < width; i++) {

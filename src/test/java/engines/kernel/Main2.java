@@ -137,7 +137,6 @@ public class Main2 {
     }
 
     private static MapLevel createMapLevelDamier(String name, int width, int height) {
-        //TODO: faire une erreur generique pour les MapLevel, qui se subdivise en toutes les erreurs actuels
         MapLevelBuilder mapLevelBuilder = new MapLevelBuilder(name, width, height);
         try {
             for (int i = 0; i < width; i++) {
