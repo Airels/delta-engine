@@ -10,8 +10,6 @@ class GraphicsEngineTest {
     Element e1,e2;
     ConcurrentLinkedDeque<Element> elements;
     Field mapField, elementField;
-    //TODO need to find how to get the stage from Jfx
-    // can't init the stage so not able to run tests
     /*
     @BeforeEach
     void testInit() throws NoSuchFieldException {
