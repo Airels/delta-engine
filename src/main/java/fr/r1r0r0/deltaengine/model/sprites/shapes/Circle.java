@@ -2,7 +2,7 @@ package fr.r1r0r0.deltaengine.model.sprites.shapes;
 
 import fr.r1r0r0.deltaengine.view.colors.Color;
 
-/** TODO implementé shape et manipuler une ellipse de javafx
+/**
  * Circle Sprite
  */
 public class Circle extends Shape {
