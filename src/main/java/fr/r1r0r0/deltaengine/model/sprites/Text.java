@@ -65,7 +65,10 @@ public final class Text implements Sprite {
     }
 
     @Override
+    @Deprecated
+    /**
+     * Use setSize instead, do nothing
+     */
     public void resize(double width, double height) {
-        // TODO
     }
 }
