@@ -7,23 +7,41 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+/**
+ * Image Sprite to display image
+ */
 public final class Image implements Sprite {
 
     private String path;
+    private ImageView imageView;
 
-    public Image(String path) {
+    /**
+     * Instantiate an Image Sprite with an image
+     * @param path to the image file
+     * @throws FileNotFoundException
+     */
+    public Image(String path) throws FileNotFoundException {
         this.path = path;
+        imageView = new ImageView(new javafx.scene.image.Image(getClass().getResourceAsStream(path)));
     }
 
     @Override
     public Node getNode() {
-        try {
-            javafx.scene.image.Image img = new javafx.scene.image.Image(new FileInputStream(path));
+        return imageView;
+    }
 
-            return new ImageView(img);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+    @Override
+    public void resize(double width, double height) {
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(height);
+    }
+
+    /**
+     * Path to image file
+     * @return String path to file
+     */
+    public String getPath() {
+        return path;
     }
 }
+
